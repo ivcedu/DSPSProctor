@@ -1,0 +1,77 @@
+<!DOCTYPE HTML>
+<html lang="en">
+    <head>
+        <meta charset="utf-8"/>
+        <meta http-equiv="X-UA-Compatible" content="IE=Edge"/>
+        <title>DSPS Complete History</title>
+        <!-- include css -->
+        <link rel="stylesheet" href="../include/bootstrap/css/bootstrap.2.3.2.min.css"/>
+        <link rel="stylesheet" href="../include/bootstrap-select/css/bootstrap-select.1.5.4.min.css"/>
+        <link rel="stylesheet" href="../include/bootstrap-timepicker/css/bootstrap-timepicker.min.css"/>
+        <link rel="stylesheet" href="../include/jquery-ui/css/jquery.ui.all.css"/>
+    </head>
+    <body id="body">
+        <div class="well container">
+            <!-- navigation bar -->
+            <div class="navbar navbar-inverse">
+                <div class="navbar-inner" id="navigation">
+                    <ul class="nav">
+                        <li><a href=# id="nav_home"><i class="icon-home icon-white"></i> Home</a></li>
+                    </ul>
+                    <ul class="nav pull-right">
+                        <li><a href=# id="nav_logout"><i class="icon-hand-right icon-white"></i> Logout</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <!-- filter options -->
+            <div class="row-fluid">
+                <div class="span3">
+                    <select class="selectpicker span12" id="search_option">
+                        <option value="All" selected>All</option>
+                        <option value="Student ID">Student ID</option>
+                        <option value="Instructor Name">Instructor Name</option>
+                        <option value="Course Name">Course Name</option>
+                    </select>
+                </div>
+                <div class="span1" style="padding-top: 5px;">Search:</div>
+                <div class="span4"><input type="text" class="span12" readonly id="search_field"></div>
+                <div class="span2 offset2">
+                    <button class="btn btn-primary span12" id="btn_refresh"><i class="icon-refresh icon-white"></i> Refresh</button>
+                </div>
+            </div>
+            
+            <!-- RF List section  -->
+            <table class="table table-condensed table-bordered" style="font-size: 90%;" id="proctor_list">
+                <thead style="background-color: grey;">
+                    <th class="span1" style="text-align: left;"><a href="#" style="color: white;">Ticket</a></th>
+                    <th class="span2" style="text-align: left;"><a href="#" style="color: white;">Course</a></th>
+                    <th class="span2" style="text-align: left;"><a href="#" style="color: white;">Instructor</a></th>
+                    <th class="span2" style="text-align: left;"><a href="#" style="color: white;">Student ID</a></th>
+                    <th class="span3" style="text-align: left;"><a href="#" style="color: white;">Student Name</a></th>
+                    <th class="span2" style="text-align: left;"><a href="#" style="color: white;">Stage</a></th>
+                    <th class="span2" style="text-align: left;"><a href="#" style="color: white;">Date Submitted</a></th>
+                </thead>
+                <tbody id="body_tr">
+                </tbody>
+            </table>
+        </div>
+        
+        <!-- include javascript -->
+        <script src="../include/jquery/jquery-2.0.3.min.js"></script>
+        <script src="../include/jquery-ui/js/jquery-ui-1.10.4.min.js"></script>
+        <script src="../include/jquery-ui/js/jquery.ui.core.js"></script>
+        <script src="../include/jquery-ui/js/jquery.ui.widget.js"></script>
+        <script src="../include/jquery-ui/js/jquery.ui.datepicker.js"></script>
+        <script src="../include/jquery-autosize/jquery.autosize.1.18.1.min.js"></script>
+        <script src="../include/bootstrap/js/bootstrap.2.3.2.min.js"></script>
+        <script src="../include/bootstrap-select/js/bootstrap-select.1.5.4.min.js"></script>
+        <script src="../include/bootstrap-timepicker/js/bootstrap-timepicker.min.js"></script>
+        <script src="../include/bootstrap-filestyle/js/bootstrap-filestyle.1.0.3.min.js"></script>
+        <!-- application javascript -->
+        <script src="js/rptAdminHistory.js"></script>
+        <script src="js/session_data.js"></script>
+        <script src="js/db_access.js"></script>
+        <script src="js/sendEmail.js"></script> 
+    </body>
+</html>
