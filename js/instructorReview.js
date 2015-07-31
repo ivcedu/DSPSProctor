@@ -9,6 +9,9 @@ var section_num = "";
 
 var m_file_name = "";
 var m_base64_data = "";
+
+var target;
+var spinner;
 ////////////////////////////////////////////////////////////////////////////////
 window.onload = function() {   
     if (localStorage.key(0) !== null) {
@@ -222,6 +225,30 @@ $(document).ready(function() {
         $('#mod_dialog_box_header').html("Complete");
         $('#mod_dialog_box_body').html("Instructor Review has been Accepted");
         $('#mod_dialog_box').modal('show');
+        
+//        startSpin();        
+//        setTimeout(function() {      
+//            var print_request_id = addPrintRequest();
+//            addPDFAttachment(print_request_id);
+//
+//            if ($('#device_type').val() === "1") {
+//                addPlotter(print_request_id);
+//                sendEmailPlotterRequestor(print_request_id);
+//                sendEmailPlotterAdmin(print_request_id);
+//
+//                if (m_free) {
+//                    sendEmailPlotterHonorNotification();
+//                }
+//            }
+//            else {
+//                addDuplicating(print_request_id);
+//                db_insertReceipt(print_request_id, m_str_dup_cost_info);
+//                sendEmailDuplicatingRequestor(print_request_id);
+//                sendEmailDuplicatingAdmin(print_request_id);
+//            }
+//            db_insertTransaction(print_request_id, localStorage.getItem('ls_dc_loginDisplayName'), "Request submitted");
+//            window.open('home.html', '_self');
+//        }, 1000);
     });
     
     // deny button click ///////////////////////////////////////////////////////
@@ -255,6 +282,15 @@ $(document).ready(function() {
     $('#comments').autosize();
     $('#dsps_comments').autosize();
 });
+
+////////////////////////////////////////////////////////////////////////////////
+function startSpin() {
+    spinner.spin(target);
+}
+
+function stopSpin() {
+    spinner.stop();
+}
 
 ////////////////////////////////////////////////////////////////////////////////
 function defaultHideDisalbe() {
