@@ -1,9 +1,15 @@
 var proctor_id = "";
 var m_file_name = "";
 var m_base64_data = "";
+
+var target;
+var spinner;
 ////////////////////////////////////////////////////////////////////////////////
 window.onload = function() {   
-    if (localStorage.key(0) !== null) {   
+    if (localStorage.key(0) !== null) { 
+        target = $('#spinner')[0];
+        spinner = new Spinner();
+        
         defaultHideDisalbe();
         
         getURLParameters();
@@ -90,7 +96,10 @@ $(document).ready(function() {
     
     // add file button click ///////////////////////////////////////////////////
     $('#add_file').click(function() {
-        addExamPDF();
+        startSpin();        
+        setTimeout(function() {      
+            addExamPDF();
+        }, 1000);
     });
     
     // exam pdf click event ////////////////////////////////////////////////////
@@ -118,6 +127,15 @@ $(document).ready(function() {
         removeExamPDF(exampdf_id);
     });
 });
+
+////////////////////////////////////////////////////////////////////////////////
+function startSpin() {
+    spinner.spin(target);
+}
+
+function stopSpin() {
+    spinner.stop();
+}
 
 ////////////////////////////////////////////////////////////////////////////////
 function defaultHideDisalbe() {
