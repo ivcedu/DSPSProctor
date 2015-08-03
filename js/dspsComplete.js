@@ -1,4 +1,11 @@
 var proctor_id = "";
+
+var stu_email = "";
+var date_submitted = "";
+
+var inst_name = "";
+var inst_email = "";
+var section_num = "";
 ////////////////////////////////////////////////////////////////////////////////
 window.onload = function() {   
     if (localStorage.key(0) !== null) {   
@@ -81,7 +88,7 @@ $(document).ready(function() {
         }
     });
     
-    // accept button click /////////////////////////////////////////////////////
+    // complete button click ///////////////////////////////////////////////////
     $('#btn_complete').click(function() { 
         $(this).prop("disabled", true);
         db_updateProctorStatus(proctor_id, 4, "DateDSPSComplete");
@@ -94,13 +101,14 @@ $(document).ready(function() {
             note += "\nComments: " + textReplaceApostrophe(dsps_comments);
         }
         db_insertTransaction(proctor_id, localStorage.getItem('ls_dsps_proctor_loginDisplayName'), note);
+        sendEmailToInstructorCompleted();
         
         $('#mod_dialog_box_header').html("Complete");
         $('#mod_dialog_box_body').html("DSPS Complete");
         $('#mod_dialog_box').modal('show');
     });
     
-    // deny button click ///////////////////////////////////////////////////////
+    // no show button click ////////////////////////////////////////////////////
     $('#btn_no_show').click(function() { 
         $(this).prop("disabled", true);
         db_updateProctorStatus(proctor_id, 5, "DateDSPSComplete");
@@ -113,6 +121,7 @@ $(document).ready(function() {
             note += "\nComments: " + textReplaceApostrophe(dsps_comments);
         }
         db_insertTransaction(proctor_id, localStorage.getItem('ls_dsps_proctor_loginDisplayName'), note);
+        sendEmailToInstructorNoShow();
         
         $('#mod_dialog_box_header').html("Complete");
         $('#mod_dialog_box_body').html("DSPS No Show");
@@ -152,6 +161,12 @@ function setProctor() {
         $('#test_time').html(result[0]['TestTime']);
         $('#comments').html(result[0]['Comments'].replace(/\n/g, "<br>"));
         $('#inst_phone').html(result[0]['InstPhone']);
+        
+        stu_email = result[0]['StuEmail'];
+        inst_name = result[0]['InstName'];
+        inst_email = result[0]['InstEmail'];
+        section_num = result[0]['SectionNum'];
+        date_submitted = convertDBDateTimeToString(result[0]['DateSubmitted']);
     }
 }
 
@@ -334,4 +349,43 @@ function getTransactionHistory() {
         var html = login_name + " : " + dt_stamp + "<br>" + note.replace(/\n/g, "<br>") + "<br><br>";
         $("#transaction_history").append(html);
     }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+function sendEmailToInstructorCompleted() {
+    var subject = "Proctor Request Completed";
+    var message = "Dear " + inst_name + ",<br><br>";
+    message += "Proctor test request has been Completed<br><br>";
+    
+    message += "Student Name: <b>" + $('#stu_name').html() + "</b><br>";
+    message += "Student ID: <b>" + $('#stu_id').html() + "</b><br>";
+    message += "Ticket #: <b>" + section_num + "</b><br>";
+    message += "Course: <b>" + $('#course_id').html() + "</b><br>";
+    message += "Test Date: <b>" + $('#test_date').html() + "</b><br>";
+    message += "Test Time: <b>" + $('#test_time').html() + "</b><br><br>";
+    
+    message += "Comments:<br>" + $('#dsps_comments').val().replace(/\n/g, "<br>");
+    
+    // testing
+    proc_sendEmail("deantest@ivc.edu", inst_name, subject, message);
+//    proc_sendEmail(inst_email, inst_name, subject, message);
+}
+
+function sendEmailToInstructorNoShow() {
+    var subject = "Proctor Request No Show";
+    var message = "Dear " + inst_name + ",<br><br>";
+    message += "Proctor test request has been No Show<br><br>";
+    
+    message += "Student Name: <b>" + $('#stu_name').html() + "</b><br>";
+    message += "Student ID: <b>" + $('#stu_id').html() + "</b><br>";
+    message += "Ticket #: <b>" + section_num + "</b><br>";
+    message += "Course: <b>" + $('#course_id').html() + "</b><br>";
+    message += "Test Date: <b>" + $('#test_date').html() + "</b><br>";
+    message += "Test Time: <b>" + $('#test_time').html() + "</b><br><br>";
+    
+    message += "Comments:<br>" + $('#dsps_comments').val().replace(/\n/g, "<br>");
+    
+    // testing
+    proc_sendEmail("deantest@ivc.edu", inst_name, subject, message);
+//    proc_sendEmail(inst_email, inst_name, subject, message);
 }

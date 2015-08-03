@@ -121,6 +121,7 @@ $(document).ready(function() {
             note += "\nComments: " + textReplaceApostrophe(dsps_comments);
         }
         db_insertTransaction(proctor_id, localStorage.getItem('ls_dsps_proctor_loginDisplayName'), note);
+        sendEmailToInstructorReview2Canceled();
         sendEmailToStudentCancel();
         
         $('#mod_dialog_box_header').html("Complete");
@@ -410,6 +411,25 @@ function sendEmailToInstructorReview2Accept() {
     var subject = "Proctor Request 2 Review Accept";
     var message = "Dear " + inst_name + ",<br><br>";
     message += "Proctor test request DSPS 2 Review has been Accepted<br><br>";
+    
+    message += "Student Name: <b>" + $('#stu_name').html() + "</b><br>";
+    message += "Student ID: <b>" + $('#stu_id').html() + "</b><br>";
+    message += "Ticket #: <b>" + section_num + "</b><br>";
+    message += "Course: <b>" + $('#course_id').html() + "</b><br>";
+    message += "Test Date: <b>" + $('#test_date').html() + "</b><br>";
+    message += "Test Time: <b>" + $('#test_time').html() + "</b><br><br>";
+    
+    message += "Comments:<br>" + $('#dsps_comments').val().replace(/\n/g, "<br>");
+    
+    // testing
+    proc_sendEmail("deantest@ivc.edu", inst_name, subject, message);
+//    proc_sendEmail(inst_email, inst_name, subject, message);
+}
+
+function sendEmailToInstructorReview2Canceled() {
+    var subject = "Proctor Request 2 Review Canceled";
+    var message = "Dear " + inst_name + ",<br><br>";
+    message += "Proctor test request DSPS 2 Review has been Canceled<br><br>";
     
     message += "Student Name: <b>" + $('#stu_name').html() + "</b><br>";
     message += "Student ID: <b>" + $('#stu_id').html() + "</b><br>";

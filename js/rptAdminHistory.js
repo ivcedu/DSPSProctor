@@ -54,23 +54,31 @@ function getAdminProctorCompleteList(search_field, value) {
     result = db_getAdminProctorCompleteList(search_field, value);
     
     $('#body_tr').empty();
+    var body_html = "";
     if (result.length !== 0) {
         for(var i = 0; i < result.length; i++) { 
-            setAdminProctorCompleteListHTML(result[i]['ProctorID'], result[i]['SectionNum'], result[i]['CourseID'], result[i]['InstName'], result[i]['StuID'], result[i]['StuName'], 
-                                            result[i]['Step'], convertDBDateTimeToString(result[i]['DateSubmitted']));
+            body_html += setAdminProctorCompleteListHTML(result[i]['ProctorID'], result[i]['SectionNum'], result[i]['CourseID'], result[i]['InstName'], result[i]['StuID'], result[i]['StuName'], 
+                                                         result[i]['Step'], result[i]['Status'], result[i]['StatusID']/*, convertDBDateTimeToString(result[i]['DateSubmitted'])*/);
         }
+        $("#body_tr").append(body_html);
     }
 }
 
-function setAdminProctorCompleteListHTML(proctor_id, section_num, course_id, int_name, stu_ID, stu_name, step, date_submitted) {
-    var tbl_html = "<tr>";
+function setAdminProctorCompleteListHTML(proctor_id, section_num, course_id, int_name, stu_ID, stu_name, step, status, status_id/*, date_submitted*/) {
+    var tbl_html = "<tr class='form-horizontal'>";
     tbl_html += "<td class='span1'><a href=# id='proctor_id_" + proctor_id +  "'>" + section_num + "</a></td>";
     tbl_html += "<td class='span2'>" + course_id + "</td>";
     tbl_html += "<td class='span2'>" + int_name + "</td>";
     tbl_html += "<td class='span2'>" + stu_ID + "</td>";
-    tbl_html += "<td class='span3'>" + stu_name + "</td>";
+    tbl_html += "<td class='span2'>" + stu_name + "</td>";
     tbl_html += "<td class='span2' id='step_" + proctor_id + "'>" + step + "</td>";
-    tbl_html += "<td class='span2'>" + date_submitted + "</td>";
+    tbl_html += "<td class='span2'>" + status + "</td>";
+    if (status_id === "5") {
+        tbl_html += "<td class='span1' style='padding: 0; text-align: center;'><button class='btn btn-mini' id='btn_restart_" + proctor_id + "'><i class='icon-edit icon-black'></i></button></td>";
+    }
+    else {
+        tbl_html += "<td class='span1'></td>";
+    }
     tbl_html += "</tr>";
-    $("#body_tr").append(tbl_html);
+    return tbl_html;
 }

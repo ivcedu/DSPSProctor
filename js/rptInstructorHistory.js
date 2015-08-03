@@ -33,15 +33,17 @@ $(document).ready(function() {
 ////////////////////////////////////////////////////////////////////////////////
 function getAdminProctorCompleteList() {
     var result = new Array(); 
-    result = db_getInstProctorCompleteList('gbrogan@ivc.edu');
+    result = db_getInstProctorCompleteList('echambers@ivc.edu');
 //    result = db_getInstProctorCompleteList(localStorage.getItem('ls_dsps_proctor_loginEmail'));
     
     $('#body_tr').empty();
+    var body_html = "";
     if (result.length !== 0) {
         for(var i = 0; i < result.length; i++) { 
-            setAdminProctorCompleteListHTML(result[i]['ProctorID'], result[i]['SectionNum'], result[i]['CourseID'], result[i]['StuName'], 
-                                    result[i]['Status'], result[i]['Step'], convertDBDateTimeToString(result[i]['DateSubmitted']));
+            body_html += setAdminProctorCompleteListHTML(result[i]['ProctorID'], result[i]['SectionNum'], result[i]['CourseID'], result[i]['StuName'], 
+                                                         result[i]['Status'], result[i]['Step'], convertDBDateTimeToString(result[i]['DateSubmitted']));
         }
+        $("#body_tr").append(body_html);
     }
 }
 
@@ -54,5 +56,5 @@ function setAdminProctorCompleteListHTML(proctor_id, section_num, course_id, stu
     tbl_html += "<td class='span2' id='step_" + proctor_id + "'>" + step + "</td>";
     tbl_html += "<td class='span2'>" + date_submitted + "</td>";
     tbl_html += "</tr>";
-    $("#body_tr").append(tbl_html);
+    return tbl_html;
 }
