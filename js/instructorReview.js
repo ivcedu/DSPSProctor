@@ -23,6 +23,7 @@ window.onload = function() {
         getSEOption();
         getCalType();
         getInternet();
+        getIVCBLDList();
         
         getURLParameters();
         setProctor();
@@ -96,9 +97,13 @@ $(document).ready(function() {
     // mailbox check event /////////////////////////////////////////////////////
     $('#ckb_mailbox').change(function() {
         if ($(this).is(':checked')) {
+            $('#cbo_mail_bld').prop('disabled', false);
+            $('#cbo_mail_bld').selectpicker('refresh');
             $('#bldg').prop('readonly', false);
         }
         else {
+            $('#cbo_mail_bld').prop('disabled', true);
+            $('#cbo_mail_bld').selectpicker('refresh');
             $('#bldg').val("");
             $('#bldg').prop('readonly', true);
         }
@@ -107,9 +112,13 @@ $(document).ready(function() {
     // faculty office check event //////////////////////////////////////////////
     $('#ckb_faculty').change(function() {
         if ($(this).is(':checked')) {
+            $('#cbo_faculty_bld').prop('disabled', false);
+            $('#cbo_faculty_bld').selectpicker('refresh');
             $('#office').prop('readonly', false);
         }
         else {
+            $('#cbo_faculty_bld').prop('disabled', true);
+            $('#cbo_faculty_bld').selectpicker('refresh');
             $('#office').val("");
             $('#office').prop('readonly', true);
         }
@@ -182,6 +191,7 @@ $(document).ready(function() {
         startSpin();        
         setTimeout(function() {      
             addExamPDF();
+            stopSpin();
         }, 1000);
     });
     
@@ -326,6 +336,21 @@ function getInternet() {
     $('#internet_access').selectpicker('refresh');
 }
 
+function getIVCBLDList() {
+    var result = new Array();
+    result = db_getIVCBLDList();
+    
+    var html = "";
+    for (var i = 0; i < result.length; i++) {
+        html += "<option value='" + result[i]['IVCBLDID'] + "'>" + result[i]['BLDCode'] + "</option>";
+    }
+    
+    $('#cbo_mail_bld').append(html);
+    $('#cbo_mail_bld').selectpicker('refresh');
+    $('#cbo_faculty_bld').append(html);
+    $('#cbo_faculty_bld').selectpicker('refresh');
+}
+
 ////////////////////////////////////////////////////////////////////////////////
 function setProctor() {
     var result = new Array();
@@ -371,21 +396,37 @@ function setAccom() {
         if (result[0]['UseOfComp'] === "1") {
             $("#ckb_user_of_comp").prop('checked', true);
         }
+        if (result[0]['Scantron'] === "1") {
+            $("#ckb_scantron").prop('checked', true);
+        }
+        if (result[0]['Scribe'] === "1") {
+            $("#ckb_scribe").prop('checked', true);
+            var ckb_scantron = result[0]['Scantron'];
+            var ckb_written_exam = result[0]['WrittenExam'];
+            var scribe_html = "";
+            if (ckb_scantron === "1" && ckb_written_exam === "0") {
+                scribe_html = "Scantron Only";
+            }
+            else if (ckb_scantron === "0" && ckb_written_exam === "1") {
+                scribe_html = "Written Exam";
+            }
+            else {
+                scribe_html = "Scantron and Written Exam";
+            }
+            $('#cbo_scribe_list').html(scribe_html);
+        } 
+//        if (result[0]['WrittenExam'] === "1") {
+//            $("#ckb_written_exam").prop('checked', true);
+//        }
+//        if (result[0]['Distraction'] === "1") {
+//            $("#ckb_distraction").prop('checked', true);
+//        }
         if (result[0]['Other'] === "1") {
             $("#ckb_other").prop('checked', true);
         }
         $('#txt_other').html(result[0]['txtOther']);
         if (result[0]['Scribe'] === "1") {
             $("#ckb_scribe").prop('checked', true);
-        }
-        if (result[0]['Scantron'] === "1") {
-            $("#ckb_scantron").prop('checked', true);
-        }
-        if (result[0]['WrittenExam'] === "1") {
-            $("#ckb_written_exam").prop('checked', true);
-        }
-        if (result[0]['Distraction'] === "1") {
-            $("#ckb_distraction").prop('checked', true);
         }
     }
 }
@@ -399,16 +440,18 @@ function updateProctorInstructorPhone() {
 function insertInstForm() {
     var allow_min = textReplaceApostrophe($('#allow_min').val());
     var mailbox = $('#ckb_mailbox').is(':checked');
+    var mail_bld_id = $('#cbo_mail_bld').val();
     var bldg = textReplaceApostrophe($('#bldg').val());
     var prof_pu = $('#ckb_prof_pu').is(':checked');
     var faculty = $('#ckb_faculty').is(':checked');
+    var faculty_bld_id = $('#cbo_faculty_bld').val();
     var office = textReplaceApostrophe($('#office').val());
     var stu_delivery = $('#ckb_stu_delivery').is(':checked');
     var scan_email = $('#ckb_scan_email').is(':checked');
     var se_option_id = $('#se_option').val();
     var exam_attach = $('input[name="rdo_exam"]:checked').val();
 
-    return db_insertInstForm(proctor_id, allow_min, mailbox, bldg, prof_pu, faculty, office, stu_delivery, scan_email, se_option_id, exam_attach);
+    return db_insertInstForm(proctor_id, allow_min, mailbox, mail_bld_id, bldg, prof_pu, faculty, faculty_bld_id, office, stu_delivery, scan_email, se_option_id, exam_attach);
 }
 
 function insertExamGuide() {
@@ -523,7 +566,7 @@ function sendEmailToDSPS_2() {
     message += "Test Date: <b>" + $('#test_date').html() + "</b><br>";
     message += "Test Time: <b>" + $('#test_time').html() + "</b><br><br>";
     
-    message += "Please click below ticket # to open DSPS final review page<br><br>";
+    message += "Please click below ticket # to open DSPS 2 review page<br><br>";
     message += "<a href='" + location.href + "'>" + section_num + "</a><br><br>";
     
     // testing

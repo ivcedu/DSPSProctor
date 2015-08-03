@@ -1,3 +1,19 @@
+// LDAP get ////////////////////////////////////////////////////////////////////
+function getLoginUserInfo(php_file, user, pass) {
+    var result = new Array();
+    $.ajax({
+        type:"POST",
+        datatype:"json",
+        url:php_file,
+        data:{username:user, password:pass},
+        async: false,  
+        success:function(data) {
+            result = JSON.parse(data);
+        }
+    });
+    return result;
+}
+
 // tardis get DB ///////////////////////////////////////////////////////////////
 function tardis_getCurrentTerm() {
     var result = "";
@@ -296,6 +312,19 @@ function db_getExamPDFList(ProctorID) {
     return result;
 }
 
+function db_getIVCBLDList() {
+    var result = new Array();
+    $.ajax({
+        type:"POST",
+        url:"php/db_getIVCBLDList.php",
+        async: false,  
+        success:function(data) {
+            result = JSON.parse(data);
+        }
+    });
+    return result;
+}
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -330,12 +359,12 @@ function db_insertAccom(ProctorID, TimeOneHalf, DoubleTime, AltMedia, Reader, En
     return ResultID;
 }
 
-function db_insertInstForm(ProctorID, TAllotMin, Mailbox, Bldg, ProfessorPU, Faculty, Office, StuDelivery, ScanEmail, SEOptionID, ExamAttach) {
+function db_insertInstForm(ProctorID, TAllotMin, Mailbox, MailboxBldID, Bldg, ProfessorPU, Faculty, FacultyBldID, Office, StuDelivery, ScanEmail, SEOptionID, ExamAttach) {
     var ResultID = "";
     $.ajax({
         type:"POST",
         url:"php/db_insertInstForm.php",
-        data:{ProctorID:ProctorID, TAllotMin:TAllotMin, Mailbox:Mailbox, Bldg:Bldg, ProfessorPU:ProfessorPU, Faculty:Faculty, Office:Office, 
+        data:{ProctorID:ProctorID, TAllotMin:TAllotMin, Mailbox:Mailbox, MailboxBldID:MailboxBldID, Bldg:Bldg, ProfessorPU:ProfessorPU, Faculty:Faculty, FacultyBldID:FacultyBldID, Office:Office, 
                 StuDelivery:StuDelivery, ScanEmail:ScanEmail, SEOptionID:SEOptionID, ExamAttach:ExamAttach},
         async: false,  
         success:function(data) {
@@ -437,6 +466,20 @@ function db_updateProctorInstPhone(ProctorID, InstPhone) {
         type:"POST",
         url:"php/db_updateProctorInstPhone.php",
         data:{ProctorID:ProctorID, InstPhone:InstPhone},
+        async: false,  
+        success:function(data) {
+            Result = JSON.parse(data);
+        }
+    });
+    return Result;
+}
+
+function db_updateProctorTestDT(ProctorID, TestDate, TestTime) {
+    var Result = false;
+    $.ajax({
+        type:"POST",
+        url:"php/db_updateProctorTestDT.php",
+        data:{ProctorID:ProctorID, TestDate:TestDate, TestTime:TestTime},
         async: false,  
         success:function(data) {
             Result = JSON.parse(data);

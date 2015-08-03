@@ -37,7 +37,7 @@ $(document).ready(function() {
         var status = $('#status_' + proctor_id).html();
         
         switch (step) {
-            case "DSPS First Review":
+            case "DSPS 1 Review":
                 window.open('dspsReview_1.html?proctor_id=' + proctor_id, '_self');
                 break;
             case "Instructor Review":
@@ -53,7 +53,7 @@ $(document).ready(function() {
                     window.open('instructorReview.html?proctor_id=' + proctor_id, '_self');
                 }
                 break;
-            case "DSPS Final Review":
+            case "DSPS 2 Review":
                 if (status === "Accepted") {
                     if (admin) {
                         window.open('dspsComplete.html?proctor_id=' + proctor_id, '_self');

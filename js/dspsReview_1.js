@@ -73,7 +73,7 @@ $(document).ready(function() {
         db_updateProctorStep(proctor_id, 2, "DateDSPSReview1");
         db_insertProctorLog(proctor_id, localStorage.getItem('ls_dsps_proctor_loginDisplayName'), 1, 7);
         
-        var note = "DSPS First Review Accepted";
+        var note = "DSPS 1 Review Accepted";
         var dsps_comments = $('#dsps_comments').val();
         if (dsps_comments !== "") {
             note += "\nComments: " + textReplaceApostrophe(dsps_comments);
@@ -82,7 +82,7 @@ $(document).ready(function() {
         sendEmailToInstructor();
         
         $('#mod_dialog_box_header').html("Complete");
-        $('#mod_dialog_box_body').html("DSPS First Review has been Accepted");
+        $('#mod_dialog_box_body').html("DSPS 1 Review has been Accepted");
         $('#mod_dialog_box').modal('show');
     });
     
@@ -92,7 +92,7 @@ $(document).ready(function() {
         db_updateProctorStatus(proctor_id, 3, "DateDSPSReview1");
         db_insertProctorLog(proctor_id, localStorage.getItem('ls_dsps_proctor_loginDisplayName'), 1, 3);
         
-        var note = "DSPS First Review Denied";
+        var note = "DSPS 1 Review Denied";
         var dsps_comments = $('#dsps_comments').val();
         if (dsps_comments !== "") {
             note += "\nComments: " + textReplaceApostrophe(dsps_comments);
@@ -101,7 +101,7 @@ $(document).ready(function() {
         sendEmailToStudentDeny();
         
         $('#mod_dialog_box_header').html("Complete");
-        $('#mod_dialog_box_body').html("DSPS First Review has been Denied");
+        $('#mod_dialog_box_body').html("DSPS 1 Review has been Denied");
         $('#mod_dialog_box').modal('show');
     });
     
@@ -160,22 +160,32 @@ function setAccom() {
         if (result[0]['UseOfComp'] === "1") {
             $("#ckb_user_of_comp").prop('checked', true);
         }
+        if (result[0]['Scribe'] === "1") {
+            $("#ckb_scribe").prop('checked', true);
+            var ckb_scantron = result[0]['Scantron'];
+            var ckb_written_exam = result[0]['WrittenExam'];
+            var scribe_html = "";
+            if (ckb_scantron === "1" && ckb_written_exam === "0") {
+                scribe_html = "Scantron Only";
+            }
+            else if (ckb_scantron === "0" && ckb_written_exam === "1") {
+                scribe_html = "Written Exam";
+            }
+            else {
+                scribe_html = "Scantron and Written Exam";
+            }
+            $('#cbo_scribe_list').html(scribe_html);
+        }
+//        if (result[0]['Scantron'] === "1") {
+//            $("#ckb_scantron").prop('checked', true);
+//        }
+//        if (result[0]['WrittenExam'] === "1") {
+//            $("#ckb_written_exam").prop('checked', true);
+//        }
         if (result[0]['Other'] === "1") {
             $("#ckb_other").prop('checked', true);
         }
         $('#txt_other').html(result[0]['txtOther']);
-        if (result[0]['Scribe'] === "1") {
-            $("#ckb_scribe").prop('checked', true);
-        }
-        if (result[0]['Scantron'] === "1") {
-            $("#ckb_scantron").prop('checked', true);
-        }
-        if (result[0]['WrittenExam'] === "1") {
-            $("#ckb_written_exam").prop('checked', true);
-        }
-        if (result[0]['Distraction'] === "1") {
-            $("#ckb_distraction").prop('checked', true);
-        }
     }
 }
 
@@ -198,7 +208,7 @@ function getTransactionHistory() {
 function sendEmailToInstructor() {
     var subject = "New Proctor Test Request";
     var message = "Dear " + inst_name + ",<br><br>";
-    message += "New proctor test request has been submitted and DSPS First Review has been Accepted<br><br>";
+    message += "New proctor test request has been submitted and DSPS 1 Review has been Accepted<br><br>";
     
     message += "Student Name: <b>" + $('#stu_name').html() + "</b><br>";
     message += "Student ID: <b>" + $('#stu_id').html() + "</b><br>";

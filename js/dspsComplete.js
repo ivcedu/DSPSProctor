@@ -178,19 +178,32 @@ function setAccom() {
         if (result[0]['UseOfComp'] === "1") {
             $("#ckb_user_of_comp").prop('checked', true);
         }
+        if (result[0]['Scribe'] === "1") {
+            $("#ckb_scribe").prop('checked', true);
+            var ckb_scantron = result[0]['Scantron'];
+            var ckb_written_exam = result[0]['WrittenExam'];
+            var scribe_html = "";
+            if (ckb_scantron === "1" && ckb_written_exam === "0") {
+                scribe_html = "Scantron Only";
+            }
+            else if (ckb_scantron === "0" && ckb_written_exam === "1") {
+                scribe_html = "Written Exam";
+            }
+            else {
+                scribe_html = "Scantron and Written Exam";
+            }
+            $('#cbo_scribe_list').html(scribe_html);
+        }
+//        if (result[0]['Scantron'] === "1") {
+//            $("#ckb_scantron").prop('checked', true);
+//        }
+//        if (result[0]['WrittenExam'] === "1") {
+//            $("#ckb_written_exam").prop('checked', true);
+//        }
         if (result[0]['Other'] === "1") {
             $("#ckb_other").prop('checked', true);
         }
         $('#txt_other').html(result[0]['txtOther']);
-        if (result[0]['Scribe'] === "1") {
-            $("#ckb_scribe").prop('checked', true);
-        }
-        if (result[0]['Scantron'] === "1") {
-            $("#ckb_scantron").prop('checked', true);
-        }
-        if (result[0]['WrittenExam'] === "1") {
-            $("#ckb_written_exam").prop('checked', true);
-        }
     }
 }
 
@@ -199,18 +212,20 @@ function setInstForm() {
     result = db_getInstForm(proctor_id);
     
     if (result.length === 1) {
-        $('#allow_min').html(result[0]['TAllotMin']);
+        $('#allow_min').html(result[0]['TAllotMin']);      
         if (result[0]['Mailbox'] === "1") {
             $("#ckb_mailbox").prop('checked', true);
+            $('#cbo_mail_bld').html(result[0]['MailBuilding']);
+            $('#bldg').html(result[0]['Bldg']);
         }
-        $('#bldg').html(result[0]['Bldg']);
         if (result[0]['ProfessorPU'] === "1") {
             $("#ckb_prof_pu").prop('checked', true);
         }
         if (result[0]['Faculty'] === "1") {
             $("#ckb_faculty").prop('checked', true);
+            $('#cbo_faculty_bld').html(result[0]['FacultyBuilding']);
+            $('#office').html(result[0]['Office']);
         }
-        $('#office').html(result[0]['Office']);
         if (result[0]['StuDelivery'] === "1") {
             $("#ckb_stu_delivery").prop('checked', true);
         }

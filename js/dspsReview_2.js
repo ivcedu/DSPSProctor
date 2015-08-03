@@ -91,10 +91,11 @@ $(document).ready(function() {
     // accept button click /////////////////////////////////////////////////////
     $('#btn_accept').click(function() { 
         $(this).prop("disabled", true);
+        updateProctorTestDateTime();
         db_updateProctorStatus(proctor_id, 7, "DateDSPSReview2");
         db_insertProctorLog(proctor_id, localStorage.getItem('ls_dsps_proctor_loginDisplayName'), 3, 7);
         
-        var note = "DSPS Final Review Accepted";
+        var note = "DSPS 2 Review Accepted";
         var dsps_comments = $('#dsps_comments').val();
         if (dsps_comments !== "") {
             note += "\nComments: " + textReplaceApostrophe(dsps_comments);
@@ -103,7 +104,7 @@ $(document).ready(function() {
         sendEmailToStudentAccepted();
         
         $('#mod_dialog_box_header').html("Complete");
-        $('#mod_dialog_box_body').html("DSPS Final Review has been Accepted");
+        $('#mod_dialog_box_body').html("DSPS 2 Review has been Accepted");
         $('#mod_dialog_box').modal('show');
     });
     
@@ -113,7 +114,7 @@ $(document).ready(function() {
         db_updateProctorStatus(proctor_id, 3, "DateDSPSReview2");
         db_insertProctorLog(proctor_id, localStorage.getItem('ls_dsps_proctor_loginDisplayName'), 3, 3);
         
-        var note = "DSPS Final Review Denied";
+        var note = "DSPS 2 Review Denied";
         var dsps_comments = $('#dsps_comments').val();
         if (dsps_comments !== "") {
             note += "\nComments: " + textReplaceApostrophe(dsps_comments);
@@ -122,7 +123,7 @@ $(document).ready(function() {
         sendEmailToStudentDeny();
         
         $('#mod_dialog_box_header').html("Complete");
-        $('#mod_dialog_box_body').html("DSPS Final Review has been Denied");
+        $('#mod_dialog_box_body').html("DSPS 2 Review has been Denied");
         $('#mod_dialog_box').modal('show');
     });
     
@@ -134,6 +135,12 @@ $(document).ready(function() {
     // auto size
     $('#comments').autosize();
     $('#dsps_comments').autosize();
+    
+    // datepicker
+    $('#test_date').datepicker();
+    
+    // timepicker
+//    $('#test_time').timepicker();
 });
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -155,8 +162,11 @@ function setProctor() {
         $('#stu_id').html(result[0]['StuID']);
         $('#inst_name').html(result[0]['InstName']);
         $('#course_id').html(result[0]['CourseID']);
-        $('#test_date').html(result[0]['TestDate']);
-        $('#test_time').html(result[0]['TestTime']);
+        $('#test_date').val(result[0]['TestDate']);
+        
+//        $('#test_time').val(result[0]['TestTime']);
+        $('#test_time').timepicker({defaultTime: result[0]['TestTime']});
+        
         $('#comments').html(result[0]['Comments'].replace(/\n/g, "<br>"));
         $('#inst_phone').html(result[0]['InstPhone']);
         
@@ -191,19 +201,32 @@ function setAccom() {
         if (result[0]['UseOfComp'] === "1") {
             $("#ckb_user_of_comp").prop('checked', true);
         }
+        if (result[0]['Scribe'] === "1") {
+            $("#ckb_scribe").prop('checked', true);
+            var ckb_scantron = result[0]['Scantron'];
+            var ckb_written_exam = result[0]['WrittenExam'];
+            var scribe_html = "";
+            if (ckb_scantron === "1" && ckb_written_exam === "0") {
+                scribe_html = "Scantron Only";
+            }
+            else if (ckb_scantron === "0" && ckb_written_exam === "1") {
+                scribe_html = "Written Exam";
+            }
+            else {
+                scribe_html = "Scantron and Written Exam";
+            }
+            $('#cbo_scribe_list').html(scribe_html);
+        }
+//        if (result[0]['Scantron'] === "1") {
+//            $("#ckb_scantron").prop('checked', true);
+//        }
+//        if (result[0]['WrittenExam'] === "1") {
+//            $("#ckb_written_exam").prop('checked', true);
+//        }
         if (result[0]['Other'] === "1") {
             $("#ckb_other").prop('checked', true);
         }
         $('#txt_other').html(result[0]['txtOther']);
-        if (result[0]['Scribe'] === "1") {
-            $("#ckb_scribe").prop('checked', true);
-        }
-        if (result[0]['Scantron'] === "1") {
-            $("#ckb_scantron").prop('checked', true);
-        }
-        if (result[0]['WrittenExam'] === "1") {
-            $("#ckb_written_exam").prop('checked', true);
-        }
     }
 }
 
@@ -212,18 +235,20 @@ function setInstForm() {
     result = db_getInstForm(proctor_id);
     
     if (result.length === 1) {
-        $('#allow_min').html(result[0]['TAllotMin']);
+        $('#allow_min').html(result[0]['TAllotMin']);      
         if (result[0]['Mailbox'] === "1") {
             $("#ckb_mailbox").prop('checked', true);
+            $('#cbo_mail_bld').html(result[0]['MailBuilding']);
+            $('#bldg').html(result[0]['Bldg']);
         }
-        $('#bldg').html(result[0]['Bldg']);
         if (result[0]['ProfessorPU'] === "1") {
             $("#ckb_prof_pu").prop('checked', true);
         }
         if (result[0]['Faculty'] === "1") {
             $("#ckb_faculty").prop('checked', true);
+            $('#cbo_faculty_bld').html(result[0]['FacultyBuilding']);
+            $('#office').html(result[0]['Office']);
         }
-        $('#office').html(result[0]['Office']);
         if (result[0]['StuDelivery'] === "1") {
             $("#ckb_stu_delivery").prop('checked', true);
         }
@@ -332,6 +357,13 @@ function getTransactionHistory() {
         var html = login_name + " : " + dt_stamp + "<br>" + note.replace(/\n/g, "<br>") + "<br><br>";
         $("#transaction_history").append(html);
     }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+function updateProctorTestDateTime() {
+    var test_date = $('#test_date').val();
+    var test_time = $('#test_time').val();
+    db_updateProctorTestDT(proctor_id, test_date, test_time);
 }
 
 ////////////////////////////////////////////////////////////////////////////////

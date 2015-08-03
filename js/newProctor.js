@@ -38,16 +38,23 @@ $(document).ready(function() {
     // other check event ///////////////////////////////////////////////////////
     $('#ckb_scribe').change(function() {
         if ($(this).is(':checked')) {
-            $('#ckb_scantron').prop('disabled', false);
-            $('#ckb_written_exam').prop('disabled', false);
+//            $('#ckb_scantron').prop('disabled', false);
+//            $('#ckb_written_exam').prop('disabled', false);
+            $('#cbo_scribe_list').prop('disabled', false);
+            $('#cbo_scribe_list').selectpicker('refresh');
             $('#ckb_distraction').prop('disabled', false);
         }
         else {
-            $("#ckb_scantron").prop('checked', false);
-            $("#ckb_written_exam").prop('checked', false);
+//            $("#ckb_scantron").prop('checked', false);
+//            $("#ckb_written_exam").prop('checked', false);
+//            $("#ckb_distraction").prop('checked', false);
+//            $('#ckb_scantron').prop('disabled', true);
+//            $('#ckb_written_exam').prop('disabled', true);
+//            $('#ckb_distraction').prop('disabled', true);
+
+            $('#cbo_scribe_list').prop('disabled', true);
+            $('#cbo_scribe_list').selectpicker('refresh');
             $("#ckb_distraction").prop('checked', false);
-            $('#ckb_scantron').prop('disabled', true);
-            $('#ckb_written_exam').prop('disabled', true);
             $('#ckb_distraction').prop('disabled', true);
         }
     });
@@ -198,11 +205,26 @@ function insertAccom(proctor_id) {
     var reader = $('#ckb_reader').is(':checked');
     var enlarge_exam = $('#ckb_enlarge_exam').is(':checked');
     var user_of_comp = $('#ckb_user_of_comp').is(':checked');
+
+    var scantron = false;
+    var written_exam = false;
+    var scribe = $('#ckb_scribe').is(':checked');
+    if (scribe) {
+        if ($('#cbo_scribe_list').val() === "scantron_only") {
+            scantron = true;
+        }
+        else if ($('#cbo_scribe_list').val() === "written_exam") {
+            written_exam = true;
+        }
+        else {
+            scantron = true;
+            written_exam = true;
+        }
+    }
+//    var scantron = $('#ckb_scantron').is(':checked');
+//    var written_exam = $('#ckb_written_exam').is(':checked');
     var other = $('#ckb_other').is(':checked');
     var txt_other = textReplaceApostrophe($('#txt_other').val());
-    var scribe = $('#ckb_scribe').is(':checked');
-    var scantron = $('#ckb_scantron').is(':checked');
-    var written_exam = $('#ckb_written_exam').is(':checked');
     var distraction = $('#ckb_distraction').is(':checked');
     
     return db_insertAccom(proctor_id, time_one_half, double_time, alt_media, reader, enlarge_exam, user_of_comp, other, txt_other, scribe, scantron, written_exam, distraction);
@@ -224,7 +246,7 @@ function sendEmailToDSPS_1() {
     
     var str_url = location.href;
     str_url = str_url.replace("newProctor.html", "dspsReview_1.html");
-    message += "Please click below ticket # to open DSPS first review page<br><br>";
+    message += "Please click below ticket # to open DSPS 1 review page<br><br>";
     message += "<a href='" + str_url + "?proctor_id=" + proctor_id + "'>" + section_num + "</a><br><br>";
     
     // testing

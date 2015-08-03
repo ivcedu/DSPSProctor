@@ -3,8 +3,19 @@
     
     $ProctorID = filter_input(INPUT_POST, 'ProctorID');
     
-    $query = "SELECT * FROM [IVCDSPS].[dbo].[InstForm] AS inst LEFT JOIN [IVCDSPS].[dbo].[SEOption] AS seop ON inst.SEOptionID = seop.SEOptionID "
-            ."WHERE inst.ProctorID = '".$ProctorID."'";
+    $query = "SELECT inst.TAllotMin,"
+            . "inst.Mailbox, "
+            . "(SELECT BLDCODE FROM [IVCDSPS].[dbo].[IVCBLD] WHERE IVCBLDID = inst.MailboxBldID) AS MailBuilding, "
+            . "inst.Bldg, "
+            . "inst.ProfessorPU, "
+            . "inst.Faculty, "
+            . "(SELECT BLDCODE FROM [IVCDSPS].[dbo].[IVCBLD] WHERE IVCBLDID = inst.FacultyBldID) AS FacultyBuilding, "
+            . "inst.Office, "
+            . "inst.ScanEmail, "
+            . "seop.SEOption, "
+            . "inst.ExamAttach "
+            . "FROM [IVCDSPS].[dbo].[InstForm] AS inst LEFT JOIN [IVCDSPS].[dbo].[SEOption] AS seop ON inst.SEOptionID = seop.SEOptionID "
+            . "WHERE inst.ProctorID = '".$ProctorID."'";
     
     $cmd = $dbConn->prepare($query);
     $cmd->execute(); 
