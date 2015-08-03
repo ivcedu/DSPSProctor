@@ -101,6 +101,7 @@ $(document).ready(function() {
             note += "\nComments: " + textReplaceApostrophe(dsps_comments);
         }       
         db_insertTransaction(proctor_id, localStorage.getItem('ls_dsps_proctor_loginDisplayName'), note);
+        // email to instructor with comments
         sendEmailToStudentAccepted();
         
         $('#mod_dialog_box_header').html("Complete");
@@ -109,21 +110,21 @@ $(document).ready(function() {
     });
     
     // deny button click ///////////////////////////////////////////////////////
-    $('#btn_deny').click(function() { 
+    $('#btn_cancel').click(function() { 
         $(this).prop("disabled", true);
-        db_updateProctorStatus(proctor_id, 3, "DateDSPSReview2");
+        db_updateProctorStatus(proctor_id, 8, "DateDSPSReview2");
         db_insertProctorLog(proctor_id, localStorage.getItem('ls_dsps_proctor_loginDisplayName'), 3, 3);
         
-        var note = "DSPS 2 Review Denied";
+        var note = "DSPS 2 Review Canceled";
         var dsps_comments = $('#dsps_comments').val();
         if (dsps_comments !== "") {
             note += "\nComments: " + textReplaceApostrophe(dsps_comments);
         }
         db_insertTransaction(proctor_id, localStorage.getItem('ls_dsps_proctor_loginDisplayName'), note);
-        sendEmailToStudentDeny();
+        sendEmailToStudentCancel();
         
         $('#mod_dialog_box_header').html("Complete");
-        $('#mod_dialog_box_body').html("DSPS 2 Review has been Denied");
+        $('#mod_dialog_box_body').html("DSPS 2 Review has been Canceled");
         $('#mod_dialog_box').modal('show');
     });
     
@@ -386,10 +387,10 @@ function sendEmailToStudentAccepted() {
 //    proc_sendEmail(stu_email, $('#stu_name').html(), subject, message);
 }
 
-function sendEmailToStudentDeny() {
+function sendEmailToStudentCancel() {
     var subject = "Test proctoring request has been Denied";
     var message = "Dear " + $('#stu_name').html() + ",<br><br>";
-    message += "Your test proctoring request that was submitted on <b>" + date_submitted + "</b> has been <b>denied;</b><br>";
+    message += "Your test proctoring request that was submitted on <b>" + date_submitted + "</b> has been <b>canceled;</b><br>";
     message += "Please contact the DSPS office as soon as possible regarding your request at 949.451.5630 or ivcdsps@ivc.edu<br>";
     message += "DSPS office hours are Monday through Thursday 8 AM - 5 PM, and Friday 8 AM - 3 PM<br><br>";
     
