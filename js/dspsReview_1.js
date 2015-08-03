@@ -87,12 +87,12 @@ $(document).ready(function() {
     });
     
     // deny button click ///////////////////////////////////////////////////////
-    $('#btn_deny').click(function() { 
+    $('#btn_cancel').click(function() { 
         $(this).prop("disabled", true);
         db_updateProctorStatus(proctor_id, 3, "DateDSPSReview1");
         db_insertProctorLog(proctor_id, localStorage.getItem('ls_dsps_proctor_loginDisplayName'), 1, 3);
         
-        var note = "DSPS 1 Review Denied";
+        var note = "DSPS 1 Review Canceled";
         var dsps_comments = $('#dsps_comments').val();
         if (dsps_comments !== "") {
             note += "\nComments: " + textReplaceApostrophe(dsps_comments);
@@ -101,7 +101,7 @@ $(document).ready(function() {
         sendEmailToStudentDeny();
         
         $('#mod_dialog_box_header').html("Complete");
-        $('#mod_dialog_box_body').html("DSPS 1 Review has been Denied");
+        $('#mod_dialog_box_body').html("DSPS 1 Review has been Canceled");
         $('#mod_dialog_box').modal('show');
     });
     

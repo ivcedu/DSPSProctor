@@ -67,7 +67,7 @@ $(document).ready(function() {
                         window.open('dspsReview_2.html?proctor_id=' + proctor_id, '_self');
                     }
                     else {
-                        window.open('instructorExamUpdate.html?proctor_id=' + proctor_id, '_self');
+                        window.open('printProctor.html?proctor_id=' + proctor_id, '_self');
                     }
                 }
                 break;
@@ -108,11 +108,13 @@ function getAdminProctorList() {
     result = db_getAdminProctorList();
     
     $('#body_tr').empty();
+    var body_html = "";
     if (result.length !== 0) {
         for(var i = 0; i < result.length; i++) { 
-            setAdminProctorListHTML(result[i]['ProctorID'], result[i]['SectionNum'], result[i]['CourseID'], result[i]['StuName'], 
-                                    result[i]['Status'], result[i]['Step'], convertDBDateTimeToString(result[i]['DateSubmitted']));
+            body_html += setAdminProctorListHTML(result[i]['ProctorID'], result[i]['SectionNum'], result[i]['CourseID'], result[i]['StuName'], 
+                                                result[i]['Status'], result[i]['Step'], convertDBDateTimeToString(result[i]['DateSubmitted']));
         }
+        $("#body_tr").append(body_html);
     }
 }
 
@@ -122,11 +124,13 @@ function getInstructorProctorList() {
 //    result = db_getInstProctorList(localStorage.getItem('ls_dsps_proctor_loginEmail'));
     
     $('#body_tr').empty();
+    var body_html = "";
     if (result.length !== 0) {
         for(var i = 0; i < result.length; i++) { 
-            setAdminProctorListHTML(result[i]['ProctorID'], result[i]['SectionNum'], result[i]['CourseID'], result[i]['StuName'], 
-                                    result[i]['Status'], result[i]['Step'], convertDBDateTimeToString(result[i]['DateSubmitted']));
+            body_html += setAdminProctorListHTML(result[i]['ProctorID'], result[i]['SectionNum'], result[i]['CourseID'], result[i]['StuName'], 
+                                                result[i]['Status'], result[i]['Step'], convertDBDateTimeToString(result[i]['DateSubmitted']));
         }
+        $("#body_tr").append(body_html);
     }
 }
 
@@ -139,5 +143,5 @@ function setAdminProctorListHTML(proctor_id, section_num, course_id, stu_name, s
     tbl_html += "<td class='span2' id='step_" + proctor_id + "'>" + step + "</td>";
     tbl_html += "<td class='span2'>" + date_submitted + "</td>";
     tbl_html += "</tr>";
-    $("#body_tr").append(tbl_html);
+    return tbl_html;
 }

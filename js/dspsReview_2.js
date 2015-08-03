@@ -101,7 +101,7 @@ $(document).ready(function() {
             note += "\nComments: " + textReplaceApostrophe(dsps_comments);
         }       
         db_insertTransaction(proctor_id, localStorage.getItem('ls_dsps_proctor_loginDisplayName'), note);
-        // email to instructor with comments
+        sendEmailToInstructorReview2Accept();
         sendEmailToStudentAccepted();
         
         $('#mod_dialog_box_header').html("Complete");
@@ -112,7 +112,7 @@ $(document).ready(function() {
     // deny button click ///////////////////////////////////////////////////////
     $('#btn_cancel').click(function() { 
         $(this).prop("disabled", true);
-        db_updateProctorStatus(proctor_id, 8, "DateDSPSReview2");
+        db_updateProctorStatus(proctor_id, 3, "DateDSPSReview2");
         db_insertProctorLog(proctor_id, localStorage.getItem('ls_dsps_proctor_loginDisplayName'), 3, 3);
         
         var note = "DSPS 2 Review Canceled";
@@ -404,4 +404,23 @@ function sendEmailToStudentCancel() {
     // testing
     proc_sendEmail("stafftest@ivc.edu", $('#stu_name').html(), subject, message);
 //    proc_sendEmail(stu_email, $('#stu_name').html(), subject, message);
+}
+
+function sendEmailToInstructorReview2Accept() {
+    var subject = "Proctor Request 2 Review Accept";
+    var message = "Dear " + inst_name + ",<br><br>";
+    message += "Proctor test request DSPS 2 Review has been Accepted<br><br>";
+    
+    message += "Student Name: <b>" + $('#stu_name').html() + "</b><br>";
+    message += "Student ID: <b>" + $('#stu_id').html() + "</b><br>";
+    message += "Ticket #: <b>" + section_num + "</b><br>";
+    message += "Course: <b>" + $('#course_id').html() + "</b><br>";
+    message += "Test Date: <b>" + $('#test_date').html() + "</b><br>";
+    message += "Test Time: <b>" + $('#test_time').html() + "</b><br><br>";
+    
+    message += "Comments:<br>" + $('#dsps_comments').val().replace(/\n/g, "<br>");
+    
+    // testing
+    proc_sendEmail("deantest@ivc.edu", inst_name, subject, message);
+//    proc_sendEmail(inst_email, inst_name, subject, message);
 }
