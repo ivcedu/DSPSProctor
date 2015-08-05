@@ -89,49 +89,37 @@ $(document).ready(function() {
     });
     
     // accept button click /////////////////////////////////////////////////////
-    $('#btn_accept').click(function() { 
+    $('#btn_restart').click(function() { 
         $(this).prop("disabled", true);
         updateProctorTestDateTime();
-        db_updateProctorStatus(proctor_id, 7, "DateDSPSReview2");
-        db_insertProctorLog(proctor_id, localStorage.getItem('ls_dsps_proctor_loginDisplayName'), 3, 7);
+        db_updateProctorStatus(proctor_id, 7, "DateDSPSReview1");
+        db_updateProctorStep(proctor_id, 2, "DateDSPSReview1");
+        db_insertProctorLog(proctor_id, localStorage.getItem('ls_dsps_proctor_loginDisplayName'), 1, 7);
         
-        var note = "DSPS 2 Review Accepted";
+        var note = "Restart proctor process";
         var dsps_comments = $('#dsps_comments').val();
         if (dsps_comments !== "") {
             note += "\nComments: " + textReplaceApostrophe(dsps_comments);
         }       
         db_insertTransaction(proctor_id, localStorage.getItem('ls_dsps_proctor_loginDisplayName'), note);
-        sendEmailToInstructorReview2Accept();
-        sendEmailToStudentAccepted();
+        sendEmailToInstructorRestart();
+        sendEmailToStudentRestart();
         
-        $('#mod_dialog_box_header').html("Complete");
-        $('#mod_dialog_box_body').html("DSPS 2 Review has been Accepted");
+        $('#mod_dialog_box_header').html("Restart Proctor Process");
+        $('#mod_dialog_box_body').html("Proctor process has been restarted");
         $('#mod_dialog_box').modal('show');
     });
     
     // deny button click ///////////////////////////////////////////////////////
     $('#btn_cancel').click(function() { 
-        $(this).prop("disabled", true);
-        db_updateProctorStatus(proctor_id, 3, "DateDSPSReview2");
-        db_insertProctorLog(proctor_id, localStorage.getItem('ls_dsps_proctor_loginDisplayName'), 3, 3);
-        
-        var note = "DSPS 2 Review Canceled";
-        var dsps_comments = $('#dsps_comments').val();
-        if (dsps_comments !== "") {
-            note += "\nComments: " + textReplaceApostrophe(dsps_comments);
-        }
-        db_insertTransaction(proctor_id, localStorage.getItem('ls_dsps_proctor_loginDisplayName'), note);
-        sendEmailToInstructorReview2Canceled();
-        sendEmailToStudentCancel();
-        
-        $('#mod_dialog_box_header').html("Complete");
-        $('#mod_dialog_box_body').html("DSPS 2 Review has been Canceled");
-        $('#mod_dialog_box').modal('show');
+        window.open('rptAdminHistory.html', '_self');
+        return false;
     });
     
     // dialog ok click /////////////////////////////////////////////////////////
     $('#mod_dialog_btn_ok').click(function() { 
-        window.open('home.html', '_self');
+        window.open('rptAdminHistory.html', '_self');
+        return false;
     });
     
     // auto size
@@ -165,10 +153,7 @@ function setProctor() {
         $('#inst_name').html(result[0]['InstName']);
         $('#course_id').html(result[0]['CourseID']);
         $('#test_date').val(result[0]['TestDate']);
-        
-//        $('#test_time').val(result[0]['TestTime']);
         $('#test_time').timepicker({defaultTime: result[0]['TestTime']});
-        
         $('#comments').html(result[0]['Comments'].replace(/\n/g, "<br>"));
         $('#inst_phone').html(result[0]['InstPhone']);
         
@@ -219,12 +204,6 @@ function setAccom() {
             }
             $('#cbo_scribe_list').html(scribe_html);
         }
-//        if (result[0]['Scantron'] === "1") {
-//            $("#ckb_scantron").prop('checked', true);
-//        }
-//        if (result[0]['WrittenExam'] === "1") {
-//            $("#ckb_written_exam").prop('checked', true);
-//        }
         if (result[0]['Other'] === "1") {
             $("#ckb_other").prop('checked', true);
         }
@@ -369,48 +348,26 @@ function updateProctorTestDateTime() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-function sendEmailToStudentAccepted() {
-    var subject = "Test proctoring request confirmation";
+function sendEmailToStudentRestart() {
+    var subject = "Test Proctoring Request Restarted";
     var message = "Dear " + $('#stu_name').html() + ",<br><br>";
-    message += "Your test proctoring request that was submitted on <b>" + date_submitted + "</b> has been approved<br><br>";
+    message += "Your test proctoring request that was submitted on <b>" + date_submitted + "</b> has been restarted and an email has been sent to your instructor for their approval.<br><br>";
     
     message += "Instructor Name: <b>" + inst_name + "</b><br>";
     message += "Ticket #: <b>" + section_num + "</b><br>";
     message += "Course: <b>" + $('#course_id').html() + "</b><br>";
     message += "Test Date: <b>" + $('#test_date').val() + "</b><br>";
     message += "Test Time: <b>" + $('#test_time').val() + "</b><br>";
-    message += "Time allotted in class: <b>" + $('#allow_min').html() + "</b> minutes<br><br>";
-    
-    message += "This is a reminder that you are scheduled to have the above exam proctored in DSPS. Please arrive 15 minutes early and bring a valid picture ID";
     
     // testing
     proc_sendEmail("stafftest@ivc.edu", $('#stu_name').html(), subject, message);
 //    proc_sendEmail(stu_email, $('#stu_name').html(), subject, message);
 }
 
-function sendEmailToStudentCancel() {
-    var subject = "Test proctoring request has been Denied";
-    var message = "Dear " + $('#stu_name').html() + ",<br><br>";
-    message += "Your test proctoring request that was submitted on <b>" + date_submitted + "</b> has been <b>canceled;</b><br>";
-    message += "Please contact the DSPS office as soon as possible regarding your request at 949.451.5630 or ivcdsps@ivc.edu<br>";
-    message += "DSPS office hours are Monday through Thursday 8 AM - 5 PM, and Friday 8 AM - 3 PM<br><br>";
-    
-    message += "Instructor Name: <b>" + inst_name + "</b><br>";
-    message += "Ticket #: <b>" + section_num + "</b><br>";
-    message += "Course: <b>" + $('#course_id').html() + "</b><br>";
-    message += "Test Date: <b>" + $('#test_date').val() + "</b><br>";
-    message += "Test Time: <b>" + $('#test_time').val() + "</b><br>";
-    message += "Time allotted in class: <b>" + $('#allow_min').html() + "</b> minutes<br><br>";
-    
-    // testing
-    proc_sendEmail("stafftest@ivc.edu", $('#stu_name').html(), subject, message);
-//    proc_sendEmail(stu_email, $('#stu_name').html(), subject, message);
-}
-
-function sendEmailToInstructorReview2Accept() {
-    var subject = "Proctor Request 2 Review Accept";
+function sendEmailToInstructorRestart() {
+    var subject = "Proctor Test Restarted";
     var message = "Dear " + inst_name + ",<br><br>";
-    message += "Proctor test request DSPS 2 Review has been Accepted<br><br>";
+    message += "Below proctor test request has been restarted and DSPS 1 Review has been Accepted<br><br>";
     
     message += "Student Name: <b>" + $('#stu_name').html() + "</b><br>";
     message += "Student ID: <b>" + $('#stu_id').html() + "</b><br>";
@@ -419,26 +376,8 @@ function sendEmailToInstructorReview2Accept() {
     message += "Test Date: <b>" + $('#test_date').val() + "</b><br>";
     message += "Test Time: <b>" + $('#test_time').val() + "</b><br><br>";
     
-    message += "Comments:<br>" + $('#dsps_comments').val().replace(/\n/g, "<br>");
-    
-    // testing
-    proc_sendEmail("deantest@ivc.edu", inst_name, subject, message);
-//    proc_sendEmail(inst_email, inst_name, subject, message);
-}
-
-function sendEmailToInstructorReview2Canceled() {
-    var subject = "Proctor Request 2 Review Canceled";
-    var message = "Dear " + inst_name + ",<br><br>";
-    message += "Proctor test request DSPS 2 Review has been Canceled<br><br>";
-    
-    message += "Student Name: <b>" + $('#stu_name').html() + "</b><br>";
-    message += "Student ID: <b>" + $('#stu_id').html() + "</b><br>";
-    message += "Ticket #: <b>" + section_num + "</b><br>";
-    message += "Course: <b>" + $('#course_id').html() + "</b><br>";
-    message += "Test Date: <b>" + $('#test_date').val() + "</b><br>";
-    message += "Test Time: <b>" + $('#test_time').val() + "</b><br><br>";
-    
-    message += "Comments:<br>" + $('#dsps_comments').val().replace(/\n/g, "<br>");
+    message += "Please click below ticket # to open Instructor Review page<br><br>";
+    message += "<a href='" + location.href + "'>" + section_num + "</a><br><br>";
     
     // testing
     proc_sendEmail("deantest@ivc.edu", inst_name, subject, message);
