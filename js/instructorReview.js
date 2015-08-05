@@ -1,10 +1,12 @@
 var proctor_id = "";
+var m_start = false;
 
 var stu_email = "";
 var date_submitted = "";
 
 var inst_name = "";
 var inst_email = "";
+var inst_phone = "";
 var section_num = "";
 
 var m_file_name = "";
@@ -28,6 +30,7 @@ window.onload = function() {
         getURLParameters();
         setProctor();
         setAccom();
+        setInstForm();
         getTransactionHistory();
     }
     else {
@@ -224,6 +227,7 @@ $(document).ready(function() {
     $('#btn_accept').click(function() { 
         $(this).prop("disabled", true);
         updateProctorInstructorPhone();
+        
         insertInstForm();
         insertExamGuide();
         
@@ -368,6 +372,7 @@ function setProctor() {
         stu_email = result[0]['StuEmail'];
         inst_name = result[0]['InstName'];
         inst_email = result[0]['InstEmail'];
+        inst_phone = result[0]['InstPhone'];
         section_num = result[0]['SectionNum'];
         date_submitted = convertDBDateTimeToString(result[0]['DateSubmitted']);
     }
@@ -431,6 +436,64 @@ function setAccom() {
     }
 }
 
+function setInstForm() {
+    var result = new Array();
+    result = db_getInstForm(proctor_id);
+    
+    if (result.length === 1) {
+        m_start = true;
+        $('#allow_min').val(result[0]['TAllotMin']);
+        $('#inst_phone').val(inst_phone);
+        if (result[0]['Mailbox'] === "1") {
+            $("#ckb_mailbox").prop('checked', true);
+            $('#cbo_mail_bld').val(result[0]['MailBuilding']);
+            $('#bldg').val(result[0]['Bldg']);
+        }
+        if (result[0]['ProfessorPU'] === "1") {
+            $("#ckb_prof_pu").prop('checked', true);
+        }
+        if (result[0]['Faculty'] === "1") {
+            $("#ckb_faculty").prop('checked', true);
+            $('#cbo_faculty_bld').val(result[0]['FacultyBuilding']);
+            $('#office').val(result[0]['Office']);
+        }
+        if (result[0]['StuDelivery'] === "1") {
+            $("#ckb_stu_delivery").prop('checked', true);
+        }
+        if (result[0]['ScanEmail'] === "1") {
+            $("#ckb_scan_email").prop('checked', true);
+            
+            $('#se_option').show();
+            $('#se_option').val(result[0]['SEOption']);
+        }
+        if (result[0]['ExamAttach'] === "1") {
+            $('input[name=rdo_exam][value=1]').prop('checked', true);
+            getExamPDFList();
+        }
+        else {
+            $('input[name=rdo_exam][value=0]').prop('checked', true);
+        }
+    }
+}
+
+function getExamPDFList() {    
+    var result = new Array();
+    result = db_getExamPDFList(proctor_id);
+    
+    $('#exam_list').empty();
+    var html = "";
+    for (var i = 0; i < result.length; i++) {
+        var exampdf_id = result[0]['ExamPDFID'];
+        var file_name = result[0]['FileName'];
+        
+        html = "<div class='row-fluid' id='row_exampdf_id" + exampdf_id + "'>";
+        html += "<div class='span9' style='padding-top: 5px'><a href=# id='exampdf_id_" + exampdf_id + "'>" + file_name + "</a></div>";
+        html += "<button class='btn btn-danger span2' id='btn_delete_exampdf_id" + exampdf_id + "'>Remove File</button>";
+        html += "</div>";
+    }
+    $('#exam_list').append(html);
+}
+
 ////////////////////////////////////////////////////////////////////////////////
 function updateProctorInstructorPhone() {
     var inst_phone = textReplaceApostrophe($('#inst_phone').val());
@@ -451,7 +514,12 @@ function insertInstForm() {
     var se_option_id = $('#se_option').val();
     var exam_attach = $('input[name="rdo_exam"]:checked').val();
 
-    return db_insertInstForm(proctor_id, allow_min, mailbox, mail_bld_id, bldg, prof_pu, faculty, faculty_bld_id, office, stu_delivery, scan_email, se_option_id, exam_attach);
+    if (m_start) {
+        return db_updateInstForm(proctor_id, allow_min, mailbox, mail_bld_id, bldg, prof_pu, faculty, faculty_bld_id, office, stu_delivery, scan_email, se_option_id, exam_attach);
+    }
+    else {
+        return db_insertInstForm(proctor_id, allow_min, mailbox, mail_bld_id, bldg, prof_pu, faculty, faculty_bld_id, office, stu_delivery, scan_email, se_option_id, exam_attach);
+    }
 }
 
 function insertExamGuide() {
@@ -466,7 +534,12 @@ function insertExamGuide() {
     var computer = $('input[name="rdo_computer"]:checked').val();
     var internet_id = $('#internet_access').val();
     
-    return db_insertExamGuide(proctor_id, notes, book, calculator, cal_type_id, cal_type_other, dictionary, scratch_paper, scantron, computer, internet_id);
+    if (m_start) {
+        return db_updateExamGuide(proctor_id, notes, book, calculator, cal_type_id, cal_type_other, dictionary, scratch_paper, scantron, computer, internet_id);
+    }
+    else {
+        return db_insertExamGuide(proctor_id, notes, book, calculator, cal_type_id, cal_type_other, dictionary, scratch_paper, scantron, computer, internet_id);
+    }
 }
 
 ////////////////////////////////////////////////////////////////////////////////

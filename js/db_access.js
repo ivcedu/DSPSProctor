@@ -488,6 +488,36 @@ function db_updateProctorTestDT(ProctorID, TestDate, TestTime) {
     return Result;
 }
 
+function db_updateInstForm(ProctorID, TAllotMin, Mailbox, MailboxBldID, Bldg, ProfessorPU, Faculty, FacultyBldID, Office, StuDelivery, ScanEmail, SEOptionID, ExamAttach) {
+    var Result = false;
+    $.ajax({
+        type:"POST",
+        url:"php/db_updateInstForm.php",
+        data:{ProctorID:ProctorID, TAllotMin:TAllotMin, Mailbox:Mailbox, MailboxBldID:MailboxBldID, Bldg:Bldg, ProfessorPU:ProfessorPU, Faculty:Faculty, FacultyBldID:FacultyBldID, Office:Office, 
+                StuDelivery:StuDelivery, ScanEmail:ScanEmail, SEOptionID:SEOptionID, ExamAttach:ExamAttach},
+        async: false,  
+        success:function(data) {
+            Result = JSON.parse(data);
+        }
+    });
+    return Result;
+}
+
+function db_updateExamGuide(ProctorID, Notes, Book, Calculator, CalTypeID, CalTypeOther, Dictionary, ScratchPaper, Scantron, Computer, InternetID) {
+    var Result = false;
+    $.ajax({
+        type:"POST",
+        url:"php/db_updateExamGuide.php",
+        data:{ProctorID:ProctorID, Notes:Notes, Book:Book, Calculator:Calculator, CalTypeID:CalTypeID, CalTypeOther:CalTypeOther, Dictionary:Dictionary, 
+                ScratchPaper:ScratchPaper, Scantron:Scantron, Computer:Computer, InternetID:InternetID},
+        async: false,  
+        success:function(data) {
+            Result = JSON.parse(data);
+        }
+    });
+    return Result;
+}
+
 // delete DB ///////////////////////////////////////////////////////////////////
 function db_deleteExamPDF(ExamPDFID) {
     var Result = false;

@@ -92,7 +92,7 @@ $(document).ready(function() {
     $('#btn_restart').click(function() { 
         $(this).prop("disabled", true);
         updateProctorTestDateTime();
-        db_updateProctorStatus(proctor_id, 7, "DateDSPSReview1");
+        db_updateProctorStatus(proctor_id, 2, "DateDSPSReview1");
         db_updateProctorStep(proctor_id, 2, "DateDSPSReview1");
         db_insertProctorLog(proctor_id, localStorage.getItem('ls_dsps_proctor_loginDisplayName'), 1, 7);
         
