@@ -15,6 +15,7 @@ window.onload = function() {
     else {
         sessionStorage.setItem('ls_dsps_url_param', location.href);
         window.open('Login.html', '_self');
+        return false;
     }
 };
 
@@ -56,11 +57,13 @@ function getURLParameters() {
 $(document).ready(function() { 
     $('#nav_home').click(function() { 
         window.open('home.html', '_self');
+        return false;
     });
     
     $('#nav_logout').click(function() { 
         localStorage.clear();
         window.open('Login.html', '_self');
+        return false;
     });
 });
 
@@ -259,12 +262,13 @@ function getTransactionHistory() {
     var result = new Array();
     result = db_getTransaction(proctor_id);
     
+    var html = "";
     for (var i = 0; i < result.length; i++) {
         var dt_stamp = convertDBDateTimeToString(result[i]['DTStamp']);
         var login_name = result[i]['LoginName'];
         var note = result[i]['Note'];
 
-        var html = login_name + " : " + dt_stamp + "<br>" + note.replace(/\n/g, "<br>") + "<br><br>";
-        $("#transaction_history").append(html);
+        html += login_name + " : " + dt_stamp + "<br>" + note.replace(/\n/g, "<br>") + "<br><br>";
     }
+    $("#transaction_history").append(html);
 }

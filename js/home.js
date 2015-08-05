@@ -9,6 +9,7 @@ window.onload = function() {
     }
     else {
         window.open('Login.html', '_self');
+        return false;
     }
 };
 
@@ -17,15 +18,18 @@ $(document).ready(function() {
     $('#nav_logout').click(function() { 
         localStorage.clear();
         window.open('Login.html', '_self');
+        return false;
     });
     
     // report - all history click //////////////////////////////////////////////
     $('#nav_rpt_all').click(function() { 
         if (admin) {
             window.open('rptAdminHistory.html', '_self');
+            return false;
         }
         else {
             window.open('rptInstructorHistory.html', '_self');
+            return false;
         }
     });
     
@@ -75,6 +79,7 @@ $(document).ready(function() {
                 window.open('printProctor.html?proctor_id=' + proctor_id, '_self');
                 break;
         }
+        return false;
     });
 });
 
@@ -108,8 +113,8 @@ function getAdminProctorList() {
     result = db_getAdminProctorList();
     
     $('#body_tr').empty();
-    var body_html = "";
     if (result.length !== 0) {
+        var body_html = "";
         for(var i = 0; i < result.length; i++) { 
             body_html += setAdminProctorListHTML(result[i]['ProctorID'], result[i]['SectionNum'], result[i]['CourseID'], result[i]['StuName'], 
                                                 result[i]['Status'], result[i]['Step'], convertDBDateTimeToString(result[i]['DateSubmitted']));
@@ -124,8 +129,8 @@ function getInstructorProctorList() {
 //    result = db_getInstProctorList(localStorage.getItem('ls_dsps_proctor_loginEmail'));
     
     $('#body_tr').empty();
-    var body_html = "";
     if (result.length !== 0) {
+        var body_html = "";
         for(var i = 0; i < result.length; i++) { 
             body_html += setAdminProctorListHTML(result[i]['ProctorID'], result[i]['SectionNum'], result[i]['CourseID'], result[i]['StuName'], 
                                                 result[i]['Status'], result[i]['Step'], convertDBDateTimeToString(result[i]['DateSubmitted']));

@@ -14,6 +14,7 @@ window.onload = function() {
     }
     else {
         window.open('Login.html', '_self');
+        return false;
     }
 };
 
@@ -63,6 +64,7 @@ $(document).ready(function() {
     $('#btn_cancel').click(function() { 
         localStorage.clear();
         window.open('Login.html', '_self');
+        return false;
     });
     
     // submit button click /////////////////////////////////////////////////////
@@ -85,6 +87,7 @@ $(document).ready(function() {
     $('#mod_dialog_btn_ok').click(function() { 
         localStorage.clear();
         window.open('Login.html', '_self');
+        return false;
     });
     
     // auto size

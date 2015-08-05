@@ -6,6 +6,7 @@ window.onload = function() {
     }
     else {
         window.open('Login.html', '_self');
+        return false;
     }
 };
 
@@ -13,11 +14,13 @@ window.onload = function() {
 $(document).ready(function() {  
     $('#nav_home').click(function() { 
         window.open('home.html', '_self');
+        return false;
     });
     
     $('#nav_logout').click(function() { 
         localStorage.clear();
         window.open('Login.html', '_self');
+        return false;
     });
     
     // search option change event //////////////////////////////////////////////
@@ -43,6 +46,7 @@ $(document).ready(function() {
         e.preventDefault();
         var proctor_id = $(this).attr('id').replace("proctor_id_", "");
         window.open('printProctor.html?proctor_id=' + proctor_id, '_self');
+        return false;
     });
     
     // table row restart button click //////////////////////////////////////////
@@ -50,6 +54,7 @@ $(document).ready(function() {
         e.preventDefault();
         var proctor_id = $(this).attr('id').replace("btn_restart_", "");
         window.open('restartProctor.html?proctor_id=' + proctor_id, '_self');
+        return false;
 //        getSelectedProctorInfo(proctor_id);
 //        $('#mod_dialog_box').modal('show');
     });
@@ -67,8 +72,8 @@ function getAdminProctorCompleteList(search_field, value) {
     result = db_getAdminProctorCompleteList(search_field, value);
     
     $('#body_tr').empty();
-    var body_html = "";
     if (result.length !== 0) {
+        var body_html = "";
         for(var i = 0; i < result.length; i++) { 
             body_html += setAdminProctorCompleteListHTML(result[i]['ProctorID'], result[i]['SectionNum'], result[i]['CourseID'], result[i]['InstName'], result[i]['StuID'], result[i]['StuName'], 
                                                          result[i]['Step'], result[i]['Status'], result[i]['StatusID']/*, convertDBDateTimeToString(result[i]['DateSubmitted'])*/);

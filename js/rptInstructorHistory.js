@@ -5,6 +5,7 @@ window.onload = function() {
     }
     else {
         window.open('Login.html', '_self');
+        return false;
     }
 };
 
@@ -12,11 +13,13 @@ window.onload = function() {
 $(document).ready(function() {   
     $('#nav_home').click(function() { 
         window.open('home.html', '_self');
+        return false;
     });
     
     $('#nav_logout').click(function() { 
         localStorage.clear();
         window.open('Login.html', '_self');
+        return false;
     });
     
     // table row open resource form click //////////////////////////////////////
@@ -24,6 +27,7 @@ $(document).ready(function() {
         e.preventDefault();
         var proctor_id = $(this).attr('id').replace("proctor_id_", "");
         window.open('printProctor.html?proctor_id=' + proctor_id, '_self');
+        return false;
     });
     
     // selectpicker
@@ -37,8 +41,8 @@ function getAdminProctorCompleteList() {
 //    result = db_getInstProctorCompleteList(localStorage.getItem('ls_dsps_proctor_loginEmail'));
     
     $('#body_tr').empty();
-    var body_html = "";
     if (result.length !== 0) {
+        var body_html = "";
         for(var i = 0; i < result.length; i++) { 
             body_html += setAdminProctorCompleteListHTML(result[i]['ProctorID'], result[i]['SectionNum'], result[i]['CourseID'], result[i]['StuName'], 
                                                          result[i]['Status'], result[i]['Step'], convertDBDateTimeToString(result[i]['DateSubmitted']));

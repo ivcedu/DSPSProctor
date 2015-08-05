@@ -23,6 +23,7 @@ window.onload = function() {
     else {
         sessionStorage.setItem('ls_dsps_url_param', location.href);
         window.open('Login.html', '_self');
+        return false;
     }
 };
 
@@ -64,11 +65,13 @@ function getURLParameters() {
 $(document).ready(function() { 
     $('#nav_home').click(function() { 
         window.open('home.html', '_self');
+        return false;
     });
     
     $('#nav_logout').click(function() { 
         localStorage.clear();
         window.open('Login.html', '_self');
+        return false;
     });
     
     // exam radio button check event ///////////////////////////////////////////
@@ -116,9 +119,11 @@ $(document).ready(function() {
         if (curBrowser === "Internet Explorer") {
             var blob = b64toBlob(exam_pdf, 'application/pdf');
             window.saveAs(blob, file_name);
+            return false;
         }
         else {
             window.open(exam_pdf, '_blank');
+            return false;
         }
     });
     
@@ -280,7 +285,7 @@ function getExamPDFList() {
         var exampdf_id = result[0]['ExamPDFID'];
         var file_name = result[0]['FileName'];
         
-        html = "<div class='row-fluid' id='row_exampdf_id" + exampdf_id + "'>";
+        html += "<div class='row-fluid' id='row_exampdf_id" + exampdf_id + "'>";
         html += "<div class='span9' style='padding-top: 5px'><a href=# id='exampdf_id_" + exampdf_id + "'>" + file_name + "</a></div>";
         html += "<button class='btn btn-danger span2' id='btn_delete_exampdf_id" + exampdf_id + "'>Remove File</button>";
         html += "</div>";
@@ -352,14 +357,15 @@ function getTransactionHistory() {
     var result = new Array();
     result = db_getTransaction(proctor_id);
     
+    var html = "";
     for (var i = 0; i < result.length; i++) {
         var dt_stamp = convertDBDateTimeToString(result[i]['DTStamp']);
         var login_name = result[i]['LoginName'];
         var note = result[i]['Note'];
 
-        var html = login_name + " : " + dt_stamp + "<br>" + note.replace(/\n/g, "<br>") + "<br><br>";
-        $("#transaction_history").append(html);
+        html += login_name + " : " + dt_stamp + "<br>" + note.replace(/\n/g, "<br>") + "<br><br>";
     }
+    $("#transaction_history").append(html);
 }
 
 ////////////////////////////////////////////////////////////////////////////////

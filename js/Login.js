@@ -28,6 +28,7 @@ window.onload = function() {
     if (localStorage.key(0) !== null) {
         if (IsLoginExpired()) {
             window.open('Login.html', '_self');
+            return false;
         }
     }
 };
@@ -49,13 +50,16 @@ $(document).ready(function() {
             if (login_type === "Staff") {
                 if (url_param === null) {
                     window.open('home.html', '_self');
+                    return false;
                 }
                 else {
                     window.open(url_param, '_self');
+                    return false;
                 }
             }
             else {
                 window.open('newProctor.html', '_self');
+                return false;
             }
         }
         else {
