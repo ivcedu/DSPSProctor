@@ -518,6 +518,20 @@ function db_updateExamGuide(ProctorID, Notes, Book, Calculator, CalTypeID, CalTy
     return Result;
 }
 
+function db_updateInstFormExamAttach(ProctorID, ExamAttach) {
+    var Result = false;
+    $.ajax({
+        type:"POST",
+        url:"php/db_updateInstFormExamAttach.php",
+        data:{ProctorID:ProctorID, ExamAttach:ExamAttach},
+        async: false,  
+        success:function(data) {
+            Result = JSON.parse(data);
+        }
+    });
+    return Result;
+}
+
 // delete DB ///////////////////////////////////////////////////////////////////
 function db_deleteExamPDF(ExamPDFID) {
     var Result = false;

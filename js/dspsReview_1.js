@@ -186,6 +186,9 @@ function setAccom() {
 //        if (result[0]['WrittenExam'] === "1") {
 //            $("#ckb_written_exam").prop('checked', true);
 //        }
+        if (result[0]['Distraction'] === "1") {
+            $("#ckb_distraction").prop('checked', true);
+        }
         if (result[0]['Other'] === "1") {
             $("#ckb_other").prop('checked', true);
         }

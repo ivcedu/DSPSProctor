@@ -209,6 +209,9 @@ function setAccom() {
             }
             $('#cbo_scribe_list').html(scribe_html);
         }
+        if (result[0]['Distraction'] === "1") {
+            $("#ckb_distraction").prop('checked', true);
+        }
         if (result[0]['Other'] === "1") {
             $("#ckb_other").prop('checked', true);
         }

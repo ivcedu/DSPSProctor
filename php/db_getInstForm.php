@@ -11,6 +11,7 @@
             . "inst.Faculty, "
             . "(SELECT BLDCODE FROM [IVCDSPS].[dbo].[IVCBLD] WHERE IVCBLDID = inst.FacultyBldID) AS FacultyBuilding, "
             . "inst.Office, "
+            . "inst.StuDelivery, "
             . "inst.ScanEmail, "
             . "seop.SEOption, "
             . "inst.ExamAttach "

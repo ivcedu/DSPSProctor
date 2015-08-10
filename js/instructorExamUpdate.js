@@ -83,7 +83,6 @@ $(document).ready(function() {
         else {
             $('#exam_attachment').hide();
             $('#attachment_file').filestyle('clear');
-            removeAllExamPDF();
         }
     });
     
@@ -130,8 +129,48 @@ $(document).ready(function() {
     // remove file button click ////////////////////////////////////////////////
     $(document).on('click', 'button[id^="btn_delete_exampdf_id"]', function() {
         var exampdf_id = $(this).attr('id').replace("btn_delete_exampdf_id", "");
+        var file_name = $('#exampdf_id_' + exampdf_id).html();
+        
         removeExamPDF(exampdf_id);
+        var note = "Test exam: " + file_name + " has been deleted";
+        db_insertTransaction(proctor_id, localStorage.getItem('ls_dsps_proctor_loginDisplayName'), note);
     });
+    
+    // save button click ///////////////////////////////////////////////////////
+    $('#btn_save').click(function() { 
+        var exam_attach = $('input[name="rdo_exam"]:checked').val();
+        db_updateInstFormExamAttach(proctor_id, exam_attach);
+        
+        var note = "Instructor update test exam option to ";
+        if (exam_attach === "1") {
+            note += "Exam Attachment";
+        }
+        else {
+            note += "Exam Drop Off";
+        }
+        
+        var inst_comments = $('#inst_comments').val();
+        if (inst_comments !== "") {
+            note += "\nComments: " + textReplaceApostrophe(inst_comments);
+        } 
+        db_insertTransaction(proctor_id, localStorage.getItem('ls_dsps_proctor_loginDisplayName'), note);
+        
+        $('#mod_dialog_box_header').html("Exam Option");
+        $('#mod_dialog_box_body').html("Test exam option has been saved");
+        $('#mod_dialog_box').modal('show');
+        
+        window.open('home.html', '_self');
+        return false;
+    });
+    
+    // close button click //////////////////////////////////////////////////////
+    $('#btn_close').click(function() { 
+        window.open('home.html', '_self');
+        return false;
+    });
+    
+    // auto size
+    $('#inst_comments').autosize();
 });
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -145,7 +184,7 @@ function stopSpin() {
 
 ////////////////////////////////////////////////////////////////////////////////
 function defaultHideDisalbe() {
-    $('#exam_attachment').hide();
+    $('#mod_dialog_box').modal('hide');
     $('#se_option').hide();
     $('#cal_type').hide();
     $('#cal_type_other').hide();
@@ -224,12 +263,9 @@ function setAccom() {
             }
             $('#cbo_scribe_list').html(scribe_html);
         }
-//        if (result[0]['Scantron'] === "1") {
-//            $("#ckb_scantron").prop('checked', true);
-//        }
-//        if (result[0]['WrittenExam'] === "1") {
-//            $("#ckb_written_exam").prop('checked', true);
-//        }
+        if (result[0]['Distraction'] === "1") {
+            $("#ckb_distraction").prop('checked', true);
+        }
         if (result[0]['Other'] === "1") {
             $("#ckb_other").prop('checked', true);
         }
@@ -271,6 +307,7 @@ function setInstForm() {
         }
         else {
             $('input[name=rdo_exam][value=0]').prop('checked', true);
+            $('#exam_attachment').hide();
         }
     }
 }
@@ -401,6 +438,9 @@ function addExamPDF() {
     var exampdf_id = db_insertExamPDF(proctor_id, m_file_name, m_base64_data);
     addPDFFileToExamList(exampdf_id);
     $('#attachment_file').filestyle('clear');
+    
+    var note = "Test exam: " + m_file_name + " has been attached";
+    db_insertTransaction(proctor_id, localStorage.getItem('ls_dsps_proctor_loginDisplayName'), note);
 }
 
 function convertPDFtoBase64() {
