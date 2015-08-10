@@ -62,8 +62,9 @@ $(document).ready(function() {
     
     // submit button click /////////////////////////////////////////////////////
     $('#btn_cancel').click(function() { 
-        localStorage.clear();
-        window.open('Login.html', '_self');
+        var parent_site = sessionStorage.getItem('m_parentSite');
+        sessionStorage.clear();
+        window.open(parent_site, '_self');
         return false;
     });
     

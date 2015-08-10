@@ -55,14 +55,15 @@ function getURLParameters() {
 
 ////////////////////////////////////////////////////////////////////////////////
 $(document).ready(function() { 
-    $('#nav_home').click(function() { 
-        window.open('home.html', '_self');
+    $('#nav_close').click(function() { 
+        window.open(document.referrer, '_self');
         return false;
     });
     
     $('#nav_logout').click(function() { 
-        localStorage.clear();
-        window.open('Login.html', '_self');
+        var parent_site = sessionStorage.getItem('m_parentSite');
+        sessionStorage.clear();
+        window.open(parent_site, '_self');
         return false;
     });
 });

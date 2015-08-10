@@ -96,6 +96,12 @@ function loginInfo() {
         }
 
         localData_login(display_name, email, phone, loginID, login_type);
+        if (location.href.indexOf("ireport.ivc.edu") >= 0) {
+            sessionStorage.setItem('m_parentSite', 'https://ireport.ivc.edu');
+        }
+        else {
+            sessionStorage.setItem('m_parentSite', 'https://services.ivc.edu');
+        }
         return true;
     }
 }
