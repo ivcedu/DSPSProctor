@@ -9,9 +9,7 @@ window.onload = function() {
     if (localStorage.key(0) !== null) { 
         target = $('#spinner')[0];
         spinner = new Spinner();
-        
         defaultHideDisalbe();
-        
         getURLParameters();
         setProctorLog();
         setProctor();
@@ -419,7 +417,7 @@ function getPDFAttachmentInfo() {
             return false;
         } 
         else {   
-            if (file.size >= 2000000) {
+            if (file.size >= 5000000) {
                 alert("Attached file size is too big, max. file size allow is 5Mb or less");
                 $('#attachment_file').filestyle('clear');
                 return false;

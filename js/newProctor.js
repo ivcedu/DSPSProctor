@@ -7,7 +7,6 @@ var section_num = "";
 window.onload = function() {   
     if (localStorage.key(0) !== null) {        
         $('#mod_dialog_box').modal('hide');
-        
         setDatePickerMinDate();
         getStudentInfo();
         getStudentCourseInfo();

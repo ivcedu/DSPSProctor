@@ -10,7 +10,6 @@ var section_num = "";
 window.onload = function() {   
     if (localStorage.key(0) !== null) {   
         defaultHideDisalbe();
-        
         getURLParameters();
         setProctor();
         setAccom();

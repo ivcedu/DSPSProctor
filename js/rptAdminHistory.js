@@ -1,7 +1,6 @@
 ////////////////////////////////////////////////////////////////////////////////
 window.onload = function() {   
     if (localStorage.key(0) !== null) {  
-//        $('#mod_dialog_box').modal('hide');
         getAdminProctorCompleteList("All", "");
     }
     else {
@@ -56,8 +55,6 @@ $(document).ready(function() {
         var proctor_id = $(this).attr('id').replace("btn_restart_", "");
         window.open('restartProctor.html?proctor_id=' + proctor_id, '_self');
         return false;
-//        getSelectedProctorInfo(proctor_id);
-//        $('#mod_dialog_box').modal('show');
     });
     
     // selectpicker
@@ -101,14 +98,3 @@ function setAdminProctorCompleteListHTML(proctor_id, section_num, course_id, int
     tbl_html += "</tr>";
     return tbl_html;
 }
-
-////////////////////////////////////////////////////////////////////////////////
-//function getSelectedProctorInfo(proctor_id) {
-//    var result = new Array();
-//    result = db_getProctor(proctor_id);
-//    
-//    if (result.length === 1) {
-//        $('#mod_test_date').val(result[0]['TestDate']);
-//        $('#mod_test_time').timepicker({template: 'modal', defaultTime: result[0]['TestTime']});
-//    }
-//}
