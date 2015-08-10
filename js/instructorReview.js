@@ -97,7 +97,6 @@ $(document).ready(function() {
         else {
             $('#exam_attachment').hide();
             $('#attachment_file').filestyle('clear');
-            removeAllExamPDF();
         }
     });
 
