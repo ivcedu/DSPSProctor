@@ -116,7 +116,7 @@ $(document).ready(function() {
     });
     
     // deny button click ///////////////////////////////////////////////////////
-    $('#btn_cancel').click(function() { 
+    $('#btn_close').click(function() { 
         window.open('rptAdminHistory.html', '_self');
         return false;
     });

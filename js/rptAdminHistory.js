@@ -45,7 +45,7 @@ $(document).ready(function() {
     $('table').on('click', 'a[id^="proctor_id_"]', function(e) {
         e.preventDefault();
         var proctor_id = $(this).attr('id').replace("proctor_id_", "");
-        window.open('printProctor.html?proctor_id=' + proctor_id, '_blank');
+        window.open('printProctor.html?proctor_id=' + proctor_id, '_self');
         return false;
     });
     
@@ -53,7 +53,7 @@ $(document).ready(function() {
     $('table').on('click', 'button[id^="btn_restart_"]', function(e) {
         e.preventDefault();
         var proctor_id = $(this).attr('id').replace("btn_restart_", "");
-        window.open('restartProctor.html?proctor_id=' + proctor_id, '_blank');
+        window.open('restartProctor.html?proctor_id=' + proctor_id, '_self');
         return false;
 //        getSelectedProctorInfo(proctor_id);
 //        $('#mod_dialog_box').modal('show');
