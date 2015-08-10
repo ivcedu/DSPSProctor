@@ -145,7 +145,7 @@ function setAccom() {
             else {
                 scribe_html = "Scantron and Written Exam";
             }
-            $('#cbo_scribe_list').html(scribe_html);
+            $('#cbo_scribe_list').html("<b><i>" + scribe_html + "</i></b>");
         }
 //        if (result[0]['Scantron'] === "1") {
 //            $("#ckb_scantron").prop('checked', true);
@@ -189,7 +189,7 @@ function setInstForm() {
             $("#ckb_scan_email").prop('checked', true);
             
             $('#se_option').show();
-            $('#se_option').html(result[0]['SEOption']);
+            $('#se_option').html("<b><i>" + result[0]['SEOption'] + "</i></b>");
         }
         if (result[0]['ExamAttach'] === "1") {
             $('input[name=rdo_exam][value=1]').prop('checked', true);
@@ -239,10 +239,10 @@ function setExamGuide() {
             $('input[name=rdo_calculator][value=1]').prop('checked', true); 
             
             $('#cal_type').show();
-            $('#cal_type').html(result[0]['CalType']);
+            $('#cal_type').html("<b><i>" + result[0]['CalType'] + "</i></b>");
             
             $('#cal_type_other').show();
-            $('#cal_type_other').html(result[0]['CalTypeOther']);
+            $('#cal_type_other').html("<b><i>" + result[0]['CalTypeOther'] + "</i></b>");
         }
         else {
             $('input[name=rdo_calculator][value=0]').prop('checked', true); 
@@ -269,7 +269,7 @@ function setExamGuide() {
             $('input[name=rdo_computer][value=1]').prop('checked', true);
             
             $('#sel_internet').show();
-            $('#internet_access').html(result[0]['Internet']);
+            $('#internet_access').html("<b><i>" + result[0]['Internet'] + "</i></b>");
         }
         else {
             $('input[name=rdo_computer][value=0]').prop('checked', true);
