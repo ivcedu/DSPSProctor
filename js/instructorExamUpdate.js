@@ -6,7 +6,7 @@ var target;
 var spinner;
 ////////////////////////////////////////////////////////////////////////////////
 window.onload = function() {   
-    if (localStorage.key(0) !== null) { 
+    if (sessionStorage.key(0) !== null) { 
         target = $('#spinner')[0];
         spinner = new Spinner();
         defaultHideDisalbe();
@@ -132,7 +132,7 @@ $(document).ready(function() {
         
         removeExamPDF(exampdf_id);
         var note = "Test exam: " + file_name + " has been deleted";
-        db_insertTransaction(proctor_id, localStorage.getItem('ls_dsps_proctor_loginDisplayName'), note);
+        db_insertTransaction(proctor_id, sessionStorage.getItem('ls_dsps_proctor_loginDisplayName'), note);
     });
     
     // save button click ///////////////////////////////////////////////////////
@@ -152,7 +152,7 @@ $(document).ready(function() {
         if (inst_comments !== "") {
             note += "\nComments: " + textReplaceApostrophe(inst_comments);
         } 
-        db_insertTransaction(proctor_id, localStorage.getItem('ls_dsps_proctor_loginDisplayName'), note);
+        db_insertTransaction(proctor_id, sessionStorage.getItem('ls_dsps_proctor_loginDisplayName'), note);
         
         $('#mod_dialog_box_header').html("Exam Option");
         $('#mod_dialog_box_body').html("Test exam option has been saved");
@@ -439,7 +439,7 @@ function addExamPDF() {
     $('#attachment_file').filestyle('clear');
     
     var note = "Test exam: " + m_file_name + " has been attached";
-    db_insertTransaction(proctor_id, localStorage.getItem('ls_dsps_proctor_loginDisplayName'), note);
+    db_insertTransaction(proctor_id, sessionStorage.getItem('ls_dsps_proctor_loginDisplayName'), note);
 }
 
 function convertPDFtoBase64() {

@@ -8,7 +8,7 @@ var inst_email = "";
 var section_num = "";
 ////////////////////////////////////////////////////////////////////////////////
 window.onload = function() {   
-    if (localStorage.key(0) !== null) {
+    if (sessionStorage.key(0) !== null) {
         defaultHideDisalbe();
         getURLParameters();
         setProctor();
@@ -98,14 +98,14 @@ $(document).ready(function() {
         $(this).prop("disabled", true);
         updateProctorTestDateTime();
         db_updateProctorStatus(proctor_id, 7, "DateDSPSReview2");
-        db_insertProctorLog(proctor_id, localStorage.getItem('ls_dsps_proctor_loginDisplayName'), 3, 7);
+        db_insertProctorLog(proctor_id, sessionStorage.getItem('ls_dsps_proctor_loginDisplayName'), 3, 7);
         
         var note = "DSPS 2 Review Accepted";
         var dsps_comments = $('#dsps_comments').val();
         if (dsps_comments !== "") {
             note += "\nComments: " + textReplaceApostrophe(dsps_comments);
         }       
-        db_insertTransaction(proctor_id, localStorage.getItem('ls_dsps_proctor_loginDisplayName'), note);
+        db_insertTransaction(proctor_id, sessionStorage.getItem('ls_dsps_proctor_loginDisplayName'), note);
         sendEmailToInstructorReview2Accept();
         sendEmailToStudentAccepted();
         
@@ -118,14 +118,14 @@ $(document).ready(function() {
     $('#btn_cancel').click(function() { 
         $(this).prop("disabled", true);
         db_updateProctorStatus(proctor_id, 3, "DateDSPSReview2");
-        db_insertProctorLog(proctor_id, localStorage.getItem('ls_dsps_proctor_loginDisplayName'), 3, 3);
+        db_insertProctorLog(proctor_id, sessionStorage.getItem('ls_dsps_proctor_loginDisplayName'), 3, 3);
         
         var note = "DSPS 2 Review Canceled";
         var dsps_comments = $('#dsps_comments').val();
         if (dsps_comments !== "") {
             note += "\nComments: " + textReplaceApostrophe(dsps_comments);
         }
-        db_insertTransaction(proctor_id, localStorage.getItem('ls_dsps_proctor_loginDisplayName'), note);
+        db_insertTransaction(proctor_id, sessionStorage.getItem('ls_dsps_proctor_loginDisplayName'), note);
         sendEmailToInstructorReview2Canceled();
         sendEmailToStudentCancel();
         

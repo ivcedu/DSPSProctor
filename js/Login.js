@@ -24,13 +24,6 @@ window.onload = function() {
         default:     
             break;
     }
-    
-    if (localStorage.key(0) !== null) {
-        if (IsLoginExpired()) {
-            window.open('Login.html', '_self');
-            return false;
-        }
-    }
 };
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -46,7 +39,7 @@ $(document).ready(function() {
         var url_param = sessionStorage.getItem('ls_dsps_url_param');
         
         if(loginInfo()) {
-            var login_type = localStorage.getItem('ls_dsps_proctor_loginType');
+            var login_type = sessionStorage.getItem('ls_dsps_proctor_loginType');
             if (login_type === "Staff") {
                 if (url_param === null) {
                     window.open('home.html', '_self');

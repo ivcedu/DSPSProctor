@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////////////////////////////////
 window.onload = function() {   
-    if (localStorage.key(0) !== null) {  
+    if (sessionStorage.key(0) !== null) {  
         getAdminProctorCompleteList("All", "");
     }
     else {

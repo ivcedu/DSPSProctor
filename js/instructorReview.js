@@ -16,7 +16,7 @@ var target;
 var spinner;
 ////////////////////////////////////////////////////////////////////////////////
 window.onload = function() {   
-    if (localStorage.key(0) !== null) {
+    if (sessionStorage.key(0) !== null) {
         target = $('#spinner')[0];
         spinner = new Spinner();
         
@@ -235,14 +235,14 @@ $(document).ready(function() {
         insertExamGuide();
         
         db_updateProctorStep(proctor_id, 3, "DateInstReview");
-        db_insertProctorLog(proctor_id, localStorage.getItem('ls_dsps_proctor_loginDisplayName'), 2, 7);
+        db_insertProctorLog(proctor_id, sessionStorage.getItem('ls_dsps_proctor_loginDisplayName'), 2, 7);
         
         var note = "Instructor Review Accepted";
         var dsps_comments = $('#dsps_comments').val();
         if (dsps_comments !== "") {
             note += "\nComments: " + textReplaceApostrophe(dsps_comments);
         } 
-        db_insertTransaction(proctor_id, localStorage.getItem('ls_dsps_proctor_loginDisplayName'), note);
+        db_insertTransaction(proctor_id, sessionStorage.getItem('ls_dsps_proctor_loginDisplayName'), note);
         sendEmailToDSPS_2();
         
         $('#mod_dialog_box_header').html("Complete");
@@ -254,14 +254,14 @@ $(document).ready(function() {
     $('#btn_cancel').click(function() { 
         $(this).prop("disabled", true);
         db_updateProctorStatus(proctor_id, 3, "DateInstReview");
-        db_insertProctorLog(proctor_id, localStorage.getItem('ls_dsps_proctor_loginDisplayName'), 2, 3);
+        db_insertProctorLog(proctor_id, sessionStorage.getItem('ls_dsps_proctor_loginDisplayName'), 2, 3);
         
         var note = "Instructor Review Canceled";
         var dsps_comments = $('#dsps_comments').val();
         if (dsps_comments !== "") {
             note += "\nComments: " + textReplaceApostrophe(dsps_comments);
         } 
-        db_insertTransaction(proctor_id, localStorage.getItem('ls_dsps_proctor_loginDisplayName'), note);
+        db_insertTransaction(proctor_id, sessionStorage.getItem('ls_dsps_proctor_loginDisplayName'), note);
         sendEmailToStudentDeny();
         
         $('#mod_dialog_box_header').html("Complete");
@@ -647,6 +647,8 @@ function sendEmailToDSPS_2() {
     message += "Test Date: <b>" + $('#test_date').html() + "</b><br>";
     message += "Test Time: <b>" + $('#test_time').html() + "</b><br><br>";
     
+    var str_url = location.href;
+    str_url = str_url.replace("instructorReview.html", "dspsReview_2.html");
     message += "Please click below ticket # to open DSPS 2 review page<br><br>";
     message += "<a href='" + location.href + "'>" + section_num + "</a><br><br>";
     
@@ -658,7 +660,7 @@ function sendEmailToDSPS_2() {
 function sendEmailToStudentDeny() {
     var subject = "Test proctoring request has been Denied";
     var message = "Dear " + $('#stu_name').html() + ",<br><br>";
-    message += "Your test proctoring request that was submitted on <b>" + date_submitted + "</b> has been <b>denied;</b><br>";
+    message += "Your test proctoring request that was submitted on <b>" + date_submitted + "</b> has been <b>canceled;</b><br>";
     message += "Please contact the DSPS office as soon as possible regarding your request at 949.451.5630 or ivcdsps@ivc.edu<br>";
     message += "DSPS office hours are Monday through Thursday 8 AM - 5 PM, and Friday 8 AM - 3 PM<br><br>";
     

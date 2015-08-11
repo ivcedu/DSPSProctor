@@ -8,7 +8,7 @@ var inst_email = "";
 var section_num = "";
 ////////////////////////////////////////////////////////////////////////////////
 window.onload = function() {   
-    if (localStorage.key(0) !== null) {   
+    if (sessionStorage.key(0) !== null) {   
         defaultHideDisalbe();
         getURLParameters();
         setProctor();
@@ -98,14 +98,14 @@ $(document).ready(function() {
         $(this).prop("disabled", true);
         db_updateProctorStatus(proctor_id, 4, "DateDSPSComplete");
         db_updateProctorStep(proctor_id, 4, "DateDSPSComplete");
-        db_insertProctorLog(proctor_id, localStorage.getItem('ls_dsps_proctor_loginDisplayName'), 4, 4);
+        db_insertProctorLog(proctor_id, sessionStorage.getItem('ls_dsps_proctor_loginDisplayName'), 4, 4);
         
         var note = "DSPS Complete";
         var dsps_comments = $('#dsps_comments').val();
         if (dsps_comments !== "") {
             note += "\nComments: " + textReplaceApostrophe(dsps_comments);
         }
-        db_insertTransaction(proctor_id, localStorage.getItem('ls_dsps_proctor_loginDisplayName'), note);
+        db_insertTransaction(proctor_id, sessionStorage.getItem('ls_dsps_proctor_loginDisplayName'), note);
         sendEmailToInstructorCompleted();
         
         $('#mod_dialog_box_header').html("Complete");
@@ -118,14 +118,14 @@ $(document).ready(function() {
         $(this).prop("disabled", true);
         db_updateProctorStatus(proctor_id, 5, "DateDSPSComplete");
         db_updateProctorStep(proctor_id, 5, "DateDSPSComplete");
-        db_insertProctorLog(proctor_id, localStorage.getItem('ls_dsps_proctor_loginDisplayName'), 5, 5);
+        db_insertProctorLog(proctor_id, sessionStorage.getItem('ls_dsps_proctor_loginDisplayName'), 5, 5);
         
         var note = "DSPS No Show";
         var dsps_comments = $('#dsps_comments').val();
         if (dsps_comments !== "") {
             note += "\nComments: " + textReplaceApostrophe(dsps_comments);
         }
-        db_insertTransaction(proctor_id, localStorage.getItem('ls_dsps_proctor_loginDisplayName'), note);
+        db_insertTransaction(proctor_id, sessionStorage.getItem('ls_dsps_proctor_loginDisplayName'), note);
         sendEmailToInstructorNoShow();
         
         $('#mod_dialog_box_header').html("Complete");

@@ -5,7 +5,7 @@ var course_id = "";
 var section_num = "";
 ////////////////////////////////////////////////////////////////////////////////
 window.onload = function() {   
-    if (localStorage.key(0) !== null) {        
+    if (sessionStorage.key(0) !== null) {        
         $('#mod_dialog_box').modal('hide');
         setDatePickerMinDate();
         getStudentInfo();
@@ -51,11 +51,11 @@ $(document).ready(function() {
 //            $('#ckb_scantron').prop('disabled', true);
 //            $('#ckb_written_exam').prop('disabled', true);
 //            $('#ckb_distraction').prop('disabled', true);
-
             $('#cbo_scribe_list').prop('disabled', true);
+            $('#cbo_scribe_list').val('scantron_only');
             $('#cbo_scribe_list').selectpicker('refresh');
-            $("#ckb_distraction").prop('checked', false);
             $('#ckb_distraction').prop('disabled', true);
+            $("#ckb_distraction").prop('checked', false);
         }
     });
     
@@ -72,8 +72,8 @@ $(document).ready(function() {
         $(this).prop("disabled", true);
         proctor_id = insertProctor();
         insertAccom(proctor_id);
-        db_insertTransaction(proctor_id, localStorage.getItem('ls_dsps_proctor_loginDisplayName'), "Proctor request submitted");
-        db_insertProctorLog(proctor_id, localStorage.getItem('ls_dsps_proctor_loginDisplayName'), 6, 1);
+        db_insertTransaction(proctor_id, sessionStorage.getItem('ls_dsps_proctor_loginDisplayName'), "Proctor request submitted");
+        db_insertProctorLog(proctor_id, sessionStorage.getItem('ls_dsps_proctor_loginDisplayName'), 6, 1);
         
         sendEmailToDSPS_1();
         sendEmailToStudent();
@@ -85,7 +85,7 @@ $(document).ready(function() {
     
     // dialog ok click /////////////////////////////////////////////////////////
     $('#mod_dialog_btn_ok').click(function() { 
-        localStorage.clear();
+        sessionStorage.clear();
         window.open('Login.html', '_self');
         return false;
     });
@@ -111,14 +111,14 @@ function setDatePickerMinDate() {
 }
 
 function getStudentInfo() {
-    var stu_name = localStorage.getItem('ls_dsps_proctor_loginDisplayName');
-    var stu_id = localStorage.getItem('ls_dsps_proctor_loginID');
+    var stu_name = sessionStorage.getItem('ls_dsps_proctor_loginDisplayName');
+    var stu_id = sessionStorage.getItem('ls_dsps_proctor_loginID');
     $('#stu_name').val(stu_name);
     $('#stu_id').val(stu_id);
 }
 
 function getStudentCourseInfo() {
-    var stu_id = localStorage.getItem('ls_dsps_proctor_loginID');
+    var stu_id = sessionStorage.getItem('ls_dsps_proctor_loginID');
     var cur_term = tardis_getCurrentTerm();
     
     // testing
@@ -180,9 +180,9 @@ function getSectionNum(course_id) {
 
 ////////////////////////////////////////////////////////////////////////////////
 function insertProctor() {    
-    var stu_name = textReplaceApostrophe(localStorage.getItem('ls_dsps_proctor_loginDisplayName'));
-    var stu_email = textReplaceApostrophe(localStorage.getItem('ls_dsps_proctor_loginEmail'));
-    var stu_ID = textReplaceApostrophe(localStorage.getItem('ls_dsps_proctor_loginID'));
+    var stu_name = textReplaceApostrophe(sessionStorage.getItem('ls_dsps_proctor_loginDisplayName'));
+    var stu_email = textReplaceApostrophe(sessionStorage.getItem('ls_dsps_proctor_loginEmail'));
+    var stu_ID = textReplaceApostrophe(sessionStorage.getItem('ls_dsps_proctor_loginID'));
     
     var sel_inst = $('#inst_list').val();
     var inst_id = getInstructorID(sel_inst);
@@ -258,8 +258,8 @@ function sendEmailToDSPS_1() {
 }
 
 function sendEmailToStudent() {
-    var email = localStorage.getItem('ls_dsps_proctor_loginEmail');
-    var name = localStorage.getItem('ls_dsps_proctor_loginDisplayName');
+    var email = sessionStorage.getItem('ls_dsps_proctor_loginEmail');
+    var name = sessionStorage.getItem('ls_dsps_proctor_loginDisplayName');
     
     var subject = "DSPS Test Proctoring Request";
     var message = "Dear " + name + ",<br><br>";

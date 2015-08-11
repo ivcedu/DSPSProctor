@@ -2,7 +2,7 @@ var admin = false;
 var master = false;
 ////////////////////////////////////////////////////////////////////////////////
 window.onload = function() {   
-    if (localStorage.key(0) !== null) {        
+    if (sessionStorage.key(0) !== null) {        
         $('#mod_dialog_box').modal('hide');
         setAdminOption();
         getProctorList();
@@ -87,16 +87,16 @@ $(document).ready(function() {
 ////////////////////////////////////////////////////////////////////////////////
 function setAdminOption() {
     var result = new Array();
-    result = db_getAdmin(localStorage.getItem('ls_dsps_proctor_loginEmail'));
+    result = db_getAdmin(sessionStorage.getItem('ls_dsps_proctor_loginEmail'));
     
-    if (localStorage.getItem('ls_dsps_proctor_loginEmail') === "ykim160@ivc.edu") {
+    if (sessionStorage.getItem('ls_dsps_proctor_loginEmail') === "ykim160@ivc.edu") {
         master = true;
     }
     if (result.length === 1) {
         admin = true;
     }
 
-    $('#login_name').html(localStorage.getItem('ls_dsps_proctor_loginDisplayName'));
+    $('#login_name').html(sessionStorage.getItem('ls_dsps_proctor_loginDisplayName'));
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -127,7 +127,7 @@ function getAdminProctorList() {
 function getInstructorProctorList() {
     var result = new Array(); 
     result = db_getInstProctorList('echambers@ivc.edu');
-//    result = db_getInstProctorList(localStorage.getItem('ls_dsps_proctor_loginEmail'));
+//    result = db_getInstProctorList(sessionStorage.getItem('ls_dsps_proctor_loginEmail'));
     
     $('#body_tr').empty();
     if (result.length !== 0) {

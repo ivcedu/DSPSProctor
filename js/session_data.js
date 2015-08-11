@@ -1,27 +1,27 @@
 ////////////////////////////////////////////////////////////////////////////////
 function localData_login(loginDisplayName, loginEmail, loginPhone, loginID, loginType) {
-    var cur_date_time = new Date();
-    cur_date_time.setHours(cur_date_time.getHours() + 2);
-    localStorage.setItem('ls_dsps_proctor_expiration_date_time', cur_date_time);
+//    var cur_date_time = new Date();
+//    cur_date_time.setHours(cur_date_time.getHours() + 2);
+//    localStorage.setItem('ls_dsps_proctor_expiration_date_time', cur_date_time);
     
-    localStorage.setItem('ls_dsps_proctor_loginDisplayName', objToString(loginDisplayName));
-    localStorage.setItem('ls_dsps_proctor_loginEmail', objToString(loginEmail));
-    localStorage.setItem('ls_dsps_proctor_loginPhone', objToString(loginPhone));
-    localStorage.setItem('ls_dsps_proctor_loginID', objToString(loginID));
-    localStorage.setItem('ls_dsps_proctor_loginType', objToString(loginType));
+    sessionStorage.setItem('ls_dsps_proctor_loginDisplayName', objToString(loginDisplayName));
+    sessionStorage.setItem('ls_dsps_proctor_loginEmail', objToString(loginEmail));
+    sessionStorage.setItem('ls_dsps_proctor_loginPhone', objToString(loginPhone));
+    sessionStorage.setItem('ls_dsps_proctor_loginID', objToString(loginID));
+    sessionStorage.setItem('ls_dsps_proctor_loginType', objToString(loginType));
 }
 
-function IsLoginExpired() {
-    var exp_date_time = new Date(localStorage.getItem('ls_dsps_expiration_date_time'));
-    var cur_date_time = new Date();
-    if (cur_date_time > exp_date_time) {
-        localStorage.clear();
-        return true;
-    }
-    else {
-        return false;
-    }
-}
+//function IsLoginExpired() {
+//    var exp_date_time = new Date(localStorage.getItem('ls_dsps_expiration_date_time'));
+//    var cur_date_time = new Date();
+//    if (cur_date_time > exp_date_time) {
+//        localStorage.clear();
+//        return true;
+//    }
+//    else {
+//        return false;
+//    }
+//}
 
 function objToString(obj) {
     if (obj === null) {

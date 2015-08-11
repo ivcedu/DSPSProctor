@@ -1,7 +1,7 @@
 var proctor_id = "";
 ////////////////////////////////////////////////////////////////////////////////
 window.onload = function() {   
-    if (localStorage.key(0) !== null) {   
+    if (sessionStorage.key(0) !== null) {   
         defaultHideDisalbe();
         getURLParameters();
         setProctorLog();

@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////////////////////////////////
 window.onload = function() {   
-    if (localStorage.key(0) !== null) {        
+    if (sessionStorage.key(0) !== null) {        
         getAdminProctorCompleteList();
     }
     else {
@@ -39,7 +39,7 @@ $(document).ready(function() {
 function getAdminProctorCompleteList() {
     var result = new Array(); 
     result = db_getInstProctorCompleteList('echambers@ivc.edu');
-//    result = db_getInstProctorCompleteList(localStorage.getItem('ls_dsps_proctor_loginEmail'));
+//    result = db_getInstProctorCompleteList(sessionStorage.getItem('ls_dsps_proctor_loginEmail'));
     
     $('#body_tr').empty();
     if (result.length !== 0) {
