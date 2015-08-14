@@ -6,6 +6,8 @@ var date_submitted = "";
 var inst_name = "";
 var inst_email = "";
 var section_num = "";
+
+var str_img = "";
 ////////////////////////////////////////////////////////////////////////////////
 window.onload = function() {   
     if (sessionStorage.key(0) !== null) {
@@ -72,6 +74,13 @@ $(document).ready(function() {
         return false;
     });
     
+    $('#nav_capture').click(function() { 
+        capture();
+        $('#mod_tech_problems').val("");
+        $('#mod_tech_img_screen').prop('src', str_img);
+        $('#mod_tech_support').modal('show');
+    });
+    
     // exam pdf click event ////////////////////////////////////////////////////
     $(document).on('click', 'a[id^="exampdf_id_"]', function() {
         var exampdf_id = $(this).attr('id').replace("exampdf_id_", "");
@@ -115,22 +124,22 @@ $(document).ready(function() {
     });
     
     // deny button click ///////////////////////////////////////////////////////
-    $('#btn_cancel').click(function() { 
+    $('#btn_deny').click(function() { 
         $(this).prop("disabled", true);
         db_updateProctorStatus(proctor_id, 3, "DateDSPSReview2");
         db_insertProctorLog(proctor_id, sessionStorage.getItem('ls_dsps_proctor_loginDisplayName'), 3, 3);
         
-        var note = "DSPS 2 Review Canceled";
+        var note = "DSPS 2 Review Denied";
         var dsps_comments = $('#dsps_comments').val();
         if (dsps_comments !== "") {
             note += "\nComments: " + textReplaceApostrophe(dsps_comments);
         }
         db_insertTransaction(proctor_id, sessionStorage.getItem('ls_dsps_proctor_loginDisplayName'), note);
-        sendEmailToInstructorReview2Canceled();
+        sendEmailToInstructorReview2Denied();
         sendEmailToStudentCancel();
         
         $('#mod_dialog_box_header').html("Complete");
-        $('#mod_dialog_box_body').html("DSPS 2 Review has been Canceled");
+        $('#mod_dialog_box_body').html("DSPS 2 Review has been Denied");
         $('#mod_dialog_box').modal('show');
     });
     
@@ -139,6 +148,26 @@ $(document).ready(function() {
         window.open('home.html', '_self');
         return false;
     });
+    
+    // modal submit button click ///////////////////////////////////////////////
+    $('#mod_tech_btn_submit').click(function() { 
+        if (sendEmailToTechSupport()) {
+            $('#mod_tech_support').modal('hide');
+            alert("Your request has been submitted successfully");
+        }
+        else {
+            $('#mod_tech_support').modal('hide');
+            alert("Sending email error!");
+        }
+    });
+    
+    // get screen shot image ///////////////////////////////////////////////////
+    html2canvas($('body'), {
+        onrendered: function(canvas) { str_img = canvas.toDataURL("image/jpg"); }
+    });
+    
+    // popover
+    $('#nav_capture').popover({content:"Contact IVC Tech Support", placement:"bottom"});
     
     // auto size
     $('#comments').autosize();
@@ -154,6 +183,7 @@ $(document).ready(function() {
 ////////////////////////////////////////////////////////////////////////////////
 function defaultHideDisalbe() {
     $('#mod_dialog_box').modal('hide');
+    $('#mod_tech_support').modal('hide');
     $('#se_option').hide();
     $('#cal_type').hide();
     $('#cal_type_other').hide();
@@ -379,6 +409,22 @@ function updateProctorTestDateTime() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+function capture() {    
+    html2canvas($('body')).then(function(canvas) { str_img = canvas.toDataURL(); });
+}
+
+////////////////////////////////////////////////////////////////////////////////
+function sendEmailToTechSupport() {
+    var subject = "Request for New Ticket";
+    var message = "New tickert has been requested from <b>" + sessionStorage.getItem('ls_dsps_proctor_loginDisplayName') + "</b> (" + sessionStorage.getItem('ls_dsps_proctor_loginEmail') + ")<br><br>";
+    message += "Application Web Site: <b>DSPS 2 Review</b><br><br>";
+    message += "<b>Problems:</b><br>" + $('#mod_tech_problems').val().replace(/\n/g, "<br>");
+//    message += "<img src='cid:screen_shot'/>";    
+    var img_base64 = str_img.replace("data:image/png;base64,", "");
+    return proc_sendEmailToTechSupport("presidenttest@ivc.edu", "Do Not Reply", "", "", subject, message, img_base64);
+}
+
+////////////////////////////////////////////////////////////////////////////////
 function sendEmailToStudentAccepted() {
     var subject = "Test proctoring request confirmation";
     var message = "Dear " + $('#stu_name').html() + ",<br><br>";
@@ -401,7 +447,7 @@ function sendEmailToStudentAccepted() {
 function sendEmailToStudentCancel() {
     var subject = "Test proctoring request has been Denied";
     var message = "Dear " + $('#stu_name').html() + ",<br><br>";
-    message += "Your test proctoring request that was submitted on <b>" + date_submitted + "</b> has been <b>canceled;</b><br>";
+    message += "Your test proctoring request that was submitted on <b>" + date_submitted + "</b> has been <b>Denied;</b><br>";
     message += "Please contact the DSPS office as soon as possible regarding your request at 949.451.5630 or ivcdsps@ivc.edu<br>";
     message += "DSPS office hours are Monday through Thursday 8 AM - 5 PM, and Friday 8 AM - 3 PM<br><br>";
     
@@ -436,10 +482,10 @@ function sendEmailToInstructorReview2Accept() {
 //    proc_sendEmail(inst_email, inst_name, subject, message);
 }
 
-function sendEmailToInstructorReview2Canceled() {
-    var subject = "Proctor Request 2 Review Canceled";
+function sendEmailToInstructorReview2Denied() {
+    var subject = "Proctor Request 2 Review Denied";
     var message = "Dear " + inst_name + ",<br><br>";
-    message += "Proctor test request DSPS 2 Review has been Canceled<br><br>";
+    message += "Proctor test request DSPS 2 Review has been Denied<br><br>";
     
     message += "Student Name: <b>" + $('#stu_name').html() + "</b><br>";
     message += "Student ID: <b>" + $('#stu_id').html() + "</b><br>";

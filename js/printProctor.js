@@ -1,7 +1,9 @@
 var proctor_id = "";
+var str_img = "";
 ////////////////////////////////////////////////////////////////////////////////
 window.onload = function() {   
-    if (sessionStorage.key(0) !== null) {   
+    if (sessionStorage.key(0) !== null) {  
+        $('#mod_tech_support').modal('hide');
         defaultHideDisalbe();
         getURLParameters();
         setProctorLog();
@@ -58,13 +60,49 @@ $(document).ready(function() {
         window.open(document.referrer, '_self');
         return false;
     });
-    
+
     $('#nav_logout').click(function() { 
         var parent_site = sessionStorage.getItem('m_parentSite');
         sessionStorage.clear();
         window.open(parent_site, '_self');
         return false;
     });
+    
+    $('#nav_capture').click(function() { 
+        capture();
+        $('#mod_tech_problems').val("");
+        $('#mod_tech_img_screen').prop('src', str_img);
+        $('#mod_tech_support').modal('show');
+    });
+    
+//    $('#mod_tech_img_screen').click(function() {
+//        if (str_img !== "") {
+//            $.fancybox.open({ href : str_img });
+//        }
+//    });
+    
+    // modal submit button click ///////////////////////////////////////////////
+    $('#mod_tech_btn_submit').click(function() { 
+        if (sendEmailToTechSupport()) {
+            $('#mod_tech_support').modal('hide');
+            alert("Your request has been submitted successfully");
+        }
+        else {
+            $('#mod_tech_support').modal('hide');
+            alert("Sending email error!");
+        }
+    });
+    
+    // get screen shot image ///////////////////////////////////////////////////
+    html2canvas($('body'), {
+        onrendered: function(canvas) { str_img = canvas.toDataURL("image/jpg"); }
+    });
+    
+    // popover
+    $('#nav_capture').popover({content:"Contact IVC Tech Support", placement:"bottom"});
+    
+    // auto size
+    $('#mod_dialog_comments').autosize();
 });
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -291,4 +329,20 @@ function getTransactionHistory() {
         html += login_name + " : " + dt_stamp + "<br>" + note.replace(/\n/g, "<br>") + "<br><br>";
     }
     $("#transaction_history").append(html);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+function capture() {    
+    html2canvas($('body')).then(function(canvas) { str_img = canvas.toDataURL(); });
+}
+
+////////////////////////////////////////////////////////////////////////////////
+function sendEmailToTechSupport() {
+    var subject = "Request for New Ticket";
+    var message = "New tickert has been requested from <b>" + sessionStorage.getItem('ls_dsps_proctor_loginDisplayName') + "</b> (" + sessionStorage.getItem('ls_dsps_proctor_loginEmail') + ")<br><br>";
+    message += "Application Web Site: <b>DSPS Proctor View</b><br><br>";
+    message += "<b>Problems:</b><br>" + $('#mod_tech_problems').val().replace(/\n/g, "<br>");
+//    message += "<img src='cid:screen_shot'/>";    
+    var img_base64 = str_img.replace("data:image/png;base64,", "");
+    return proc_sendEmailToTechSupport("presidenttest@ivc.edu", "Do Not Reply", "", "", subject, message, img_base64);
 }

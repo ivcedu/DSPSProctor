@@ -3,10 +3,13 @@ var m_ar_courses = [];
 var proctor_id = "";
 var course_id = "";
 var section_num = "";
+
+var str_img = "";
 ////////////////////////////////////////////////////////////////////////////////
 window.onload = function() {   
     if (sessionStorage.key(0) !== null) {        
         $('#mod_dialog_box').modal('hide');
+        $('#mod_tech_support').modal('hide');
         setDatePickerMinDate();
         getStudentInfo();
         getStudentCourseInfo();
@@ -19,6 +22,13 @@ window.onload = function() {
 
 ////////////////////////////////////////////////////////////////////////////////
 $(document).ready(function() { 
+    $('#nav_capture').click(function() { 
+        capture();
+        $('#mod_tech_problems').val("");
+        $('#mod_tech_img_screen').prop('src', str_img);
+        $('#mod_tech_support').modal('show');
+    });
+    
     $('#inst_list').change(function() {
         var inst_name = $(this).val();
         setCourseInfo(inst_name);
@@ -90,8 +100,35 @@ $(document).ready(function() {
         return false;
     });
     
+    // modal submit button click ///////////////////////////////////////////////
+    $('#mod_tech_btn_submit').click(function() { 
+        if (sendEmailToTechSupport()) {
+            $('#mod_tech_support').modal('hide');
+            alert("Your request has been submitted successfully");
+        }
+        else {
+            $('#mod_tech_support').modal('hide');
+            alert("Sending email error!");
+        }
+    });
+    
+//    $('#mod_tech_img_screen').click(function() {
+//        if (str_img !== "") {
+//            $.fancybox.open({ href : str_img });
+//        }
+//    });
+    
+    // get screen shot image ///////////////////////////////////////////////////
+    html2canvas($('body'), {
+        onrendered: function(canvas) { str_img = canvas.toDataURL("image/jpg"); }
+    });
+    
+    // popover
+    $('#nav_capture').popover({content:"Contact IVC Tech Support", placement:"right"});
+    
     // auto size
     $('#comments').autosize();
+    $('#mod_dialog_comments').autosize();
     
     // selectpicker
     $('.selectpicker').selectpicker();
@@ -231,6 +268,22 @@ function insertAccom(proctor_id) {
     var distraction = $('#ckb_distraction').is(':checked');
     
     return db_insertAccom(proctor_id, time_one_half, double_time, alt_media, reader, enlarge_exam, user_of_comp, other, txt_other, scribe, scantron, written_exam, distraction);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+function capture() {    
+    html2canvas($('body')).then(function(canvas) { str_img = canvas.toDataURL(); });
+}
+
+////////////////////////////////////////////////////////////////////////////////
+function sendEmailToTechSupport() {
+    var subject = "Request for New Ticket";
+    var message = "New tickert has been requested from <b>" + sessionStorage.getItem('ls_dsps_proctor_loginDisplayName') + "</b> (" + sessionStorage.getItem('ls_dsps_proctor_loginEmail') + ")<br><br>";
+    message += "Application Web Site: <b>New Proctor Request</b><br><br>";
+    message += "<b>Problems:</b><br>" + $('#mod_tech_problems').val().replace(/\n/g, "<br>");
+//    message += "<img src='cid:screen_shot'/>";    
+    var img_base64 = str_img.replace("data:image/png;base64,", "");
+    return proc_sendEmailToTechSupport("presidenttest@ivc.edu", "Do Not Reply", "", "", subject, message, img_base64);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
