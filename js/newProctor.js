@@ -79,6 +79,12 @@ $(document).ready(function() {
     
     // submit button click /////////////////////////////////////////////////////
     $('#btn_submit').click(function() {
+        var err = formValidation();
+        if (err !== "") {
+            alert(err);
+            return false;
+        }
+        
         $(this).prop("disabled", true);
         proctor_id = insertProctor();
         insertAccom(proctor_id);
@@ -139,6 +145,23 @@ $(document).ready(function() {
     // timepicker
     $('#test_time').timepicker();
 });
+
+////////////////////////////////////////////////////////////////////////////////
+function formValidation() {
+    var err = "";
+    
+    if ($('#inst_list').val() === "Select...") {
+        err += "Instructor's name is a required field\n";
+    }
+    if ($('#course_list').val() === "Select...") {
+        err += "Course is a required field\n";
+    }
+    if ($('#test_date').val() === "") {
+        err += "Test date is a required field\n";
+    }
+
+    return err;
+}
 
 ////////////////////////////////////////////////////////////////////////////////
 function setDatePickerMinDate() {

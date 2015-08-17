@@ -532,6 +532,20 @@ function db_updateInstFormExamAttach(ProctorID, ExamAttach) {
     return Result;
 }
 
+function db_updateInstFormExamReceived(ProctorID, ExamReceived) {
+    var Result = false;
+    $.ajax({
+        type:"POST",
+        url:"php/db_updateInstFormExamReceived.php",
+        data:{ProctorID:ProctorID, ExamReceived:ExamReceived},
+        async: false,  
+        success:function(data) {
+            Result = JSON.parse(data);
+        }
+    });
+    return Result;
+}
+
 // delete DB ///////////////////////////////////////////////////////////////////
 function db_deleteExamPDF(ExamPDFID) {
     var Result = false;

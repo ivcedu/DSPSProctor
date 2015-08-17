@@ -236,10 +236,17 @@ $(document).ready(function() {
     
     // accept button click /////////////////////////////////////////////////////
     $('#btn_accept').click(function() { 
+        var err = formValidation();
+        if (err !== "") {
+            alert(err);
+            return false;
+        }
+        
         $(this).prop("disabled", true);
         updateProctorInstructorPhone();
         
         insertInstForm();
+        updateInstFormExamReceived();
         insertExamGuide();
         
         db_updateProctorStep(proctor_id, 3, "DateInstReview");
@@ -318,6 +325,23 @@ function startSpin() {
 
 function stopSpin() {
     spinner.stop();
+}
+
+////////////////////////////////////////////////////////////////////////////////
+function formValidation() {
+    var err = "";
+    
+    if ($('#allow_min').val() === "") {
+        err += "Time allotted in class is a required field\n";
+    }
+    if ($('#inst_phone').val() === "") {
+        err += "Contact information during exam a required field\n";
+    }
+    if (typeof $('input[name="rdo_fs_approval"]:checked').val() === 'undefined') {
+        err += "Exam Attachment or Exam Drop Off option is a required field\n";
+    }
+
+    return err;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -555,6 +579,14 @@ function insertInstForm() {
     }
     else {
         return db_insertInstForm(proctor_id, allow_min, mailbox, mail_bld_id, bldg, prof_pu, faculty, faculty_bld_id, office, stu_delivery, scan_email, se_option_id, exam_attach);
+    }
+}
+
+function updateInstFormExamReceived() {
+    var result = new Array();
+    result = db_getExamPDFList(proctor_id);
+    if (result.length >= 1 ) {
+        db_updateInstFormExamReceived(proctor_id, "1");
     }
 }
 

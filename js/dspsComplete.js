@@ -142,6 +142,16 @@ $(document).ready(function() {
         $('#mod_dialog_box').modal('show');
     });
     
+    // exam status update button click /////////////////////////////////////////
+    $('#btn_exam_update').click(function() {
+        var exam_received = $('#exam_status_list').val();
+        db_updateInstFormExamReceived(proctor_id, exam_received);
+        var note = "Exam status updated to " + (exam_received === "1" ? "Received" : "Not Received");
+        db_insertTransaction(proctor_id, sessionStorage.getItem('ls_dsps_proctor_loginDisplayName'), note);
+        getTransactionHistory();
+        alert("Exam status has been updated");
+    });
+    
     // dialog ok click /////////////////////////////////////////////////////////
     $('#mod_dialog_btn_ok').click(function() { 
         window.open('home.html', '_self');
@@ -171,6 +181,9 @@ $(document).ready(function() {
     // auto size
     $('#comments').autosize();
     $('#dsps_comments').autosize();
+    
+    // selectpicker
+    $('.selectpicker').selectpicker();
 });
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -266,6 +279,10 @@ function setInstForm() {
     result = db_getInstForm(proctor_id);
     
     if (result.length === 1) {
+        if (result[0]['ExamReceived'] === "1") {
+            $('#exam_status_list').val("1");
+            $('#exam_status_list').selectpicker('refresh');
+        }
         $('#allow_min').html(result[0]['TAllotMin']);      
         if (result[0]['Mailbox'] === "1") {
             $("#ckb_mailbox").prop('checked', true);
@@ -290,10 +307,12 @@ function setInstForm() {
             $('#se_option').html(result[0]['SEOption']);
         }
         if (result[0]['ExamAttach'] === "1") {
+            $('#exam_type').html("Attachment");
             $('input[name=rdo_exam][value=1]').prop('checked', true);
             getExamPDFList();
         }
         else {
+            $('#exam_type').html("Drop Off");
             $('input[name=rdo_exam][value=0]').prop('checked', true);
         }
     }
@@ -380,6 +399,7 @@ function getTransactionHistory() {
     var result = new Array();
     result = db_getTransaction(proctor_id);
     
+    $("#transaction_history").html("");
     var html = "";
     for (var i = 0; i < result.length; i++) {
         var dt_stamp = convertDBDateTimeToString(result[i]['DTStamp']);

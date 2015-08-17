@@ -148,6 +148,7 @@ $(document).ready(function() {
     $('#btn_save').click(function() { 
         var exam_attach = $('input[name="rdo_exam"]:checked').val();
         db_updateInstFormExamAttach(proctor_id, exam_attach);
+        updateInstFormExamReceived();
         
         var note = "Instructor update test exam option to ";
         if (exam_attach === "1") {
@@ -503,6 +504,14 @@ function removeExamPDF(id) {
 function removeAllExamPDF() {
     db_deleteExamPDFAll(proctor_id);
     $('#exam_list').empty();
+}
+
+function updateInstFormExamReceived() {
+    var result = new Array();
+    result = db_getExamPDFList(proctor_id);
+    if (result.length >= 1 ) {
+        db_updateInstFormExamReceived(proctor_id, "1");
+    }
 }
 
 ////////////////////////////////////////////////////////////////////////////////

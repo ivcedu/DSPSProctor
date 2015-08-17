@@ -14,7 +14,8 @@
             . "inst.StuDelivery, "
             . "inst.ScanEmail, "
             . "seop.SEOption, "
-            . "inst.ExamAttach "
+            . "inst.ExamAttach, "
+            . "inst.ExamReceived "
             . "FROM [IVCDSPS].[dbo].[InstForm] AS inst LEFT JOIN [IVCDSPS].[dbo].[SEOption] AS seop ON inst.SEOptionID = seop.SEOptionID "
             . "WHERE inst.ProctorID = '".$ProctorID."'";
     
