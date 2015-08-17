@@ -102,15 +102,18 @@ $(document).ready(function() {
     
     // deny button click ///////////////////////////////////////////////////////
     $('#btn_deny').click(function() { 
+        if ($('#dsps_comments').val().replace(/\s+/g, '') === "") {
+            alert("Please specify reasons for denial under Comments");
+            return false;
+        }
+        
         $(this).prop("disabled", true);
         db_updateProctorStatus(proctor_id, 3, "DateDSPSReview1");
         db_insertProctorLog(proctor_id, sessionStorage.getItem('ls_dsps_proctor_loginDisplayName'), 1, 3);
         
         var note = "DSPS 1 Review Denied";
         var dsps_comments = $('#dsps_comments').val();
-        if (dsps_comments !== "") {
-            note += "\nComments: " + textReplaceApostrophe(dsps_comments);
-        }
+        note += "\nComments: " + textReplaceApostrophe(dsps_comments);
         db_insertTransaction(proctor_id, sessionStorage.getItem('ls_dsps_proctor_loginDisplayName'), note);
         sendEmailToStudentDeny();
         

@@ -267,17 +267,21 @@ $(document).ready(function() {
     
     // deny button click ///////////////////////////////////////////////////////
     $('#btn_deny').click(function() { 
+        if ($('#dsps_comments').val().replace(/\s+/g, '') === "") {
+            alert("Please specify reasons for denial under Comments");
+            return false;
+        }
+        
         $(this).prop("disabled", true);
         db_updateProctorStatus(proctor_id, 3, "DateInstReview");
         db_insertProctorLog(proctor_id, sessionStorage.getItem('ls_dsps_proctor_loginDisplayName'), 2, 3);
         
         var note = "Instructor Review Denied";
         var dsps_comments = $('#dsps_comments').val();
-        if (dsps_comments !== "") {
-            note += "\nComments: " + textReplaceApostrophe(dsps_comments);
-        } 
+        note += "\nComments: " + textReplaceApostrophe(dsps_comments);
         db_insertTransaction(proctor_id, sessionStorage.getItem('ls_dsps_proctor_loginDisplayName'), note);
         sendEmailToStudentDeny();
+        sendEmailToDSPSDeny();
         
         $('#mod_dialog_box_header').html("Complete");
         $('#mod_dialog_box_body').html("Instructor Review has been Denied");
@@ -337,7 +341,7 @@ function formValidation() {
     if ($('#inst_phone').val() === "") {
         err += "Contact information during exam a required field\n";
     }
-    if (typeof $('input[name="rdo_fs_approval"]:checked').val() === 'undefined') {
+    if (typeof $('input[name="rdo_exam"]:checked').val() === 'undefined') {
         err += "Exam Attachment or Exam Drop Off option is a required field\n";
     }
 
@@ -749,5 +753,24 @@ function sendEmailToStudentDeny() {
     
     // testing
     proc_sendEmail("stafftest@ivc.edu", $('#stu_name').html(), subject, message);
+//    proc_sendEmail(stu_email, $('#stu_name').html(), subject, message);
+}
+
+function sendEmailToDSPSDeny() {
+    var subject = "Test proctoring request has been Denied";
+    var message = "Dear Angie Bates,<br><br>";
+    message += "Instructor review has been <b>Denied</b><br><br>";
+    
+    message += "Student Name: <b>" + $('#stu_name').html() + "</b><br>";
+    message += "Student ID: <b>" + $('#stu_id').html() + "</b><br>";
+    message += "Instructor Name: <b>" + inst_name + "</b><br>";
+    message += "Ticket #: <b>" + section_num + "</b><br>";
+    message += "Course: <b>" + $('#course_id').html() + "</b><br>";
+    message += "Test Date: <b>" + $('#test_date').html() + "</b><br>";
+    message += "Test Time: <b>" + $('#test_time').html() + "</b><br><br>";
+    message += "Comments:<br>" + $('#dsps_comments').val();
+    
+    // testing
+    proc_sendEmail("vptest@ivc.edu", $('#stu_name').html(), subject, message);
 //    proc_sendEmail(stu_email, $('#stu_name').html(), subject, message);
 }
