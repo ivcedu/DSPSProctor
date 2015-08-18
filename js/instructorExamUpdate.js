@@ -2,6 +2,9 @@ var proctor_id = "";
 var m_file_name = "";
 var m_base64_data = "";
 
+var inst_name = "";
+var section_num = "";
+
 var target;
 var spinner;
 
@@ -163,6 +166,7 @@ $(document).ready(function() {
             note += "\nComments: " + textReplaceApostrophe(inst_comments);
         } 
         db_insertTransaction(proctor_id, sessionStorage.getItem('ls_dsps_proctor_loginDisplayName'), note);
+        sendEmailToDSPSTestExamChange();
         
         $('#mod_dialog_box_header').html("Exam Option");
         $('#mod_dialog_box_body').html("Test exam option has been saved");
@@ -251,6 +255,9 @@ function setProctor() {
         $('#test_time').html(result[0]['TestTime']);
         $('#comments').html(result[0]['Comments'].replace(/\n/g, "<br>"));
         $('#inst_phone').html(result[0]['InstPhone']);
+        
+        inst_name = result[0]['InstName'];
+        section_num = result[0]['SectionNum'];
     }
 }
 
@@ -528,4 +535,28 @@ function sendEmailToTechSupport() {
 //    message += "<img src='cid:screen_shot'/>";    
     var img_base64 = str_img.replace("data:image/png;base64,", "");
     return proc_sendEmailToTechSupport("presidenttest@ivc.edu", "Do Not Reply", "", "", subject, message, img_base64);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+function sendEmailToDSPSTestExamChange() {
+    var subject = "Proctor Test Instructor Exam Update";
+    var message = "Dear Angie Bates,<br><br>";
+    message += "Instructor changed test exam option.<br><br>";
+    
+    message += "Student Name: <b>" + $('#stu_name').html() + "</b><br>";
+    message += "Student ID: <b>" + $('#stu_id').html() + "</b><br>";
+    message += "Instructor Name: <b>" + inst_name + "</b><br>";
+    message += "Ticket #: <b>" + section_num + "</b><br>";
+    message += "Course: <b>" + $('#course_id').html() + "</b><br>";
+    message += "Test Date: <b>" + $('#test_date').html() + "</b><br>";
+    message += "Test Time: <b>" + $('#test_time').html() + "</b><br><br>";
+    
+    var str_url = location.href;
+    str_url = str_url.replace("instructorReview.html", "dspsReview_2.html");
+    message += "Please click below ticket # to open DSPS 2 review page<br><br>";
+    message += "<a href='" + str_url + "'>" + section_num + "</a><br><br>";
+    
+    // testing
+    proc_sendEmail("vptest@ivc.edu", "Angie Bates", subject, message);
+//    proc_sendEmail("abates@ivc.edu", "Angie Bates", subject, message);
 }
