@@ -575,6 +575,23 @@ function db_deleteExamPDFAll(ProctorID) {
     return Result;
 }
 
+// pdf file verification ///////////////////////////////////////////////////////
+function pdfGetTotalPages(file_data) {
+    var Result = "";
+    $.ajax({  
+        url: "php/pdf_getTotalPages.php",  
+        type: "POST",  
+        data: file_data,
+        processData: false,  
+        contentType: false,  
+        async: false,
+        success:function(data) {
+            Result = JSON.parse(data);
+        }  
+    });
+    return Result;
+}
+
 // upload attach file //////////////////////////////////////////////////////////
 //function uploadAttachFile(file_data) {
 //    var Result = "";

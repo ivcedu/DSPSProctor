@@ -1,6 +1,7 @@
 var proctor_id = "";
 var m_file_name = "";
 var m_base64_data = "";
+var m_total_page = 0;
 
 var inst_name = "";
 var section_num = "";
@@ -471,13 +472,24 @@ function getPDFAttachmentInfo() {
     }
 }
 
-function addExamPDF() {    
-    var exampdf_id = db_insertExamPDF(proctor_id, m_file_name, m_base64_data);
-    addPDFFileToExamList(exampdf_id);
-    $('#attachment_file').filestyle('clear');
+function addExamPDF() {
+    var file = $('#attachment_file').get(0).files[0];
+    var f_name = file.name.replace(/#/g, "");
+    var file_data = new FormData();
+    file_data.append("files[]", file, f_name); 
+    m_total_page = pdfGetTotalPages(file_data);
     
-    var note = "Test exam: " + m_file_name + " has been attached";
-    db_insertTransaction(proctor_id, sessionStorage.getItem('ls_dsps_proctor_loginDisplayName'), note);
+    if (m_total_page === 0) {
+        alert("Your PDF file are not correctly formatted. please verify your pdf file again");
+    }
+    else {
+        var exampdf_id = db_insertExamPDF(proctor_id, m_file_name, m_base64_data);
+        addPDFFileToExamList(exampdf_id);
+        var note = "Test exam: " + m_file_name + " has been attached";
+        db_insertTransaction(proctor_id, sessionStorage.getItem('ls_dsps_proctor_loginDisplayName'), note);
+    }
+    
+    $('#attachment_file').filestyle('clear');
 }
 
 function convertPDFtoBase64() {
