@@ -201,11 +201,24 @@ $(document).ready(function() {
     
     // add file button click ///////////////////////////////////////////////////
     $('#add_file').click(function() {
-        startSpin();        
-        setTimeout(function() {      
-            addExamPDF();
-            stopSpin();
-        }, 1000);
+        var file = $('#attachment_file').get(0).files[0];
+        var f_name = file.name.replace(/#/g, "");
+        var file_data = new FormData();
+        file_data.append("files[]", file, f_name); 
+        m_total_page = pdfGetTotalPages(file_data);
+        
+        if (m_total_page === 0) {
+            alert("Your PDF file are not correctly formatted. please verify your pdf file again");
+            $('#attachment_file').filestyle('clear');
+            return false;
+        }
+        else {
+            startSpin();        
+            setTimeout(function() {      
+                result = addExamPDF();
+                stopSpin();
+            }, 1000);
+        }
     });
     
     // exam pdf click event ////////////////////////////////////////////////////
@@ -659,20 +672,8 @@ function convertPDFtoBase64() {
 }
 
 function addExamPDF() {    
-    var file = $('#attachment_file').get(0).files[0];
-    var f_name = file.name.replace(/#/g, "");
-    var file_data = new FormData();
-    file_data.append("files[]", file, f_name); 
-    m_total_page = pdfGetTotalPages(file_data);
-    
-    if (m_total_page === 0) {
-        alert("Your PDF file are not correctly formatted. please verify your pdf file again");
-    }
-    else {
-        var exampdf_id = db_insertExamPDF(proctor_id, m_file_name, m_base64_data);
-        addPDFFileToExamList(exampdf_id);
-    }
-    
+    var exampdf_id = db_insertExamPDF(proctor_id, m_file_name, m_base64_data);
+    addPDFFileToExamList(exampdf_id);
     $('#attachment_file').filestyle('clear');
 }
 
