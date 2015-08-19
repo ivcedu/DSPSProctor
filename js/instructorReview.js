@@ -215,7 +215,7 @@ $(document).ready(function() {
         else {
             startSpin();        
             setTimeout(function() {      
-                result = addExamPDF();
+                addExamPDF();
                 stopSpin();
             }, 1000);
         }
