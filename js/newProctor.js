@@ -48,19 +48,11 @@ $(document).ready(function() {
     // other check event ///////////////////////////////////////////////////////
     $('#ckb_scribe').change(function() {
         if ($(this).is(':checked')) {
-//            $('#ckb_scantron').prop('disabled', false);
-//            $('#ckb_written_exam').prop('disabled', false);
             $('#cbo_scribe_list').prop('disabled', false);
             $('#cbo_scribe_list').selectpicker('refresh');
             $('#ckb_distraction').prop('disabled', false);
         }
         else {
-//            $("#ckb_scantron").prop('checked', false);
-//            $("#ckb_written_exam").prop('checked', false);
-//            $("#ckb_distraction").prop('checked', false);
-//            $('#ckb_scantron').prop('disabled', true);
-//            $('#ckb_written_exam').prop('disabled', true);
-//            $('#ckb_distraction').prop('disabled', true);
             $('#cbo_scribe_list').prop('disabled', true);
             $('#cbo_scribe_list').val('scantron_only');
             $('#cbo_scribe_list').selectpicker('refresh');
@@ -144,6 +136,25 @@ $(document).ready(function() {
     
     // timepicker
     $('#test_time').timepicker();
+    
+    $('#stu_name').popover({content:"student name field", placement:"bottom"});
+    $('#stu_id').popover({content:"student ID field", placement:"bottom"});
+    $('#div_inst_list').popover({content:"instructor name drop down list", placement:"bottom"});
+    $('#div_course_list').popover({content:"course drop down list", placement:"bottom"});
+    $('#test_date').popover({content:"test date field", placement:"bottom"});
+    $('#test_time').popover({content:"time of exam field", placement:"bottom"});
+    $('#test_time_icon').popover({content:"time of exam selection button", placement:"bottom"});
+    $('#ckb_time_one_half').popover({content:"time and one half check box field", placement:"bottom"});
+    $('#ckb_double_time').popover({content:"double time check box field", placement:"bottom"});
+    $('#ckb_reader').popover({content:"reader check box field", placement:"bottom"});
+    $('#ckb_enlarge_exam').popover({content:"enlarge exam check box field", placement:"bottom"});
+    $('#ckb_user_of_comp').popover({content:"use of computer check box field", placement:"bottom"});
+    $('#ckb_scribe').popover({content:"scribe check box field", placement:"bottom"});
+    $('#div_scribe_list').popover({content:"scribe drop down list", placement:"bottom"});
+    $('#ckb_distraction').popover({content:"distraction reduced environment check box field", placement:"bottom"});
+    $('#ckb_other').popover({content:"other check box field", placement:"bottom"});
+    $('#txt_other').popover({content:"other text input field", placement:"bottom"});
+    $('#comments').popover({content:"comments text input field", placement:"bottom"});
 });
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -180,6 +191,7 @@ function getStudentInfo() {
 function getStudentCourseInfo() {
     var stu_id = sessionStorage.getItem('ls_dsps_proctor_loginID');
     var cur_term = tardis_getCurrentTerm();
+    $('#new_protor_title').html("New Test Proctoring (" + getCurrentSemester(cur_term) + ")");
     
     // testing
     stu_id = "1029202";
@@ -264,7 +276,8 @@ function insertProctor() {
 function insertAccom(proctor_id) {
     var time_one_half = $('#ckb_time_one_half').is(':checked');
     var double_time = $('#ckb_double_time').is(':checked');
-    var alt_media = $('#ckb_alt_media').is(':checked');
+//    var alt_media = $('#ckb_alt_media').is(':checked');
+    var alt_media = false;
     var reader = $('#ckb_reader').is(':checked');
     var enlarge_exam = $('#ckb_enlarge_exam').is(':checked');
     var user_of_comp = $('#ckb_user_of_comp').is(':checked');

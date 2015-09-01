@@ -8,6 +8,9 @@ var inst_email = "";
 var section_num = "";
 
 var str_img = "";
+
+var new_date = "";
+var new_time = "";
 ////////////////////////////////////////////////////////////////////////////////
 window.onload = function() {   
     if (sessionStorage.key(0) !== null) {   
@@ -125,11 +128,11 @@ $(document).ready(function() {
     // no show button click ////////////////////////////////////////////////////
     $('#btn_no_show').click(function() { 
         $(this).prop("disabled", true);
-        db_updateProctorStatus(proctor_id, 5, "DateDSPSComplete");
-        db_updateProctorStep(proctor_id, 5, "DateDSPSComplete");
-        db_insertProctorLog(proctor_id, sessionStorage.getItem('ls_dsps_proctor_loginDisplayName'), 5, 5);
+        db_updateProctorStatus(proctor_id, 2, "DateDSPSComplete");
+        db_updateProctorStep(proctor_id, 3, "DateInstReview");
+        db_insertProctorLog(proctor_id, sessionStorage.getItem('ls_dsps_proctor_loginDisplayName'), 4, 5);
         
-        var note = "DSPS No Show";
+        var note = "DSPS Student No Show";
         var dsps_comments = $('#dsps_comments').val();
         if (dsps_comments !== "") {
             note += "\nComments: " + textReplaceApostrophe(dsps_comments);
@@ -138,8 +141,35 @@ $(document).ready(function() {
         sendEmailToInstructorNoShow();
         
         $('#mod_dialog_box_header').html("Complete");
-        $('#mod_dialog_box_body').html("DSPS No Show");
+        $('#mod_dialog_box_body').html("DSPS Student No Show");
         $('#mod_dialog_box').modal('show');
+    });
+    
+    // exam not received button click //////////////////////////////////////////
+    $('#btn_no_exam').click(function() { 
+        $(this).prop("disabled", true);
+        $('#mod_new_date_time_box').modal('show');
+    });
+    
+    // mod new date time save click ////////////////////////////////////////////
+    $('#mod_new_dt_btn_save').click(function() { 
+        new_date = $('#mod_new_test_date').val();
+        new_time = $('#mod_new_test_time').val();
+        
+        db_updateProctorTestDT(proctor_id, test_date, test_time);
+        db_insertProctorLog(proctor_id, sessionStorage.getItem('ls_dsps_proctor_loginDisplayName'), 4, 9);
+        
+        var note = "DSPS Exam Not Received";
+        var dsps_comments = $('#dsps_comments').val();
+        if (dsps_comments !== "") {
+            note += "\nComments: " + textReplaceApostrophe(dsps_comments);
+        }
+        db_insertTransaction(proctor_id, sessionStorage.getItem('ls_dsps_proctor_loginDisplayName'), note);
+        sendEmailToInstructorExamNotReceived();
+        sendEmailToStudentExamNotReceived();
+        
+        window.open('home.html', '_self');
+        return false;
     });
     
     // exam status update button click /////////////////////////////////////////
@@ -157,7 +187,7 @@ $(document).ready(function() {
         window.open('home.html', '_self');
         return false;
     });
-    
+
     // modal submit button click ///////////////////////////////////////////////
     $('#mod_tech_btn_submit').click(function() { 
         if (sendEmailToTechSupport()) {
@@ -184,11 +214,18 @@ $(document).ready(function() {
     
     // selectpicker
     $('.selectpicker').selectpicker();
+    
+    // datepicker
+    $('#mod_new_test_date').datepicker();
+    
+    // timepicker
+    $('#mod_new_test_time').timepicker({template: 'modal'});
 });
 
 ////////////////////////////////////////////////////////////////////////////////
 function defaultHideDisalbe() {
     $('#mod_dialog_box').modal('hide');
+    $('#mod_new_date_time_box').modal('hide');
     $('#mod_tech_support').modal('hide');
     $('#se_option').hide();
     $('#cal_type').hide();
@@ -230,9 +267,9 @@ function setAccom() {
         if (result[0]['DoubleTime'] === "1") {
             $("#ckb_double_time").prop('checked', true);
         }
-        if (result[0]['AltMedia'] === "1") {
-            $("#ckb_alt_media").prop('checked', true);
-        }
+//        if (result[0]['AltMedia'] === "1") {
+//            $("#ckb_alt_media").prop('checked', true);
+//        }
         if (result[0]['Reader'] === "1") {
             $("#ckb_reader").prop('checked', true);
         }
@@ -448,9 +485,9 @@ function sendEmailToInstructorCompleted() {
 }
 
 function sendEmailToInstructorNoShow() {
-    var subject = "Proctor Request No Show";
+    var subject = "Proctor Request Student No Show";
     var message = "Dear " + inst_name + ",<br><br>";
-    message += "Proctor test request has been No Show<br><br>";
+    message += "Student did not show up for this exam.<br><br>";
     
     message += "Student Name: <b>" + $('#stu_name').html() + "</b><br>";
     message += "Student ID: <b>" + $('#stu_id').html() + "</b><br>";
@@ -463,5 +500,45 @@ function sendEmailToInstructorNoShow() {
     
     // testing
     proc_sendEmail("deantest@ivc.edu", inst_name, subject, message);
+//    proc_sendEmail(inst_email, inst_name, subject, message);
+}
+
+function sendEmailToInstructorExamNotReceived() {
+    var subject = "Proctor Request Exam Not Received";
+    var message = "Dear " + inst_name + ",<br><br>";
+    message += "We did not receive your exam for<br><br>";
+    
+    message += "Student Name: <b>" + $('#stu_name').html() + "</b><br>";
+    message += "Student ID: <b>" + $('#stu_id').html() + "</b><br>";
+    message += "Ticket #: <b>" + section_num + "</b><br>";
+    message += "Course: <b>" + $('#course_id').html() + "</b><br>";
+    message += "Test Date: <b>" + $('#test_date').html() + "</b><br>";
+    message += "Test Time: <b>" + $('#test_time').html() + "</b><br><br>";
+    
+    message += "It has been rescheduled for (" + new_date + " " + new_time + ") please attach or drop off exam before this scheduled date/time. Thank you!";
+    message += "Comments:<br>" + $('#dsps_comments').val().replace(/\n/g, "<br>");
+    
+    // testing
+    proc_sendEmail("deantest@ivc.edu", inst_name, subject, message);
+//    proc_sendEmail(inst_email, inst_name, subject, message);
+}
+
+function sendEmailToStudentExamNotReceived() {
+    var subject = "Proctor Request Exam Not Received";
+    var message = "Dear " + $('#stu_name').html() + ",<br><br>";
+    message += "We did not receive exam form instructor<br><br>";
+    
+    message += "Instructor Name: <b>" + inst_name + "</b><br>";
+    message += "Ticket #: <b>" + section_num + "</b><br>";
+    message += "Course: <b>" + $('#course_id').html() + "</b><br>";
+    message += "Test Date: <b>" + $('#test_date').val() + "</b><br>";
+    message += "Test Time: <b>" + $('#test_time').val() + "</b><br>";
+    message += "Time allotted in class: <b>" + $('#allow_min').html() + "</b> minutes<br><br>";
+    
+    message += "It has been rescheduled for (" + new_date + " " + new_time + ") please attach or drop off exam before this scheduled date/time. Thank you!";
+    message += "Comments:<br>" + $('#dsps_comments').val().replace(/\n/g, "<br>");
+    
+    // testing
+    proc_sendEmail("staff1@ivc.edu", inst_name, subject, message);
 //    proc_sendEmail(inst_email, inst_name, subject, message);
 }

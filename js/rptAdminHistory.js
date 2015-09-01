@@ -4,12 +4,18 @@ window.onload = function() {
     if (sessionStorage.key(0) !== null) {  
         $('#mod_tech_support').modal('hide');
         getAdminProctorCompleteList("All", "");
+        initializeTable();
     }
     else {
         window.open('Login.html', '_self');
         return false;
     }
 };
+
+////////////////////////////////////////////////////////////////////////////////
+function initializeTable() {
+    $("#proctor_list").tablesorter({ });
+}
 
 ////////////////////////////////////////////////////////////////////////////////
 $(document).ready(function() {  
@@ -59,12 +65,12 @@ $(document).ready(function() {
     });
     
     // table row restart button click //////////////////////////////////////////
-    $('table').on('click', 'button[id^="btn_restart_"]', function(e) {
-        e.preventDefault();
-        var proctor_id = $(this).attr('id').replace("btn_restart_", "");
-        window.open('restartProctor.html?proctor_id=' + proctor_id, '_self');
-        return false;
-    });
+//    $('table').on('click', 'button[id^="btn_restart_"]', function(e) {
+//        e.preventDefault();
+//        var proctor_id = $(this).attr('id').replace("btn_restart_", "");
+//        window.open('restartProctor.html?proctor_id=' + proctor_id, '_self');
+//        return false;
+//    });
     
     // modal submit button click ///////////////////////////////////////////////
     $('#mod_tech_btn_submit').click(function() { 
@@ -115,15 +121,9 @@ function setAdminProctorCompleteListHTML(proctor_id, section_num, course_id, int
     tbl_html += "<td class='span2'>" + course_id + "</td>";
     tbl_html += "<td class='span2'>" + int_name + "</td>";
     tbl_html += "<td class='span2'>" + stu_ID + "</td>";
-    tbl_html += "<td class='span2'>" + stu_name + "</td>";
+    tbl_html += "<td class='span3'>" + stu_name + "</td>";
     tbl_html += "<td class='span2' id='step_" + proctor_id + "'>" + step + "</td>";
     tbl_html += "<td class='span2'>" + status + "</td>";
-    if (status_id === "5") {
-        tbl_html += "<td class='span1' style='padding: 0; text-align: center;'><button class='btn btn-mini' id='btn_restart_" + proctor_id + "'><i class='icon-edit icon-black'></i></button></td>";
-    }
-    else {
-        tbl_html += "<td class='span1'></td>";
-    }
     tbl_html += "</tr>";
     return tbl_html;
 }

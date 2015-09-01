@@ -358,6 +358,15 @@ function formValidation() {
     if (typeof $('input[name="rdo_exam"]:checked').val() === 'undefined') {
         err += "Exam Attachment or Exam Drop Off option is a required field\n";
     }
+    if (typeof $('input[name="rdo_notes"]:checked').val() === 'undefined'
+        || typeof $('input[name="rdo_book"]:checked').val() === 'undefined'
+        || typeof $('input[name="rdo_calculator"]:checked').val() === 'undefined'
+        || typeof $('input[name="rdo_dictionary"]:checked').val() === 'undefined'
+        || typeof $('input[name="rdo_scratch_paper"]:checked').val() === 'undefined'
+        || typeof $('input[name="rdo_scantron"]:checked').val() === 'undefined'
+        || typeof $('input[name="rdo_computer"]:checked').val() === 'undefined') {
+        err += "All Exam Guidelines options are required field\n";
+    }
 
     return err;
 }
@@ -464,9 +473,9 @@ function setAccom() {
         if (result[0]['DoubleTime'] === "1") {
             $("#ckb_double_time").prop('checked', true);
         }
-        if (result[0]['AltMedia'] === "1") {
-            $("#ckb_alt_media").prop('checked', true);
-        }
+//        if (result[0]['AltMedia'] === "1") {
+//            $("#ckb_alt_media").prop('checked', true);
+//        }
         if (result[0]['Reader'] === "1") {
             $("#ckb_reader").prop('checked', true);
         }

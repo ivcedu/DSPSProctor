@@ -122,6 +122,28 @@ $(document).ready(function() {
         $('#mod_dialog_box').modal('show');
     });
     
+    // cancel button click ///////////////////////////////////////////////////////
+    $('#btn_cancel').click(function() { 
+        if ($('#dsps_comments').val().replace(/\s+/g, '') === "") {
+            alert("Please specify reasons for cancel under Comments");
+            return false;
+        }
+        
+        $(this).prop("disabled", true);
+        db_updateProctorStatus(proctor_id, 10, "DateDSPSReview1");
+        db_insertProctorLog(proctor_id, sessionStorage.getItem('ls_dsps_proctor_loginDisplayName'), 1, 10);
+        
+        var note = "DSPS 1 Review Canceled";
+        var dsps_comments = $('#dsps_comments').val();
+        note += "\nComments: " + textReplaceApostrophe(dsps_comments);
+        db_insertTransaction(proctor_id, sessionStorage.getItem('ls_dsps_proctor_loginDisplayName'), note);
+        sendEmailToStudentCanceled();
+        
+        $('#mod_dialog_box_header').html("Complete");
+        $('#mod_dialog_box_body').html("DSPS 1 Review has been Canceled");
+        $('#mod_dialog_box').modal('show');
+    });
+    
     // dialog ok click /////////////////////////////////////////////////////////
     $('#mod_dialog_btn_ok').click(function() { 
         window.open('home.html', '_self');
@@ -186,9 +208,9 @@ function setAccom() {
         if (result[0]['DoubleTime'] === "1") {
             $("#ckb_double_time").prop('checked', true);
         }
-        if (result[0]['AltMedia'] === "1") {
-            $("#ckb_alt_media").prop('checked', true);
-        }
+//        if (result[0]['AltMedia'] === "1") {
+//            $("#ckb_alt_media").prop('checked', true);
+//        }
         if (result[0]['Reader'] === "1") {
             $("#ckb_reader").prop('checked', true);
         }
@@ -291,6 +313,22 @@ function sendEmailToStudentDeny() {
     message += "Your test proctoring request that was submitted on <b>" + date_submitted + "</b> has been <b>Denied;</b><br>";
     message += "Please contact the DSPS office as soon as possible regarding your request at 949.451.5630 or ivcdsps@ivc.edu<br>";
     message += "DSPS office hours are Monday through Thursday 8 AM - 5 PM, and Friday 8 AM - 3 PM<br><br>";
+    
+    message += "Instructor Name: <b>" + inst_name + "</b><br>";
+    message += "Ticket #: <b>" + section_num + "</b><br>";
+    message += "Course: <b>" + $('#course_id').html() + "</b><br>";
+    message += "Test Date: <b>" + $('#test_date').html() + "</b><br>";
+    message += "Test Time: <b>" + $('#test_time').html() + "</b><br><br>";
+    
+    // testing
+    proc_sendEmail("stafftest@ivc.edu", $('#stu_name').html(), subject, message);
+//    proc_sendEmail(stu_email, $('#stu_name').html(), subject, message);
+}
+
+function sendEmailToStudentCanceled() {
+    var subject = "Test proctoring request has been Canceled";
+    var message = "Dear " + $('#stu_name').html() + ",<br><br>";
+    message += "Your test proctoring request that was submitted on <b>" + date_submitted + "</b> has been <b>Canceled;</b><br>";
     
     message += "Instructor Name: <b>" + inst_name + "</b><br>";
     message += "Ticket #: <b>" + section_num + "</b><br>";

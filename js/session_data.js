@@ -153,6 +153,25 @@ function getDTUIStamp() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+function getCurrentSemester(term_code) {
+    var year = term_code.substring(0, 4);
+    var seme_code = term_code.substring(4);
+    var semester = "";
+    
+    if (seme_code === "1") {
+        semester = "Spring Semester";
+    }
+    else if (seme_code === "2") {
+        semester = "Summer Semester";
+    }
+    else {
+        semester = "Fall Semester";
+    }
+    
+    return year + " " + semester;
+}
+
+////////////////////////////////////////////////////////////////////////////////
 function b64toBlob(b64Data, contentType) {
     contentType = contentType || '';
     var sliceSize = 512;

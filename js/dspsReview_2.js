@@ -106,7 +106,7 @@ $(document).ready(function() {
     $('#btn_accept').click(function() { 
         $(this).prop("disabled", true);
         updateProctorTestDateTime();
-        db_updateProctorStatus(proctor_id, 7, "DateDSPSReview2");
+        db_updateProctorStep(proctor_id, 4, "DateDSPSReview2");
         db_insertProctorLog(proctor_id, sessionStorage.getItem('ls_dsps_proctor_loginDisplayName'), 3, 7);
         
         var note = "DSPS 2 Review Accepted";
@@ -143,6 +143,29 @@ $(document).ready(function() {
         
         $('#mod_dialog_box_header').html("Complete");
         $('#mod_dialog_box_body').html("DSPS 2 Review has been Denied");
+        $('#mod_dialog_box').modal('show');
+    });
+    
+    // cancel button click ///////////////////////////////////////////////////////
+    $('#btn_cancel').click(function() { 
+        if ($('#dsps_comments').val().replace(/\s+/g, '') === "") {
+            alert("Please specify reasons for cancel under Comments");
+            return false;
+        }
+        
+        $(this).prop("disabled", true);
+        db_updateProctorStatus(proctor_id, 10, "DateDSPSReview2");
+        db_insertProctorLog(proctor_id, sessionStorage.getItem('ls_dsps_proctor_loginDisplayName'), 3, 10);
+        
+        var note = "DSPS 2 Review Canceled";
+        var dsps_comments = $('#dsps_comments').val();
+        note += "\nComments: " + textReplaceApostrophe(dsps_comments);
+        db_insertTransaction(proctor_id, sessionStorage.getItem('ls_dsps_proctor_loginDisplayName'), note);
+        sendEmailToStudentCanceled();
+        sendEmailToInstructorCanceled();
+        
+        $('#mod_dialog_box_header').html("Complete");
+        $('#mod_dialog_box_body').html("DSPS 2 Review has been Canceled");
         $('#mod_dialog_box').modal('show');
     });
     
@@ -230,9 +253,9 @@ function setAccom() {
         if (result[0]['DoubleTime'] === "1") {
             $("#ckb_double_time").prop('checked', true);
         }
-        if (result[0]['AltMedia'] === "1") {
-            $("#ckb_alt_media").prop('checked', true);
-        }
+//        if (result[0]['AltMedia'] === "1") {
+//            $("#ckb_alt_media").prop('checked', true);
+//        }
         if (result[0]['Reader'] === "1") {
             $("#ckb_reader").prop('checked', true);
         }
@@ -502,4 +525,37 @@ function sendEmailToInstructorReview2Denied() {
     // testing
     proc_sendEmail("deantest@ivc.edu", inst_name, subject, message);
 //    proc_sendEmail(inst_email, inst_name, subject, message);
+}
+
+function sendEmailToStudentCanceled() {
+    var subject = "Test proctoring request has been Canceled";
+    var message = "Dear " + $('#stu_name').html() + ",<br><br>";
+    message += "Your test proctoring request that was submitted on <b>" + date_submitted + "</b> has been <b>Canceled;</b><br>";
+    
+    message += "Instructor Name: <b>" + inst_name + "</b><br>";
+    message += "Ticket #: <b>" + section_num + "</b><br>";
+    message += "Course: <b>" + $('#course_id').html() + "</b><br>";
+    message += "Test Date: <b>" + $('#test_date').html() + "</b><br>";
+    message += "Test Time: <b>" + $('#test_time').html() + "</b><br><br>";
+    
+    // testing
+    proc_sendEmail("stafftest@ivc.edu", $('#stu_name').html(), subject, message);
+//    proc_sendEmail(stu_email, $('#stu_name').html(), subject, message);
+}
+
+function sendEmailToInstructorCanceled() {
+    var subject = "Test proctoring request has been Canceled";
+    var message = "Dear " + inst_name + ",<br><br>";
+    message += "Proctor test request DSPS 2 Review has been Canceled<br><br>";
+    
+    message += "Student Name: <b>" + $('#stu_name').html() + "</b><br>";
+    message += "Student ID: <b>" + $('#stu_id').html() + "</b><br>";
+    message += "Ticket #: <b>" + section_num + "</b><br>";
+    message += "Course: <b>" + $('#course_id').html() + "</b><br>";
+    message += "Test Date: <b>" + $('#test_date').val() + "</b><br>";
+    message += "Test Time: <b>" + $('#test_time').val() + "</b><br><br>";
+    
+    // testing
+    proc_sendEmail("stafftest@ivc.edu", $('#stu_name').html(), subject, message);
+//    proc_sendEmail(stu_email, $('#stu_name').html(), subject, message);
 }

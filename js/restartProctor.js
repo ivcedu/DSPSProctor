@@ -211,9 +211,9 @@ function setAccom() {
         if (result[0]['DoubleTime'] === "1") {
             $("#ckb_double_time").prop('checked', true);
         }
-        if (result[0]['AltMedia'] === "1") {
-            $("#ckb_alt_media").prop('checked', true);
-        }
+//        if (result[0]['AltMedia'] === "1") {
+//            $("#ckb_alt_media").prop('checked', true);
+//        }
         if (result[0]['Reader'] === "1") {
             $("#ckb_reader").prop('checked', true);
         }

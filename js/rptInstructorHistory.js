@@ -4,12 +4,18 @@ window.onload = function() {
     if (sessionStorage.key(0) !== null) {
         $('#mod_tech_support').modal('hide');
         getAdminProctorCompleteList();
+        initializeTable();
     }
     else {
         window.open('Login.html', '_self');
         return false;
     }
 };
+
+////////////////////////////////////////////////////////////////////////////////
+function initializeTable() {
+    $("#proctor_list").tablesorter({ });
+}
 
 ////////////////////////////////////////////////////////////////////////////////
 $(document).ready(function() {   

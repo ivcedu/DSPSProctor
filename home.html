@@ -38,18 +38,85 @@
             </div>
             
             <!-- RF List section  -->
-            <table class="table table-condensed table-bordered" id="proctor_list">
-                <thead style="background-color: grey;">
-                    <th class="span1" style="text-align: left;"><a href="#" style="color: white;">Ticket</a></th>
-                    <th class="span2" style="text-align: left;"><a href="#" style="color: white;">Course</a></th>
-                    <th class="span3" style="text-align: left;"><a href="#" style="color: white;">Student Name</a></th>
-                    <th class="span2" style="text-align: left;"><a href="#" style="color: white;">Status</a></th>
-                    <th class="span2" style="text-align: left;"><a href="#" style="color: white;">Stage</a></th>
-                    <th class="span2" style="text-align: left;"><a href="#" style="color: white;">Date Submitted</a></th>
-                </thead>
-                <tbody id="body_tr">
-                </tbody>
-            </table>
+            <div id="inst_section">
+                <table class="table table-condensed table-bordered" id="proctor_list">
+                    <thead style="background-color: grey;">
+                        <th class="span1" style="text-align: left;"><a href="#" style="color: white;">Ticket</a></th>
+                        <th class="span2" style="text-align: left;"><a href="#" style="color: white;">Course</a></th>
+                        <th class="span3" style="text-align: left;"><a href="#" style="color: white;">Student Name</a></th>
+                        <th class="span2" style="text-align: left;"><a href="#" style="color: white;">Status</a></th>
+                        <th class="span2" style="text-align: left;"><a href="#" style="color: white;">Stage</a></th>
+                        <th class="span2" style="text-align: left;"><a href="#" style="color: white;">Date Submitted</a></th>
+                    </thead>
+                    <tbody id="body_tr">
+                    </tbody>
+                </table>
+            </div>
+            <div id="admin_section">
+                <div class="row-fluid" style="padding-bottom: 10px;">
+                    <div class="text-center" style="background-color: gray; color: white; height: 20px;">DSPS Review 1</div>
+                </div>
+                <table class="table table-condensed table-bordered" id="dsps_1_list">
+                    <thead>
+                        <th class="span1" style="text-align: left;"><a href="#">Ticket</a></th>
+                        <th class="span2" style="text-align: left;"><a href="#">Course</a></th>
+                        <th class="span3" style="text-align: left;"><a href="#">Student Name</a></th>
+                        <th class="span2" style="text-align: left;"><a href="#">Status</a></th>
+                        <th class="span2" style="text-align: left;"><a href="#">Stage</a></th>
+                        <th class="span2" style="text-align: left;"><a href="#">Date Submitted</a></th>
+                    </thead>
+                    <tbody id="dsps_1_body_tr">
+                    </tbody>
+                </table>
+                
+                <div class="row-fluid" style="padding-bottom: 10px;">
+                    <div class="text-center" style="background-color: gray; color: white; height: 20px;">DSPS Review 2</div>
+                </div>
+                <table class="table table-condensed table-bordered" id="dsps_2_list">
+                    <thead>
+                        <th class="span1" style="text-align: left;"><a href="#">Ticket</a></th>
+                        <th class="span2" style="text-align: left;"><a href="#">Course</a></th>
+                        <th class="span3" style="text-align: left;"><a href="#">Student Name</a></th>
+                        <th class="span2" style="text-align: left;"><a href="#">Status</a></th>
+                        <th class="span2" style="text-align: left;"><a href="#">Stage</a></th>
+                        <th class="span2" style="text-align: left;"><a href="#">Date Submitted</a></th>
+                    </thead>
+                    <tbody id="dsps_2_body_tr">
+                    </tbody>
+                </table>
+                
+                <div class="row-fluid" style="padding-bottom: 10px;">
+                    <div class="text-center" style="background-color: gray; color: white; height: 20px;">Instructor Review</div>
+                </div>
+                <table class="table table-condensed table-bordered" id="inst_review_list">
+                    <thead>
+                        <th class="span1" style="text-align: left;"><a href="#">Ticket</a></th>
+                        <th class="span2" style="text-align: left;"><a href="#">Course</a></th>
+                        <th class="span3" style="text-align: left;"><a href="#">Student Name</a></th>
+                        <th class="span2" style="text-align: left;"><a href="#">Status</a></th>
+                        <th class="span2" style="text-align: left;"><a href="#">Stage</a></th>
+                        <th class="span2" style="text-align: left;"><a href="#">Date Submitted</a></th>
+                    </thead>
+                    <tbody id="inst_review_body_tr">
+                    </tbody>
+                </table>
+                
+                <div class="row-fluid" style="padding-bottom: 10px;">
+                    <div class="text-center" style="background-color: gray; color: white; height: 20px;">DSPS Complete</div>
+                </div>
+                <table class="table table-condensed table-bordered" id="dsps_complete_list">
+                    <thead>
+                        <th class="span1" style="text-align: left;"><a href="#">Ticket</a></th>
+                        <th class="span2" style="text-align: left;"><a href="#">Course</a></th>
+                        <th class="span3" style="text-align: left;"><a href="#">Student Name</a></th>
+                        <th class="span2" style="text-align: left;"><a href="#">Status</a></th>
+                        <th class="span2" style="text-align: left;"><a href="#">Stage</a></th>
+                        <th class="span2" style="text-align: left;"><a href="#">Date Submitted</a></th>
+                    </thead>
+                    <tbody id="dsps_complete_body_tr">
+                    </tbody>
+                </table>
+            </div>
             
             <!-- Modal dialog box -->
             <div class="modal hide fade hidden-print" id="mod_dialog_box">
@@ -99,6 +166,8 @@
         <script src="../include/jquery-ui/js/jquery.ui.widget.js"></script>
         <script src="../include/jquery-ui/js/jquery.ui.datepicker.js"></script>
         <script src="../include/jquery-autosize/jquery.autosize.1.18.1.min.js"></script>
+        <script src="../include/jquery-tablesorter/js/jquery.tablesorter.min.js"></script>
+        <script src="../include/jquery-tablesorter/js/jquery.tablesorter.widgets.min.js"></script>
         <script src="../include/bootstrap/js/bootstrap.2.3.2.min.js"></script>
         <script src="../include/bootstrap-select/js/bootstrap-select.1.5.4.min.js"></script>
         <script src="../include/bootstrap-timepicker/js/bootstrap-timepicker.min.js"></script>
