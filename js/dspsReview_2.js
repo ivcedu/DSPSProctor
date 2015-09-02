@@ -109,7 +109,7 @@ $(document).ready(function() {
         db_updateProctorStep(proctor_id, 4, "DateDSPSReview2");
         db_insertProctorLog(proctor_id, sessionStorage.getItem('ls_dsps_proctor_loginDisplayName'), 3, 7);
         
-        var note = "DSPS 2 Review Accepted";
+        var note = "DSPS Review 2 Accepted";
         var dsps_comments = $('#dsps_comments').val();
         if (dsps_comments !== "") {
             note += "\nComments: " + textReplaceApostrophe(dsps_comments);
@@ -119,7 +119,7 @@ $(document).ready(function() {
         sendEmailToStudentAccepted();
         
         $('#mod_dialog_box_header').html("Complete");
-        $('#mod_dialog_box_body').html("DSPS 2 Review has been Accepted");
+        $('#mod_dialog_box_body').html("DSPS Review 2 has been Accepted");
         $('#mod_dialog_box').modal('show');
     });
     
@@ -134,7 +134,7 @@ $(document).ready(function() {
         db_updateProctorStatus(proctor_id, 3, "DateDSPSReview2");
         db_insertProctorLog(proctor_id, sessionStorage.getItem('ls_dsps_proctor_loginDisplayName'), 3, 3);
         
-        var note = "DSPS 2 Review Denied";
+        var note = "DSPS Review 2 Denied";
         var dsps_comments = $('#dsps_comments').val();
         note += "\nComments: " + textReplaceApostrophe(dsps_comments);
         db_insertTransaction(proctor_id, sessionStorage.getItem('ls_dsps_proctor_loginDisplayName'), note);
@@ -142,7 +142,7 @@ $(document).ready(function() {
         sendEmailToStudentCancel();
         
         $('#mod_dialog_box_header').html("Complete");
-        $('#mod_dialog_box_body').html("DSPS 2 Review has been Denied");
+        $('#mod_dialog_box_body').html("DSPS Review 2 has been Denied");
         $('#mod_dialog_box').modal('show');
     });
     
@@ -157,7 +157,7 @@ $(document).ready(function() {
         db_updateProctorStatus(proctor_id, 10, "DateDSPSReview2");
         db_insertProctorLog(proctor_id, sessionStorage.getItem('ls_dsps_proctor_loginDisplayName'), 3, 10);
         
-        var note = "DSPS 2 Review Canceled";
+        var note = "DSPS Review 2 Canceled";
         var dsps_comments = $('#dsps_comments').val();
         note += "\nComments: " + textReplaceApostrophe(dsps_comments);
         db_insertTransaction(proctor_id, sessionStorage.getItem('ls_dsps_proctor_loginDisplayName'), note);
@@ -165,7 +165,7 @@ $(document).ready(function() {
         sendEmailToInstructorCanceled();
         
         $('#mod_dialog_box_header').html("Complete");
-        $('#mod_dialog_box_body').html("DSPS 2 Review has been Canceled");
+        $('#mod_dialog_box_body').html("DSPS Review 2 has been Canceled");
         $('#mod_dialog_box').modal('show');
     });
     
@@ -253,9 +253,6 @@ function setAccom() {
         if (result[0]['DoubleTime'] === "1") {
             $("#ckb_double_time").prop('checked', true);
         }
-//        if (result[0]['AltMedia'] === "1") {
-//            $("#ckb_alt_media").prop('checked', true);
-//        }
         if (result[0]['Reader'] === "1") {
             $("#ckb_reader").prop('checked', true);
         }
@@ -281,12 +278,6 @@ function setAccom() {
             }
             $('#cbo_scribe_list').html(scribe_html);
         }
-//        if (result[0]['Scantron'] === "1") {
-//            $("#ckb_scantron").prop('checked', true);
-//        }
-//        if (result[0]['WrittenExam'] === "1") {
-//            $("#ckb_written_exam").prop('checked', true);
-//        }
         if (result[0]['Distraction'] === "1") {
             $("#ckb_distraction").prop('checked', true);
         }
@@ -492,7 +483,7 @@ function sendEmailToStudentCancel() {
 function sendEmailToInstructorReview2Accept() {
     var subject = "Proctor Request 2 Review Accept";
     var message = "Dear " + inst_name + ",<br><br>";
-    message += "Proctor test request DSPS 2 Review has been Accepted<br><br>";
+    message += "Proctor test request DSPS Review 2 has been Accepted<br><br>";
     
     message += "Student Name: <b>" + $('#stu_name').html() + "</b><br>";
     message += "Student ID: <b>" + $('#stu_id').html() + "</b><br>";
@@ -511,7 +502,7 @@ function sendEmailToInstructorReview2Accept() {
 function sendEmailToInstructorReview2Denied() {
     var subject = "Proctor Request 2 Review Denied";
     var message = "Dear " + inst_name + ",<br><br>";
-    message += "Proctor test request DSPS 2 Review has been Denied<br><br>";
+    message += "Proctor test request DSPS Review 2 has been Denied<br><br>";
     
     message += "Student Name: <b>" + $('#stu_name').html() + "</b><br>";
     message += "Student ID: <b>" + $('#stu_id').html() + "</b><br>";
@@ -530,7 +521,7 @@ function sendEmailToInstructorReview2Denied() {
 function sendEmailToStudentCanceled() {
     var subject = "Test proctoring request has been Canceled";
     var message = "Dear " + $('#stu_name').html() + ",<br><br>";
-    message += "Your test proctoring request that was submitted on <b>" + date_submitted + "</b> has been <b>Canceled;</b><br>";
+    message += "Your test proctoring request that was submitted on <b>" + date_submitted + "</b> has been <b>Canceled;</b><br><br>";
     
     message += "Instructor Name: <b>" + inst_name + "</b><br>";
     message += "Ticket #: <b>" + section_num + "</b><br>";
@@ -546,7 +537,7 @@ function sendEmailToStudentCanceled() {
 function sendEmailToInstructorCanceled() {
     var subject = "Test proctoring request has been Canceled";
     var message = "Dear " + inst_name + ",<br><br>";
-    message += "Proctor test request DSPS 2 Review has been Canceled<br><br>";
+    message += "Proctor test request DSPS Review 2 has been Canceled<br><br><br>";
     
     message += "Student Name: <b>" + $('#stu_name').html() + "</b><br>";
     message += "Student ID: <b>" + $('#stu_id').html() + "</b><br>";

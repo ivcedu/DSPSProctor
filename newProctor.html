@@ -33,9 +33,9 @@
             <!-- student proctor request -->
             <div class="row-fluid">
                 <div class="span2" style="padding-top: 5px;">Name:</div>
-                <div class="span4"><input type="text" class="span12 input-large" readonly id="stu_name"></div>
+                <div class="span4" id="div_stu_name"><input type="text" class="span12 input-large" readonly id="stu_name"></div>
                 <div class="span2" style="padding-top: 5px;">Student ID:</div>
-                <div class="span2"><input type="text" class="span12" readonly id="stu_id"></div>
+                <div class="span2" id="div_stu_id"><input type="text" class="span12" readonly id="stu_id"></div>
             </div>
             <div class="row-fluid">
                 <div class="span2" style="padding-top: 5px; color: blue;">Instructor's Name:</div>
@@ -48,7 +48,7 @@
             </div>
             <div class="row-fluid">
                 <div class="span2" style="padding-top: 5px; color: blue;">Test Date:</div>
-                <div class="span2"><input type="text" class="span12" id="test_date"></div>
+                <div class="span2" id="dev_test_date"><input type="text" class="span12" id="test_date"></div>
                 <div class="span2" style="padding-top: 5px; color: blue;">Time of Exam:</div>
                 <div class="span2 input-append bootstrap-timepicker">
                     <input type="text" class="input-small" id="test_time">
@@ -62,25 +62,25 @@
                 <div class="span12 text-center" style="padding-top: 5px; border-bottom: 1px solid black; font-weight: bold;">Accommodations:</div>
             </div>
             <div class="row-fluid">
-                <div class="span1"><div class="span12 text-center vertical_middle"><input type="checkbox" id="ckb_time_one_half"></div></div>
+                <div class="span1" id="dev_time_one_half"><div class="span12 text-center vertical_middle"><input type="checkbox" id="ckb_time_one_half"></div></div>
                 <div class="span2" style="padding-top: 3px;">Time & one half</div>
-                <div class="span1"><div class="span12 text-center vertical_middle"><input type="checkbox" id="ckb_double_time"></div></div>
+                <div class="span1" id="dev_double_time"><div class="span12 text-center vertical_middle"><input type="checkbox" id="ckb_double_time"></div></div>
                 <div class="span2" style="padding-top: 3px;">Double Time</div>
                 <!--
                 <div class="span1"><div class="span12 text-center vertical_middle"><input type="checkbox" id="ckb_alt_media"></div></div>
                 <div class="span2" style="padding-top: 3px;">Alt Media</div>
                 -->
-                <div class="span1"><div class="span12 text-center vertical_middle"><input type="checkbox" id="ckb_reader"></div></div>
+                <div class="span1" id="dev_reader"><div class="span12 text-center vertical_middle"><input type="checkbox" id="ckb_reader"></div></div>
                 <div class="span2" style="padding-top: 3px;">Reader</div>
             </div>
             <div class="row-fluid">
-                <div class="span1"><div class="span12 text-center vertical_middle"><input type="checkbox" id="ckb_enlarge_exam"></div></div>
+                <div class="span1" id="dev_enlarge_exam"><div class="span12 text-center vertical_middle"><input type="checkbox" id="ckb_enlarge_exam"></div></div>
                 <div class="span2" style="padding-top: 3px;">Enlarge Exam</div>
-                <div class="span1"><div class="span12 text-center vertical_middle"><input type="checkbox" id="ckb_user_of_comp"></div></div>
+                <div class="span1" id="dev_user_of_comp"><div class="span12 text-center vertical_middle"><input type="checkbox" id="ckb_user_of_comp"></div></div>
                 <div class="span2" style="padding-top: 3px;">Use of Computer</div>
             </div>
             <div class="row-fluid">
-                <div class="span1"><div class="span12 text-center vertical_middle"><input type="checkbox" id="ckb_scribe"></div></div>
+                <div class="span1" id="dev_scribe"><div class="span12 text-center vertical_middle"><input type="checkbox" id="ckb_scribe"></div></div>
                 <div class="span2" style="padding-top: 3px;">Scribe:</div>
                 <div class="span3" id="div_scribe_list">
                     <select class="selectpicker span12" disabled id="cbo_scribe_list">
@@ -95,17 +95,17 @@
                 <div class="span1"><div class="span12 text-center vertical_middle"><input type="checkbox" disabled id="ckb_written_exam"></div></div>
                 <div class="span2" style="padding-top: 3px;">Written Exam</div>
                 -->
-                <div class="span1 offset2"><div class="span12 text-center vertical_middle"><input type="checkbox" disabled id="ckb_distraction"></div></div>
+                <div class="span1 offset2" id="dev_distraction"><div class="span12 text-center vertical_middle"><input type="checkbox" disabled id="ckb_distraction"></div></div>
                 <div class="span3" style="padding-top: 3px;">Distraction Reduced Environment</div>
             </div>
             <div class="row-fluid">
-                <div class="span1"><div class="span12 text-center vertical_middle"><input type="checkbox" id="ckb_other"></div></div>
+                <div class="span1" id="dev_other"><div class="span12 text-center vertical_middle"><input type="checkbox" id="ckb_other"></div></div>
                 <div class="span1" style="padding-top: 3px;">Other:</div>
-                <div class="span10"><input type="text" class="span12" readonly id="txt_other"></div>
+                <div class="span10" id="dev_text_other"><input type="text" class="span12" readonly id="txt_other"></div>
             </div>
             <div class="row-fluid">
                 <div class="span2" style="padding-top: 3px;">Comments:</div>
-                <div class="span10"><textarea class="span12" style="height: 50px; resize: vertical;" id="comments"></textarea></div>
+                <div class="span10" id="dev_comments"><textarea class="span12" style="height: 50px; resize: vertical;" id="comments"></textarea></div>
             </div>
             
             <!-- submit -->

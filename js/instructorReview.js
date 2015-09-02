@@ -473,9 +473,6 @@ function setAccom() {
         if (result[0]['DoubleTime'] === "1") {
             $("#ckb_double_time").prop('checked', true);
         }
-//        if (result[0]['AltMedia'] === "1") {
-//            $("#ckb_alt_media").prop('checked', true);
-//        }
         if (result[0]['Reader'] === "1") {
             $("#ckb_reader").prop('checked', true);
         }
@@ -504,12 +501,6 @@ function setAccom() {
             }
             $('#cbo_scribe_list').html(scribe_html);
         } 
-//        if (result[0]['WrittenExam'] === "1") {
-//            $("#ckb_written_exam").prop('checked', true);
-//        }
-//        if (result[0]['Distraction'] === "1") {
-//            $("#ckb_distraction").prop('checked', true);
-//        }
         if (result[0]['Distraction'] === "1") {
             $("#ckb_distraction").prop('checked', true);
         }
