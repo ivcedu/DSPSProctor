@@ -454,6 +454,9 @@ function sendEmailToStudentAccepted() {
     message += "Test Time: <b>" + $('#test_time').val() + "</b><br>";
     message += "Time allotted in class: <b>" + $('#allow_min').html() + "</b> minutes<br><br>";
     
+    if ($('#dsps_comments').val() !== "") {
+        message += "Comments:<br>" + $('#dsps_comments').val().replace(/\n/g, "<br>");
+    }
     message += "This is a reminder that you are scheduled to have the above exam proctored in DSPS. Please arrive 15 minutes early and bring a valid picture ID";
     
     // testing
@@ -475,6 +478,10 @@ function sendEmailToStudentCancel() {
     message += "Test Time: <b>" + $('#test_time').val() + "</b><br>";
     message += "Time allotted in class: <b>" + $('#allow_min').html() + "</b> minutes<br><br>";
     
+    if ($('#dsps_comments').val() !== "") {
+        message += "Comments:<br>" + $('#dsps_comments').val().replace(/\n/g, "<br>");
+    }
+    
     // testing
     proc_sendEmail("stafftest@ivc.edu", $('#stu_name').html(), subject, message);
 //    proc_sendEmail(stu_email, $('#stu_name').html(), subject, message);
@@ -492,7 +499,9 @@ function sendEmailToInstructorReview2Accept() {
     message += "Test Date: <b>" + $('#test_date').val() + "</b><br>";
     message += "Test Time: <b>" + $('#test_time').val() + "</b><br><br>";
     
-    message += "Comments:<br>" + $('#dsps_comments').val().replace(/\n/g, "<br>");
+    if ($('#dsps_comments').val() !== "") {
+        message += "Comments:<br>" + $('#dsps_comments').val().replace(/\n/g, "<br>");
+    }
     
     // testing
     proc_sendEmail("deantest@ivc.edu", inst_name, subject, message);
@@ -511,7 +520,9 @@ function sendEmailToInstructorReview2Denied() {
     message += "Test Date: <b>" + $('#test_date').val() + "</b><br>";
     message += "Test Time: <b>" + $('#test_time').val() + "</b><br><br>";
     
-    message += "Comments:<br>" + $('#dsps_comments').val().replace(/\n/g, "<br>");
+    if ($('#dsps_comments').val() !== "") {
+        message += "Comments:<br>" + $('#dsps_comments').val().replace(/\n/g, "<br>");
+    }
     
     // testing
     proc_sendEmail("deantest@ivc.edu", inst_name, subject, message);
@@ -526,8 +537,12 @@ function sendEmailToStudentCanceled() {
     message += "Instructor Name: <b>" + inst_name + "</b><br>";
     message += "Ticket #: <b>" + section_num + "</b><br>";
     message += "Course: <b>" + $('#course_id').html() + "</b><br>";
-    message += "Test Date: <b>" + $('#test_date').html() + "</b><br>";
-    message += "Test Time: <b>" + $('#test_time').html() + "</b><br><br>";
+    message += "Test Date: <b>" + $('#test_date').val() + "</b><br>";
+    message += "Test Time: <b>" + $('#test_time').val() + "</b><br><br>";
+    
+    if ($('#dsps_comments').val() !== "") {
+        message += "Comments:<br>" + $('#dsps_comments').val().replace(/\n/g, "<br>");
+    }
     
     // testing
     proc_sendEmail("stafftest@ivc.edu", $('#stu_name').html(), subject, message);
@@ -546,7 +561,11 @@ function sendEmailToInstructorCanceled() {
     message += "Test Date: <b>" + $('#test_date').val() + "</b><br>";
     message += "Test Time: <b>" + $('#test_time').val() + "</b><br><br>";
     
+    if ($('#dsps_comments').val() !== "") {
+        message += "Comments:<br>" + $('#dsps_comments').val().replace(/\n/g, "<br>");
+    }
+    
     // testing
-    proc_sendEmail("stafftest@ivc.edu", $('#stu_name').html(), subject, message);
+    proc_sendEmail("deantest@ivc.edu", $('#stu_name').html(), subject, message);
 //    proc_sendEmail(stu_email, $('#stu_name').html(), subject, message);
 }

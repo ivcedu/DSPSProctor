@@ -288,6 +288,10 @@ function sendEmailToInstructor() {
     message += "Test Date: <b>" + $('#test_date').html() + "</b><br>";
     message += "Test Time: <b>" + $('#test_time').html() + "</b><br><br>";
     
+    if ($('#dsps_comments').val() !== "") {
+        message += "Comments:<br>" + $('#dsps_comments').val().replace(/\n/g, "<br>");
+    }
+    
     var str_url = location.href;
     str_url = str_url.replace("dspsReview_1.html", "instructorReview.html");
     message += "Please click below ticket # to open Instructor Review page<br><br>";
@@ -311,6 +315,10 @@ function sendEmailToStudentDeny() {
     message += "Test Date: <b>" + $('#test_date').html() + "</b><br>";
     message += "Test Time: <b>" + $('#test_time').html() + "</b><br><br>";
     
+    if ($('#dsps_comments').val() !== "") {
+        message += "Comments:<br>" + $('#dsps_comments').val().replace(/\n/g, "<br>");
+    }
+    
     // testing
     proc_sendEmail("stafftest@ivc.edu", $('#stu_name').html(), subject, message);
 //    proc_sendEmail(stu_email, $('#stu_name').html(), subject, message);
@@ -326,6 +334,10 @@ function sendEmailToStudentCanceled() {
     message += "Course: <b>" + $('#course_id').html() + "</b><br>";
     message += "Test Date: <b>" + $('#test_date').html() + "</b><br>";
     message += "Test Time: <b>" + $('#test_time').html() + "</b><br><br>";
+    
+    if ($('#dsps_comments').val() !== "") {
+        message += "Comments:<br>" + $('#dsps_comments').val().replace(/\n/g, "<br>");
+    }
     
     // testing
     proc_sendEmail("stafftest@ivc.edu", $('#stu_name').html(), subject, message);

@@ -561,6 +561,10 @@ function sendEmailToDSPSTestExamChange() {
     message += "Test Date: <b>" + $('#test_date').html() + "</b><br>";
     message += "Test Time: <b>" + $('#test_time').html() + "</b><br><br>";
     
+    if ($('#inst_comments').val() !== "") {
+        message += "Comments:<br>" + $('#inst_comments').val().replace(/\n/g, "<br>");
+    }
+    
     var str_url = location.href;
     str_url = str_url.replace("instructorReview.html", "dspsReview_2.html");
     message += "Please click below ticket # to open DSPS 2 review page<br><br>";

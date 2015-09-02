@@ -742,6 +742,10 @@ function sendEmailToDSPS_2() {
     message += "Test Date: <b>" + $('#test_date').html() + "</b><br>";
     message += "Test Time: <b>" + $('#test_time').html() + "</b><br><br>";
     
+    if ($('#dsps_comments').val() !== "") {
+        message += "Comments:<br>" + $('#dsps_comments').val().replace(/\n/g, "<br>");
+    }
+    
     var str_url = location.href;
     str_url = str_url.replace("instructorReview.html", "dspsReview_2.html");
     message += "Please click below ticket # to open DSPS 2 review page<br><br>";
@@ -765,6 +769,10 @@ function sendEmailToStudentDeny() {
     message += "Test Date: <b>" + $('#test_date').html() + "</b><br>";
     message += "Test Time: <b>" + $('#test_time').html() + "</b><br><br>";
     
+    if ($('#dsps_comments').val() !== "") {
+        message += "Comments:<br>" + $('#dsps_comments').val().replace(/\n/g, "<br>");
+    }
+    
     // testing
     proc_sendEmail("stafftest@ivc.edu", $('#stu_name').html(), subject, message);
 //    proc_sendEmail(stu_email, $('#stu_name').html(), subject, message);
@@ -782,7 +790,10 @@ function sendEmailToDSPSDeny() {
     message += "Course: <b>" + $('#course_id').html() + "</b><br>";
     message += "Test Date: <b>" + $('#test_date').html() + "</b><br>";
     message += "Test Time: <b>" + $('#test_time').html() + "</b><br><br>";
-    message += "Comments:<br>" + $('#dsps_comments').val();
+    
+    if ($('#dsps_comments').val() !== "") {
+        message += "Comments:<br>" + $('#dsps_comments').val().replace(/\n/g, "<br>");
+    }
     
     // testing
     proc_sendEmail("vptest@ivc.edu", $('#stu_name').html(), subject, message);
