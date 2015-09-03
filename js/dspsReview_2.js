@@ -455,7 +455,7 @@ function sendEmailToStudentAccepted() {
     message += "Time allotted in class: <b>" + $('#allow_min').html() + "</b> minutes<br><br>";
     
     if ($('#dsps_comments').val() !== "") {
-        message += "Comments:<br>" + $('#dsps_comments').val().replace(/\n/g, "<br>");
+        message += "Comments:<br>" + $('#dsps_comments').val().replace(/\n/g, "<br>") + "<br><br>";
     }
     message += "This is a reminder that you are scheduled to have the above exam proctored in DSPS. Please arrive 15 minutes early and bring a valid picture ID";
     

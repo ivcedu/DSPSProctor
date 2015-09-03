@@ -562,7 +562,7 @@ function sendEmailToDSPSTestExamChange() {
     message += "Test Time: <b>" + $('#test_time').html() + "</b><br><br>";
     
     if ($('#inst_comments').val() !== "") {
-        message += "Comments:<br>" + $('#inst_comments').val().replace(/\n/g, "<br>");
+        message += "Comments:<br>" + $('#inst_comments').val().replace(/\n/g, "<br>") + "<br><br>";
     }
     
     var str_url = location.href;

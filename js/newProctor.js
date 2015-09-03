@@ -336,6 +336,10 @@ function sendEmailToDSPS_1() {
     message += "Test Date: <b>" + $('#test_date').val() + "</b><br>";
     message += "Test Time: <b>" + $('#test_time').val() + "</b><br><br>";
     
+    if ($('#comments').val() !== "") {
+        message += "Student Comments:<br>" + $('#comments').val().replace(/\n/g, "<br>") + "<br><br>";
+    }
+    
     var str_url = location.href;
     str_url = str_url.replace("newProctor.html", "dspsReview_1.html");
     message += "Please click below ticket # to open DSPS 1 review page<br><br>";
