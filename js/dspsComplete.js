@@ -510,10 +510,10 @@ function sendEmailToInstructorExamNotReceived() {
     message += "Test Date: <b>" + $('#test_date').html() + "</b><br>";
     message += "Test Time: <b>" + $('#test_time').html() + "</b><br><br>";
     
-    message += "It has been rescheduled for (" + new_date + " " + new_time + ") please attach or drop off exam before this scheduled date/time. Thank you!";
     if ($('#dsps_comments').val() !== "") {
-        message += "Comments:<br>" + $('#dsps_comments').val().replace(/\n/g, "<br>");
+        message += "Comments:<br>" + $('#dsps_comments').val().replace(/\n/g, "<br>") + "<br><br>";
     }
+    message += "It has been rescheduled for (" + new_date + " " + new_time + ") please attach or drop off exam before this scheduled date/time.<br><br>Thank you!";
     
     // testing
     proc_sendEmail("deantest@ivc.edu", inst_name, subject, message);
@@ -531,12 +531,12 @@ function sendEmailToStudentExamNotReceived() {
     message += "Test Date: <b>" + $('#test_date').val() + "</b><br>";
     message += "Test Time: <b>" + $('#test_time').val() + "</b><br>";
     message += "Time allotted in class: <b>" + $('#allow_min').html() + "</b> minutes<br><br>";
-    
-    message += "It has been rescheduled for (" + new_date + " " + new_time + ") please attach or drop off exam before this scheduled date/time. Thank you!";
+
     if ($('#dsps_comments').val() !== "") {
-        message += "Comments:<br>" + $('#dsps_comments').val().replace(/\n/g, "<br>");
+        message += "Comments:<br>" + $('#dsps_comments').val().replace(/\n/g, "<br>") + "<br><br>";
     }
-    
+    message += "It has been rescheduled for (" + new_date + " " + new_time + ") please attach or drop off exam before this scheduled date/time.<br><br>Thank you!";
+
     // testing
     proc_sendEmail("stafftest@ivc.edu", inst_name, subject, message);
 //    proc_sendEmail(inst_email, inst_name, subject, message);
