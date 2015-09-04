@@ -148,6 +148,11 @@ $(document).ready(function() {
     // exam not received button click //////////////////////////////////////////
     $('#btn_no_exam').click(function() { 
         $(this).prop("disabled", true);
+        
+        var cur_date = new Date();
+        cur_date.setDate(cur_date.getDate()+1);
+        $('#mod_new_test_date').datepicker( "option", "minDate", cur_date);
+        
         $('#mod_new_date_time_box').modal('show');
     });
     
