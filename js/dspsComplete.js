@@ -154,6 +154,7 @@ $(document).ready(function() {
         $('#mod_new_test_date').datepicker( "option", "minDate", cur_date);
         
         $('#mod_new_date_time_box').modal('show');
+        $(this).prop("disabled", false);
     });
     
     // mod new date time save click ////////////////////////////////////////////
