@@ -534,14 +534,14 @@ function sendEmailToStudentExamNotReceived() {
     message += "Instructor Name: <b>" + inst_name + "</b><br>";
     message += "Ticket #: <b>" + section_num + "</b><br>";
     message += "Course: <b>" + $('#course_id').html() + "</b><br>";
-    message += "Test Date: <b>" + $('#test_date').val() + "</b><br>";
-    message += "Test Time: <b>" + $('#test_time').val() + "</b><br>";
+    message += "Test Date: <b>" + $('#test_date').html() + "</b><br>";
+    message += "Test Time: <b>" + $('#test_time').html() + "</b><br>";
     message += "Time allotted in class: <b>" + $('#allow_min').html() + "</b> minutes<br><br>";
 
     if ($('#dsps_comments').val() !== "") {
         message += "Comments:<br>" + $('#dsps_comments').val().replace(/\n/g, "<br>") + "<br><br>";
     }
-    message += "It has been rescheduled for (" + new_date + " " + new_time + ") please attach or drop off exam before this scheduled date/time.<br><br>Thank you!";
+    message += "It has been rescheduled for (" + new_date + " " + new_time + ")<br><br>Thank you!";
 
     // testing
     proc_sendEmail("stafftest@ivc.edu", inst_name, subject, message);
