@@ -134,11 +134,12 @@ function db_getExamGuide(ProctorID) {
     return result;
 }
 
-function db_getAdminProctorList() {
+function db_getAdminProctorList(SearchOption, SearchValue) {
     var result = new Array();
     $.ajax({
         type:"POST",
         url:"php/db_getAdminProctorList.php",
+        data:{SearchOption:SearchOption, SearchValue:SearchValue},
         async: false,  
         success:function(data) {
             result = JSON.parse(data);

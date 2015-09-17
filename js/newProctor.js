@@ -34,6 +34,20 @@ $(document).ready(function() {
         setCourseInfo(inst_name);
     });
     
+    // time and one half check event ///////////////////////////////////////////
+    $('#ckb_time_one_half').change(function() {
+        if ($(this).is(':checked')) {
+            $('#ckb_double_time').prop('checked', false);
+        }
+    });
+    
+    // double time check event /////////////////////////////////////////////////
+    $('#ckb_double_time').change(function() {
+        if ($(this).is(':checked')) {
+            $('#ckb_time_one_half').prop('checked', false);
+        }
+    });
+    
     // other check event ///////////////////////////////////////////////////////
     $('#ckb_other').change(function() {
         if ($(this).is(':checked')) {
@@ -50,14 +64,11 @@ $(document).ready(function() {
         if ($(this).is(':checked')) {
             $('#cbo_scribe_list').prop('disabled', false);
             $('#cbo_scribe_list').selectpicker('refresh');
-            $('#ckb_distraction').prop('disabled', false);
         }
         else {
             $('#cbo_scribe_list').prop('disabled', true);
             $('#cbo_scribe_list').val('scantron_only');
             $('#cbo_scribe_list').selectpicker('refresh');
-            $('#ckb_distraction').prop('disabled', true);
-            $("#ckb_distraction").prop('checked', false);
         }
     });
     

@@ -294,8 +294,8 @@ function getExamPDFList() {
     $('#exam_list').empty();
     var html = "";
     for (var i = 0; i < result.length; i++) {
-        var exampdf_id = result[0]['ExamPDFID'];
-        var file_name = result[0]['FileName'];
+        var exampdf_id = result[i]['ExamPDFID'];
+        var file_name = result[i]['FileName'];
         
         html += "<div class='row-fluid' id='row_exampdf_id" + exampdf_id + "'>";
         html += "<div class='span9' style='padding-top: 5px'><a href=# id='exampdf_id_" + exampdf_id + "'>" + file_name + "</a></div>";

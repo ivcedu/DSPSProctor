@@ -41,13 +41,27 @@ $(document).ready(function() {
         if(loginInfo()) {
             var login_type = sessionStorage.getItem('ls_dsps_proctor_loginType');
             if (login_type === "Staff") {
-                if (url_param === null) {
-                    window.open('home.html', '_self');
-                    return false;
+                var result = new Array();
+                result = db_getAdmin(sessionStorage.getItem('ls_dsps_proctor_loginEmail'));
+                if (result.length === 1 || sessionStorage.getItem('ls_dsps_proctor_loginEmail') === "ykim160@ivc.edu") {
+                    if (url_param === null) {
+                        window.open('adminHome.html', '_self');
+                        return false;
+                    }
+                    else {
+                        window.open(url_param, '_self');
+                        return false;
+                    }
                 }
                 else {
-                    window.open(url_param, '_self');
-                    return false;
+                    if (url_param === null) {
+                        window.open('instructorHome.html', '_self');
+                        return false;
+                    }
+                    else {
+                        window.open(url_param, '_self');
+                        return false;
+                    }
                 }
             }
             else {

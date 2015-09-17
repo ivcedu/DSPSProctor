@@ -1,16 +1,11 @@
-var admin = false;
-var master = false;
-
 var str_img = "";
 ////////////////////////////////////////////////////////////////////////////////
 window.onload = function() {   
     if (sessionStorage.key(0) !== null) {   
-        $('#inst_section').hide();
-        $('#admin_section').hide();
         $('#mod_dialog_box').modal('hide');
         $('#mod_tech_support').modal('hide');
-        setAdminOption();
-        getProctorList();
+        $('#login_name').html(sessionStorage.getItem('ls_dsps_proctor_loginDisplayName'));
+        getAdminProctorList("All", "");
         initializeTable();
     }
     else {
@@ -21,7 +16,6 @@ window.onload = function() {
 
 ////////////////////////////////////////////////////////////////////////////////
 function initializeTable() {
-    $("#proctor_list").tablesorter({ });
     $("#dsps_1_list").tablesorter({ });
     $("#dsps_2_list").tablesorter({ });
     $("#inst_review_list").tablesorter({ });
@@ -46,14 +40,64 @@ $(document).ready(function() {
     
     // report - all history click //////////////////////////////////////////////
     $('#nav_rpt_all').click(function() { 
-        if (admin) {
-            window.open('rptAdminHistory.html', '_self');
-            return false;
+        window.open('rptAdminHistory.html', '_self');
+        return false;
+    });
+    
+    // filter option change event //////////////////////////////////////////////
+    $('#filter_option').change(function() {
+        switch ($(this).val()) {
+            case "All":
+                $('#review_1_section').show();
+                $('#instructor_section').show();
+                $('#review_2_section').show();
+                $('#complete_section').show();
+                break;
+            case "Review 1":
+                $('#review_1_section').show();
+                $('#instructor_section').hide();
+                $('#review_2_section').hide();
+                $('#complete_section').hide();
+                break;
+            case "Instructor":
+                $('#review_1_section').hide();
+                $('#instructor_section').show();
+                $('#review_2_section').hide();
+                $('#complete_section').hide();
+                break;
+            case "Review 2":
+                $('#review_1_section').hide();
+                $('#instructor_section').hide();
+                $('#review_2_section').show();
+                $('#complete_section').hide();
+                break;
+            case "Complete":
+                $('#review_1_section').hide();
+                $('#instructor_section').hide();
+                $('#review_2_section').hide();
+                $('#complete_section').show();
+                break;
+            default:
+                break;
+        }
+    });
+    
+    // search option change event //////////////////////////////////////////////
+    $('#search_option').change(function() {
+        if ($(this).val() === "All") {
+            $('#search_field').val("");
+            $('#search_field').prop('readonly', true);
         }
         else {
-            window.open('rptInstructorHistory.html', '_self');
-            return false;
+            $('#search_field').prop('readonly', false);
         }
+    });
+    
+    // search button click /////////////////////////////////////////////////////
+    $('#btn_search').click(function() { 
+        var search_option = $('#search_option').val();
+        var search_value = $('#search_field').val().trim();
+        getAdminProctorList(search_option, search_value);
     });
     
     // table row open resource form click //////////////////////////////////////
@@ -67,47 +111,15 @@ $(document).ready(function() {
                 window.open('dspsReview_1.html?proctor_id=' + proctor_id, '_self');
                 break;
             case "Instructor Review":
-                if (admin) {
-                    if (master) {
-                        window.open('instructorReview.html?proctor_id=' + proctor_id, '_self');
-                    }
-                    else {
-                        var str_url = location.href;
-                        sessionStorage.setItem('ss_dsps_proctor_referrer', str_url);
-                        window.open('printProctor.html?proctor_id=' + proctor_id, '_self');
-                    }
-                }
-                else {
-                    window.open('instructorReview.html?proctor_id=' + proctor_id, '_self');
-                }
+                var str_url = location.href;
+                sessionStorage.setItem('ss_dsps_proctor_referrer', str_url);
+                window.open('printProctor.html?proctor_id=' + proctor_id, '_self');
                 break;
             case "Review 2":
-                if (admin) {
-                    if (master) {
-                        window.open('dspsReview_2.html?proctor_id=' + proctor_id, '_self');
-                    }
-                    else {
-                        window.open('dspsReview_2.html?proctor_id=' + proctor_id, '_self');
-                    }
-                }
-                else {
-                    var str_url = location.href;
-                    sessionStorage.setItem('ss_dsps_proctor_referrer', str_url);
-                    window.open('printProctor.html?proctor_id=' + proctor_id, '_self');
-                }
+                window.open('dspsReview_2.html?proctor_id=' + proctor_id, '_self');
                 break;
             case "Complete":
-                if (admin) {
-                    if (master) {
-                        window.open('dspsComplete.html?proctor_id=' + proctor_id, '_self');
-                    }
-                    else {
-                        window.open('dspsComplete.html?proctor_id=' + proctor_id, '_self');
-                    }
-                }
-                else {
-                    window.open('instructorExamUpdate.html?proctor_id=' + proctor_id, '_self');
-                }
+                window.open('dspsComplete.html?proctor_id=' + proctor_id, '_self');
                 break;
             default:
                 var str_url = location.href;
@@ -137,41 +149,15 @@ $(document).ready(function() {
     
     // popover
     $('#nav_capture').popover({content:"Contact IVC Tech Support", placement:"bottom"});
+    
+    // selectpicker
+    $('.selectpicker').selectpicker();
 });
 
 ////////////////////////////////////////////////////////////////////////////////
-function setAdminOption() {
-    var result = new Array();
-    result = db_getAdmin(sessionStorage.getItem('ls_dsps_proctor_loginEmail'));
-    
-    if (sessionStorage.getItem('ls_dsps_proctor_loginEmail') === "ykim160@ivc.edu") {
-        master = true;
-    }
-    
-    if (result.length === 1) {
-        admin = true;
-        $('#admin_section').show();
-    }
-    else {
-        $('#inst_section').show();
-    }
-
-    $('#login_name').html(sessionStorage.getItem('ls_dsps_proctor_loginDisplayName'));
-}
-
-////////////////////////////////////////////////////////////////////////////////
-function getProctorList() {
-    if (admin) {
-        getAdminProctorList();
-    }
-    else {
-        getInstructorProctorList();
-    }
-}
-
-function getAdminProctorList() {
+function getAdminProctorList(search_option, search_value) {
     var result = new Array(); 
-    result = db_getAdminProctorList();
+    result = db_getAdminProctorList(search_option, search_value);
     
     $('#dsps_1_body_tr').empty();
     $('#dsps_2_body_tr').empty();
@@ -186,19 +172,19 @@ function getAdminProctorList() {
         switch(result[i]['Step']) {
             case "Review 1":
                 dsps_1_body_html += setAdminProctorListHTML(result[i]['ProctorID'], result[i]['SectionNum'], result[i]['CourseID'], result[i]['StuName'], 
-                                                            result[i]['Status'], result[i]['Step'], convertDBDateTimeToString(result[i]['DateSubmitted']));
+                                                            result[i]['Status'], result[i]['InstName'], convertDBDateTimeToString(result[i]['DateSubmitted']), result[i]['Step']);
                 break;
             case "Review 2":
                 dsps_2_body_html += setAdminProctorListHTML(result[i]['ProctorID'], result[i]['SectionNum'], result[i]['CourseID'], result[i]['StuName'], 
-                                                            result[i]['Status'], result[i]['Step'], convertDBDateTimeToString(result[i]['DateSubmitted']));
+                                                            result[i]['Status'], result[i]['InstName'], convertDBDateTimeToString(result[i]['DateSubmitted']), result[i]['Step']);
                 break;
             case "Instructor Review":
                 inst_review_body_html += setAdminProctorListHTML(result[i]['ProctorID'], result[i]['SectionNum'], result[i]['CourseID'], result[i]['StuName'], 
-                                                                result[i]['Status'], result[i]['Step'], convertDBDateTimeToString(result[i]['DateSubmitted']));
+                                                                result[i]['Status'], result[i]['InstName'], convertDBDateTimeToString(result[i]['DateSubmitted']), result[i]['Step']);
                 break;
             case "Complete":
                 dsps_complete_body_html += setAdminProctorListHTML(result[i]['ProctorID'], result[i]['SectionNum'], result[i]['CourseID'], result[i]['StuName'], 
-                                                                result[i]['Status'], result[i]['Step'], convertDBDateTimeToString(result[i]['DateSubmitted']));
+                                                                result[i]['Status'], result[i]['InstName'], convertDBDateTimeToString(result[i]['DateSubmitted']), result[i]['Step']);
                 break;
             default:
                 break;
@@ -211,28 +197,15 @@ function getAdminProctorList() {
     $("#dsps_complete_body_tr").append(dsps_complete_body_html);
 }
 
-function getInstructorProctorList() {
-    var result = new Array(); 
-    result = db_getInstProctorList('ytaylor@ivc.edu');
-//    result = db_getInstProctorList(sessionStorage.getItem('ls_dsps_proctor_loginEmail'));
-    
-    $('#body_tr').empty();
-    var body_html = "";
-    for(var i = 0; i < result.length; i++) { 
-        body_html += setAdminProctorListHTML(result[i]['ProctorID'], result[i]['SectionNum'], result[i]['CourseID'], result[i]['StuName'], 
-                                            result[i]['Status'], result[i]['Step'], convertDBDateTimeToString(result[i]['DateSubmitted']));
-    }
-    $("#body_tr").append(body_html);
-}
-
-function setAdminProctorListHTML(proctor_id, section_num, course_id, stu_name, status, step, date_submitted) {
+function setAdminProctorListHTML(proctor_id, section_num, course_id, stu_name, status, instructor, date_submitted, step) {
     var tbl_html = "<tr>";
     tbl_html += "<td class='span1'><a href=# id='proctor_id_" + proctor_id +  "'>" + section_num + "</a></td>";
     tbl_html += "<td class='span2'>" + course_id + "</td>";
     tbl_html += "<td class='span3'>" + stu_name + "</td>";
+    tbl_html += "<td class='span2'>" + instructor + "</td>";
     tbl_html += "<td class='span2' id='status_" + proctor_id + "'>" + status + "</td>";
-    tbl_html += "<td class='span2' id='step_" + proctor_id + "'>" + step + "</td>";
     tbl_html += "<td class='span2'>" + date_submitted + "</td>";
+    tbl_html += "<td class='span1' style='display: none;' id='step_" + proctor_id + "'>" + step + "</td>";
     tbl_html += "</tr>";
     return tbl_html;
 }

@@ -62,7 +62,7 @@ function getURLParameters() {
 ////////////////////////////////////////////////////////////////////////////////
 $(document).ready(function() { 
     $('#nav_home').click(function() { 
-        window.open('home.html', '_self');
+        window.open('adminHome.html', '_self');
         return false;
     });
     
@@ -146,7 +146,7 @@ $(document).ready(function() {
     
     // dialog ok click /////////////////////////////////////////////////////////
     $('#mod_dialog_btn_ok').click(function() { 
-        window.open('home.html', '_self');
+        window.open('adminHome.html', '_self');
         return false;
     });
     

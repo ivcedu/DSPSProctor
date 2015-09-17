@@ -66,7 +66,7 @@ function getURLParameters() {
 ////////////////////////////////////////////////////////////////////////////////
 $(document).ready(function() { 
     $('#nav_home').click(function() { 
-        window.open('home.html', '_self');
+        window.open('adminHome.html', '_self');
         return false;
     });
     
@@ -174,7 +174,7 @@ $(document).ready(function() {
         sendEmailToInstructorExamNotReceived();
         sendEmailToStudentExamNotReceived();
         
-        window.open('home.html', '_self');
+        window.open('adminHome.html', '_self');
         return false;
     });
     
@@ -186,11 +186,17 @@ $(document).ready(function() {
         db_insertTransaction(proctor_id, sessionStorage.getItem('ls_dsps_proctor_loginDisplayName'), note);
         getTransactionHistory();
         alert("Exam status has been updated");
+        if (exam_received === "1") {
+            $('#btn_no_exam').hide();
+        }
+        else {
+            $('#btn_no_exam').show();
+        }
     });
     
     // dialog ok click /////////////////////////////////////////////////////////
     $('#mod_dialog_btn_ok').click(function() { 
-        window.open('home.html', '_self');
+        window.open('adminHome.html', '_self');
         return false;
     });
 
@@ -314,6 +320,7 @@ function setInstForm() {
     
     if (result.length === 1) {
         if (result[0]['ExamReceived'] === "1") {
+            $('#btn_no_exam').hide();
             $('#exam_status_list').val("1");
             $('#exam_status_list').selectpicker('refresh');
         }
@@ -359,8 +366,8 @@ function getExamPDFList() {
     $('#exam_list').empty();
     var html = "";
     for (var i = 0; i < result.length; i++) {
-        var exampdf_id = result[0]['ExamPDFID'];
-        var file_name = result[0]['FileName'];
+        var exampdf_id = result[i]['ExamPDFID'];
+        var file_name = result[i]['FileName'];
         
         html = "<div class='row-fluid' id='row_exampdf_id" + exampdf_id + "'>";
         html += "<div class='span9' style='padding-top: 5px'><a href=# id='exampdf_id_" + exampdf_id + "'>" + file_name + "</a></div>";
@@ -519,7 +526,12 @@ function sendEmailToInstructorExamNotReceived() {
     if ($('#dsps_comments').val() !== "") {
         message += "Comments:<br>" + $('#dsps_comments').val().replace(/\n/g, "<br>") + "<br><br>";
     }
-    message += "It has been rescheduled for (" + new_date + " " + new_time + ") please attach or drop off exam before this scheduled date/time.<br><br>Thank you!";
+    message += "It has been rescheduled for (<b>" + new_date + " " + new_time + "</b>) please attach or drop off exam before this scheduled date/time.<br>";
+    message += "Please click below to download the exam, drop the exam off at SSC 170, or contact DSPS at (949)451-5630 or at dspstesting@ivc.edu<br><br>";
+    
+    var str_url = location.href;
+    str_url = str_url.replace("dspsReview_1.html", "instructorReview.html");
+    message += "<a href='" + str_url + "'>" + section_num + "</a>";
     
     // testing
     proc_sendEmail("deantest@ivc.edu", inst_name, subject, message);
@@ -541,7 +553,7 @@ function sendEmailToStudentExamNotReceived() {
     if ($('#dsps_comments').val() !== "") {
         message += "Comments:<br>" + $('#dsps_comments').val().replace(/\n/g, "<br>") + "<br><br>";
     }
-    message += "It has been rescheduled for (" + new_date + " " + new_time + ")<br><br>Thank you!";
+    message += "It has been rescheduled for (<b>" + new_date + " " + new_time + "</b>)<br><br>Thank you!";
 
     // testing
     proc_sendEmail("stafftest@ivc.edu", inst_name, subject, message);

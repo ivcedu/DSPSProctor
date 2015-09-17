@@ -2,7 +2,7 @@ var proctor_id = "";
 var str_img = "";
 ////////////////////////////////////////////////////////////////////////////////
 window.onload = function() {   
-    if (sessionStorage.key(0) !== null) {  
+    if (sessionStorage.key(0) !== null) {        
         $('#mod_tech_support').modal('hide');
         defaultHideDisalbe();
         getURLParameters();
@@ -57,8 +57,35 @@ function getURLParameters() {
 ////////////////////////////////////////////////////////////////////////////////
 $(document).ready(function() { 
     $('#nav_close').click(function() { 
-        window.open(document.referrer, '_self');
-        return false;
+        var str_url = sessionStorage.getItem('ss_dsps_proctor_referrer');
+        
+        var result = new Array();
+        result = db_getAdmin(sessionStorage.getItem('ls_dsps_proctor_loginEmail'));
+        
+        if (result.length === 1 || sessionStorage.getItem('ls_dsps_proctor_loginEmail') === "ykim160@ivc.edu") {
+            if (str_url === null) {
+                window.open('adminHome.html', '_self');
+                return false;
+            }
+            else {
+                window.open(str_url, '_self');
+                return false;
+            }            
+        }
+        else {
+            if (str_url === null) {
+                window.open('instructorHome.html', '_self');
+                return false;
+            }
+            else {
+                window.open(str_url, '_self');
+                return false;
+            }
+        }
+
+//        // only works for safari, chrome, firefox
+//        window.open(document.referrer, '_self');
+//        return false;
     });
 
     $('#nav_logout').click(function() { 
@@ -246,8 +273,8 @@ function getExamPDFList() {
     $('#exam_list').empty();
     var html = "";
     for (var i = 0; i < result.length; i++) {
-        var exampdf_id = result[0]['ExamPDFID'];
-        var file_name = result[0]['FileName'];
+        var exampdf_id = result[i]['ExamPDFID'];
+        var file_name = result[i]['FileName'];
         
         html += "<div class='row-fluid' id='row_exampdf_id" + exampdf_id + "'>";
         html += "<div class='span9' style='padding-top: 5px'><a href=# id='exampdf_id_" + exampdf_id + "'>" + file_name + "</a></div>";

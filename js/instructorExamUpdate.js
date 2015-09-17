@@ -68,7 +68,7 @@ function getURLParameters() {
 ////////////////////////////////////////////////////////////////////////////////
 $(document).ready(function() { 
     $('#nav_home').click(function() { 
-        window.open('home.html', '_self');
+        window.open('instructorHome.html', '_self');
         return false;
     });
     
@@ -101,34 +101,51 @@ $(document).ready(function() {
     // file //////////////////////////////////////////////////////////////////// 
     $('#attachment_file').change(function() {
         if (getPDFAttachmentInfo()) {
-            $('#add_file').prop('disabled', false);
+            var file = $('#attachment_file').get(0).files[0];
+            var f_name = file.name.replace(/#/g, "");
+            var file_data = new FormData();
+            file_data.append("files[]", file, f_name); 
+            m_total_page = pdfGetTotalPages(file_data);
+
+            if (m_total_page === 0) {
+                alert("Your PDF file are not correctly formatted. please verify your pdf file again");
+                $('#attachment_file').filestyle('clear');
+                return false;
+            }
+            else {
+                startSpin();        
+                setTimeout(function() {      
+                    addExamPDF();
+                    stopSpin();
+                }, 1000);
+            }
         }
         else {
-            $('#add_file').prop('disabled', true);
+            return false;
         }
     });
     
     // add file button click ///////////////////////////////////////////////////
-    $('#add_file').click(function() {
-        var file = $('#attachment_file').get(0).files[0];
-        var f_name = file.name.replace(/#/g, "");
-        var file_data = new FormData();
-        file_data.append("files[]", file, f_name); 
-        m_total_page = pdfGetTotalPages(file_data);
-        
-        if (m_total_page === 0) {
-            alert("Your PDF file are not correctly formatted. please verify your pdf file again");
-            $('#attachment_file').filestyle('clear');
-            return false;
-        }
-        else {
-            startSpin();        
-            setTimeout(function() {      
-                addExamPDF();
-                stopSpin();
-            }, 1000);
-        }
-    });
+//    $('#add_file').click(function() {
+//        var file = $('#attachment_file').get(0).files[0];
+//        var f_name = file.name.replace(/#/g, "");
+//        var file_data = new FormData();
+//        file_data.append("files[]", file, f_name); 
+//        m_total_page = pdfGetTotalPages(file_data);
+//        
+//        if (m_total_page === 0) {
+//            alert("Your PDF file are not correctly formatted. please verify your pdf file again");
+//            $('#attachment_file').filestyle('clear');
+//            return false;
+//        }
+//        else {
+//            startSpin();        
+//            setTimeout(function() {      
+//                addExamPDF();
+//                stopSpin();
+//            }, 1000);
+//        }
+//    });
     
     // exam pdf click event ////////////////////////////////////////////////////
     $(document).on('click', 'a[id^="exampdf_id_"]', function() {
@@ -186,13 +203,13 @@ $(document).ready(function() {
         $('#mod_dialog_box_body').html("Test exam option has been saved");
         $('#mod_dialog_box').modal('show');
         
-        window.open('home.html', '_self');
+        window.open('instructorHome.html', '_self');
         return false;
     });
     
     // close button click //////////////////////////////////////////////////////
     $('#btn_close').click(function() { 
-        window.open('home.html', '_self');
+        window.open('instructorHome.html', '_self');
         return false;
     });
     
@@ -367,8 +384,8 @@ function getExamPDFList() {
     $('#exam_list').empty();
     var html = "";
     for (var i = 0; i < result.length; i++) {
-        var exampdf_id = result[0]['ExamPDFID'];
-        var file_name = result[0]['FileName'];
+        var exampdf_id = result[i]['ExamPDFID'];
+        var file_name = result[i]['FileName'];
         
         html += "<div class='row-fluid' id='row_exampdf_id" + exampdf_id + "'>";
         html += "<div class='span9' style='padding-top: 5px'><a href=# id='exampdf_id_" + exampdf_id + "'>" + file_name + "</a></div>";
@@ -506,8 +523,8 @@ function convertPDFtoBase64() {
 
 function addPDFFileToExamList(id) {  
     var html = "<div class='row-fluid' id='row_exampdf_id" + id + "'>";
-    html += "<div class='span9' style='padding-top: 5px'><a href=# id='exampdf_id_" + id + "'>" + m_file_name + "</a></div>";
-    html += "<button class='btn btn-danger span2' id='btn_delete_exampdf_id" + id + "'>Remove File</button>";
+    html += "<div class='span1 text-center'><button class='btn btn-mini btn-warning' id='btn_delete_exampdf_id" + id + "'><i class='icon-trash icon-white'></i></button></div>";
+    html += "<div class='span11'><a href=# id='exampdf_id_" + id + "'>" + m_file_name + "</a></div>";
     html += "</div>";
     
     $('#exam_list').append(html);

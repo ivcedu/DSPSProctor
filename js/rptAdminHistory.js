@@ -20,7 +20,7 @@ function initializeTable() {
 ////////////////////////////////////////////////////////////////////////////////
 $(document).ready(function() {  
     $('#nav_home').click(function() { 
-        window.open('home.html', '_self');
+        window.open('adminHome.html', '_self');
         return false;
     });
     
@@ -60,6 +60,8 @@ $(document).ready(function() {
     $('table').on('click', 'a[id^="proctor_id_"]', function(e) {
         e.preventDefault();
         var proctor_id = $(this).attr('id').replace("proctor_id_", "");
+        var str_url = location.href;
+        sessionStorage.setItem('ss_dsps_proctor_referrer', str_url);
         window.open('printProctor.html?proctor_id=' + proctor_id, '_self');
         return false;
     });
