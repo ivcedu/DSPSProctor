@@ -556,6 +556,11 @@ function sendEmailToStudentExamNotReceived() {
     message += "It has been rescheduled for (<b>" + new_date + " " + new_time + "</b>)<br><br>Thank you!";
 
     // testing
-    proc_sendEmail("stafftest@ivc.edu", inst_name, subject, message);
+    var cal_title = "DSPS Proctor Test: " + $('#stu_name').html() + " (" + $('#course_id').html() + ")";
+    var db_start_date = convertStringDateTimeToDBDateFormat(new_date, new_time, "");
+    var db_end_date = convertStringDateTimeToDBDateFormat(new_date, new_time, $('#allow_min').html());
+    proc_sendEmailWithCalendar("stafftest@ivc.edu", $('#stu_name').html(), subject, message, db_start_date, db_end_date, cal_title, "SSC 171", "DSPS Test Schedule");
+    
+//    proc_sendEmail("stafftest@ivc.edu", inst_name, subject, message);
 //    proc_sendEmail(inst_email, inst_name, subject, message);
 }

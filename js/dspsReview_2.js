@@ -458,9 +458,14 @@ function sendEmailToStudentAccepted() {
         message += "Comments:<br>" + $('#dsps_comments').val().replace(/\n/g, "<br>") + "<br><br>";
     }
     message += "This is a reminder that you are scheduled to have the above exam proctored in DSPS. Please arrive 15 minutes early and bring a valid picture ID";
-    
+
     // testing
-    proc_sendEmail("stafftest@ivc.edu", $('#stu_name').html(), subject, message);
+    var cal_title = "DSPS Proctor Test: " + $('#stu_name').html() + " (" + $('#course_id').html() + ")";
+    var db_start_date = convertStringDateTimeToDBDateFormat($('#test_date').val(), $('#test_time').val(), "");
+    var db_end_date = convertStringDateTimeToDBDateFormat($('#test_date').val(), $('#test_time').val(), $('#allow_min').html());
+    proc_sendEmailWithCalendar("stafftest@ivc.edu", $('#stu_name').html(), subject, message, db_start_date, db_end_date, cal_title, "SSC 171", "DSPS Test Schedule");
+//    proc_sendEmail("stafftest@ivc.edu", $('#stu_name').html(), subject, message);
+    
 //    proc_sendEmail(stu_email, $('#stu_name').html(), subject, message);
 }
 

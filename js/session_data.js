@@ -138,6 +138,40 @@ function convertDBDateToString(date_time) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+function convertStringDateTimeToDBDateFormat(str_date, str_time, duration) {
+    var ar_date = str_date.split("/");
+    var yr = ar_date[2];
+    var mo = ar_date[0];
+    var dy = ar_date[1];
+    
+    var ar_time = str_time.split(":");
+    var hr = ar_time[0];
+    var mn_shift = ar_time[1];
+    
+    var ar_min = mn_shift.split(" ");
+    var mn = ar_min[0];
+    var shift = ar_min[1];
+    
+    var n_hr = 0;
+    if (shift === "PM") {
+        n_hr = Number(hr) + 12;
+    }
+    else {
+        n_hr = Number(hr);
+    }
+    
+    if (duration === "") {
+        return yr + mo + dy + "T" + n_hr + mn + "00";
+    }
+    else {
+        var total_min = Number(mn) + Number(duration);
+        var add_hr = Math.floor(total_min / 60);
+        var new_mn = total_min % 60;
+        return yr + mo + dy + "T" + (n_hr + add_hr) + new_mn + "00";
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
 function getDTUIStamp() {
     var result = "";
     var cur_dt = new Date();
