@@ -75,8 +75,7 @@ $(document).ready(function() {
 ////////////////////////////////////////////////////////////////////////////////
 function getAdminProctorCompleteList() {
     var result = new Array(); 
-    result = db_getInstProctorCompleteList('ytaylor@ivc.edu');
-//    result = db_getInstProctorCompleteList(sessionStorage.getItem('ls_dsps_proctor_loginEmail'));
+    result = db_getInstProctorCompleteList(sessionStorage.getItem('ls_dsps_proctor_loginEmail'));
     
     $('#body_tr').empty();
     if (result.length !== 0) {

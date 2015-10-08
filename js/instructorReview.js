@@ -216,28 +216,6 @@ $(document).ready(function() {
         }
     });
     
-    // add file button click ///////////////////////////////////////////////////
-//    $('#add_file').click(function() {
-//        var file = $('#attachment_file').get(0).files[0];
-//        var f_name = file.name.replace(/#/g, "");
-//        var file_data = new FormData();
-//        file_data.append("files[]", file, f_name); 
-//        m_total_page = pdfGetTotalPages(file_data);
-//        
-//        if (m_total_page === 0) {
-//            alert("Your PDF file are not correctly formatted. please verify your pdf file again");
-//            $('#attachment_file').filestyle('clear');
-//            return false;
-//        }
-//        else {
-//            startSpin();        
-//            setTimeout(function() {      
-//                addExamPDF();
-//                stopSpin();
-//            }, 1000);
-//        }
-//    });
-    
     // exam pdf click event ////////////////////////////////////////////////////
     $(document).on('click', 'a[id^="exampdf_id_"]', function() {
         var exampdf_id = $(this).attr('id').replace("exampdf_id_", "");
@@ -397,8 +375,6 @@ function defaultHideDisalbe() {
     $('#sel_cal_type').hide();
     $('#sel_cal_other').hide();
     $('#sel_internet').hide();
-    
-//    $('#add_file').prop('disabled', true);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -768,16 +744,14 @@ function sendEmailToDSPS_2() {
     message += "Please click below ticket # to open DSPS 2 review page<br><br>";
     message += "<a href='" + str_url + "'>" + section_num + "</a><br><br>";
     
-    // testing
-    proc_sendEmail("vptest@ivc.edu", "Angie Bates", subject, message);
-//    proc_sendEmail("abates@ivc.edu", "Angie Bates", subject, message);
+    proc_sendEmail("ivcdspsexams@ivc.edu", "DSPS Exams", subject, message);
 }
 
 function sendEmailToStudentDeny() {
     var subject = "Test proctoring request has been Denied";
     var message = "Dear " + $('#stu_name').html() + ",<br><br>";
     message += "Your test proctoring request that was submitted on <b>" + date_submitted + "</b> has been <b>Denied;</b><br>";
-    message += "Please contact the DSPS office as soon as possible regarding your request at 949.451.5630 or ivcdsps@ivc.edu<br>";
+    message += "Please contact the DSPS office as soon as possible regarding your request at 949.451.5630 or ivcdspsexams@ivc.edu<br>";
     message += "DSPS office hours are Monday through Thursday 8 AM - 5 PM, and Friday 8 AM - 3 PM<br><br>";
     
     message += "Instructor Name: <b>" + inst_name + "</b><br>";
@@ -791,13 +765,13 @@ function sendEmailToStudentDeny() {
     }
     
     // testing
-    proc_sendEmail("stafftest@ivc.edu", $('#stu_name').html(), subject, message);
-//    proc_sendEmail(stu_email, $('#stu_name').html(), subject, message);
+//    proc_sendEmail("stafftest@ivc.edu", $('#stu_name').html(), subject, message);
+    proc_sendEmail(stu_email, $('#stu_name').html(), subject, message);
 }
 
 function sendEmailToDSPSDeny() {
     var subject = "Test proctoring request has been Denied";
-    var message = "Dear Angie Bates,<br><br>";
+    var message = "DSPS Exam,<br><br>";
     message += "Instructor review has been <b>Denied</b><br><br>";
     
     message += "Student Name: <b>" + $('#stu_name').html() + "</b><br>";
@@ -812,7 +786,5 @@ function sendEmailToDSPSDeny() {
         message += "Comments:<br>" + $('#dsps_comments').val().replace(/\n/g, "<br>");
     }
     
-    // testing
-    proc_sendEmail("vptest@ivc.edu", $('#stu_name').html(), subject, message);
-//    proc_sendEmail(stu_email, $('#stu_name').html(), subject, message);
+    proc_sendEmail("ivcdspsexams@ivc.edu", "DSPS Exams", subject, message);
 }

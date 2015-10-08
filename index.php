@@ -4,7 +4,7 @@
         <meta charset="utf-8"/>
         <meta http-equiv="X-UA-Compatible" content="IE=Edge"/>
         <meta http-equiv="Cache-Control" content="no-cache"/>
-        <title>DSPS Proctor Login</title>
+        <title>DSPS Exams Login</title>
         <!-- application css -->
         <link rel="stylesheet" href="css/style-2.css"/>
     </head>
@@ -12,7 +12,7 @@
         <div class="body"></div>
         <div class="grad"></div>
         <div class="header">
-            <div>DSPS Proctor</div>
+            <div>DSPS Exams</div>
         </div>
         <div class="loginFrame"></div>
         <div class="login">

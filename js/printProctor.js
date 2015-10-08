@@ -367,7 +367,7 @@ function capture() {
 function sendEmailToTechSupport() {
     var subject = "Request for New Ticket";
     var message = "New tickert has been requested from <b>" + sessionStorage.getItem('ls_dsps_proctor_loginDisplayName') + "</b> (" + sessionStorage.getItem('ls_dsps_proctor_loginEmail') + ")<br><br>";
-    message += "Application Web Site: <b>DSPS Proctor View</b><br><br>";
+    message += "Application Web Site: <b>DSPS Exams View</b><br><br>";
     message += "<b>Problems:</b><br>" + $('#mod_tech_problems').val().replace(/\n/g, "<br>");
 //    message += "<img src='cid:screen_shot'/>";    
     var img_base64 = str_img.replace("data:image/png;base64,", "");

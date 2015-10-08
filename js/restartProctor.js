@@ -414,8 +414,8 @@ function sendEmailToStudentRestart() {
     message += "Test Time: <b>" + $('#test_time').val() + "</b><br>";
     
     // testing
-    proc_sendEmail("stafftest@ivc.edu", $('#stu_name').html(), subject, message);
-//    proc_sendEmail(stu_email, $('#stu_name').html(), subject, message);
+//    proc_sendEmail("stafftest@ivc.edu", $('#stu_name').html(), subject, message);
+    proc_sendEmail(stu_email, $('#stu_name').html(), subject, message);
 }
 
 function sendEmailToInstructorRestart() {
@@ -434,6 +434,6 @@ function sendEmailToInstructorRestart() {
     message += "<a href='" + location.href + "'>" + section_num + "</a><br><br>";
     
     // testing
-    proc_sendEmail("deantest@ivc.edu", inst_name, subject, message);
-//    proc_sendEmail(inst_email, inst_name, subject, message);
+//    proc_sendEmail("deantest@ivc.edu", inst_name, subject, message);
+    proc_sendEmail(inst_email, inst_name, subject, message);
 }

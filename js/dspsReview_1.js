@@ -298,15 +298,15 @@ function sendEmailToInstructor() {
     message += "<a href='" + str_url + "'>" + section_num + "</a><br><br>";
     
     // testing
-    proc_sendEmail("deantest@ivc.edu", inst_name, subject, message);
-//    proc_sendEmail(inst_email, inst_name, subject, message);
+//    proc_sendEmail("deantest@ivc.edu", inst_name, subject, message);
+    proc_sendEmail(inst_email, inst_name, subject, message);
 }
 
 function sendEmailToStudentDeny() {
     var subject = "Test proctoring request has been Denied";
     var message = "Dear " + $('#stu_name').html() + ",<br><br>";
     message += "Your test proctoring request that was submitted on <b>" + date_submitted + "</b> has been <b>Denied;</b><br>";
-    message += "Please contact the DSPS office as soon as possible regarding your request at 949.451.5630 or ivcdsps@ivc.edu<br>";
+    message += "Please contact the DSPS office as soon as possible regarding your request at 949.451.5630 or ivcdspsexams@ivc.edu<br>";
     message += "DSPS office hours are Monday through Thursday 8 AM - 5 PM, and Friday 8 AM - 3 PM<br><br>";
     
     message += "Instructor Name: <b>" + inst_name + "</b><br>";
@@ -320,8 +320,8 @@ function sendEmailToStudentDeny() {
     }
     
     // testing
-    proc_sendEmail("stafftest@ivc.edu", $('#stu_name').html(), subject, message);
-//    proc_sendEmail(stu_email, $('#stu_name').html(), subject, message);
+//    proc_sendEmail("stafftest@ivc.edu", $('#stu_name').html(), subject, message);
+    proc_sendEmail(stu_email, $('#stu_name').html(), subject, message);
 }
 
 function sendEmailToStudentCanceled() {
@@ -340,6 +340,6 @@ function sendEmailToStudentCanceled() {
     }
     
     // testing
-    proc_sendEmail("stafftest@ivc.edu", $('#stu_name').html(), subject, message);
-//    proc_sendEmail(stu_email, $('#stu_name').html(), subject, message);
+//    proc_sendEmail("stafftest@ivc.edu", $('#stu_name').html(), subject, message);
+    proc_sendEmail(stu_email, $('#stu_name').html(), subject, message);
 }

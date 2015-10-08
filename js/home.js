@@ -213,8 +213,7 @@ function getAdminProctorList() {
 
 function getInstructorProctorList() {
     var result = new Array(); 
-    result = db_getInstProctorList('ytaylor@ivc.edu');
-//    result = db_getInstProctorList(sessionStorage.getItem('ls_dsps_proctor_loginEmail'));
+    result = db_getInstProctorList(sessionStorage.getItem('ls_dsps_proctor_loginEmail'));
     
     $('#body_tr').empty();
     var body_html = "";

@@ -125,28 +125,6 @@ $(document).ready(function() {
         }
     });
     
-    // add file button click ///////////////////////////////////////////////////
-//    $('#add_file').click(function() {
-//        var file = $('#attachment_file').get(0).files[0];
-//        var f_name = file.name.replace(/#/g, "");
-//        var file_data = new FormData();
-//        file_data.append("files[]", file, f_name); 
-//        m_total_page = pdfGetTotalPages(file_data);
-//        
-//        if (m_total_page === 0) {
-//            alert("Your PDF file are not correctly formatted. please verify your pdf file again");
-//            $('#attachment_file').filestyle('clear');
-//            return false;
-//        }
-//        else {
-//            startSpin();        
-//            setTimeout(function() {      
-//                addExamPDF();
-//                stopSpin();
-//            }, 1000);
-//        }
-//    });
-    
     // exam pdf click event ////////////////////////////////////////////////////
     $(document).on('click', 'a[id^="exampdf_id_"]', function() {
         var exampdf_id = $(this).attr('id').replace("exampdf_id_", "");
@@ -587,7 +565,5 @@ function sendEmailToDSPSTestExamChange() {
     message += "Please click below ticket # to open DSPS 2 review page<br><br>";
     message += "<a href='" + str_url + "'>" + section_num + "</a><br><br>";
     
-    // testing
-    proc_sendEmail("vptest@ivc.edu", "Angie Bates", subject, message);
-//    proc_sendEmail("abates@ivc.edu", "Angie Bates", subject, message);
+    proc_sendEmail("ivcdspsexams@ivc.edu", "DSPS Exams", subject, message);
 }

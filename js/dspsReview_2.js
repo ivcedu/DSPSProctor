@@ -459,21 +459,20 @@ function sendEmailToStudentAccepted() {
     }
     message += "This is a reminder that you are scheduled to have the above exam proctored in DSPS. Please arrive 15 minutes early and bring a valid picture ID";
 
-    // testing
-    var cal_title = "DSPS Proctor Test: " + $('#stu_name').html() + " (" + $('#course_id').html() + ")";
+    var cal_title = "DSPS Exams Test: " + $('#stu_name').html() + " (" + $('#course_id').html() + ")";
     var db_start_date = convertStringDateTimeToDBDateFormat($('#test_date').val(), $('#test_time').val(), "");
     var db_end_date = convertStringDateTimeToDBDateFormat($('#test_date').val(), $('#test_time').val(), $('#allow_min').html());
-    proc_sendEmailWithCalendar("stafftest@ivc.edu", $('#stu_name').html(), subject, message, db_start_date, db_end_date, cal_title, "SSC 171", "DSPS Test Schedule");
-//    proc_sendEmail("stafftest@ivc.edu", $('#stu_name').html(), subject, message);
     
-//    proc_sendEmail(stu_email, $('#stu_name').html(), subject, message);
+    // testing
+//    proc_sendEmailWithCalendar("stafftest@ivc.edu", $('#stu_name').html(), subject, message, db_start_date, db_end_date, cal_title, "SSC 171", "DSPS Test Schedule");
+    proc_sendEmailWithCalendar(stu_email, $('#stu_name').html(), subject, message, db_start_date, db_end_date, cal_title, "SSC 171", "DSPS Test Schedule");
 }
 
 function sendEmailToStudentCancel() {
     var subject = "Test proctoring request has been Denied";
     var message = "Dear " + $('#stu_name').html() + ",<br><br>";
     message += "Your test proctoring request that was submitted on <b>" + date_submitted + "</b> has been <b>Denied;</b><br>";
-    message += "Please contact the DSPS office as soon as possible regarding your request at 949.451.5630 or ivcdsps@ivc.edu<br>";
+    message += "Please contact the DSPS office as soon as possible regarding your request at 949.451.5630 or ivcdspsexams@ivc.edu<br>";
     message += "DSPS office hours are Monday through Thursday 8 AM - 5 PM, and Friday 8 AM - 3 PM<br><br>";
     
     message += "Instructor Name: <b>" + inst_name + "</b><br>";
@@ -488,8 +487,8 @@ function sendEmailToStudentCancel() {
     }
     
     // testing
-    proc_sendEmail("stafftest@ivc.edu", $('#stu_name').html(), subject, message);
-//    proc_sendEmail(stu_email, $('#stu_name').html(), subject, message);
+//    proc_sendEmail("stafftest@ivc.edu", $('#stu_name').html(), subject, message);
+    proc_sendEmail(stu_email, $('#stu_name').html(), subject, message);
 }
 
 function sendEmailToInstructorReview2Accept() {
@@ -509,8 +508,8 @@ function sendEmailToInstructorReview2Accept() {
     }
     
     // testing
-    proc_sendEmail("deantest@ivc.edu", inst_name, subject, message);
-//    proc_sendEmail(inst_email, inst_name, subject, message);
+//    proc_sendEmail("deantest@ivc.edu", inst_name, subject, message);
+    proc_sendEmail(inst_email, inst_name, subject, message);
 }
 
 function sendEmailToInstructorReview2Denied() {
@@ -530,8 +529,8 @@ function sendEmailToInstructorReview2Denied() {
     }
     
     // testing
-    proc_sendEmail("deantest@ivc.edu", inst_name, subject, message);
-//    proc_sendEmail(inst_email, inst_name, subject, message);
+//    proc_sendEmail("deantest@ivc.edu", inst_name, subject, message);
+    proc_sendEmail(inst_email, inst_name, subject, message);
 }
 
 function sendEmailToStudentCanceled() {
@@ -550,8 +549,8 @@ function sendEmailToStudentCanceled() {
     }
     
     // testing
-    proc_sendEmail("stafftest@ivc.edu", $('#stu_name').html(), subject, message);
-//    proc_sendEmail(stu_email, $('#stu_name').html(), subject, message);
+//    proc_sendEmail("stafftest@ivc.edu", $('#stu_name').html(), subject, message);
+    proc_sendEmail(stu_email, $('#stu_name').html(), subject, message);
 }
 
 function sendEmailToInstructorCanceled() {
@@ -571,6 +570,6 @@ function sendEmailToInstructorCanceled() {
     }
     
     // testing
-    proc_sendEmail("deantest@ivc.edu", $('#stu_name').html(), subject, message);
-//    proc_sendEmail(stu_email, $('#stu_name').html(), subject, message);
+//    proc_sendEmail("deantest@ivc.edu", $('#stu_name').html(), subject, message);
+    proc_sendEmail(stu_email, $('#stu_name').html(), subject, message);
 }

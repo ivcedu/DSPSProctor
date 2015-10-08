@@ -9,8 +9,8 @@
     $mail = new PHPMailer();
     $mail->IsSMTP();
     $mail->Host = "smtp1.socccd.edu";
-    $mail->From = "ivcdsps@ivc.edu";
-    $mail->FromName = "Disabled Students Programs & Services";
+    $mail->From = "ivcdspsexams@ivc.edu";
+    $mail->FromName = "DSPS Exam";
     $mail->AddAddress($Email, $Name);
     //$mail->AddCC($address, $name);
     $mail->IsHTML(true); // send as HTML

@@ -14,7 +14,7 @@
     // Build the ics file
     $ical = "BEGIN:VCALENDAR\n"
             ."VERSION:2.0\n"
-            ."PRODID:-//DSPS Proctor Application\n"
+            ."PRODID:-//DSPS Exams Application\n"
             ."CALSCALE:GREGORIAN\n"
             ."BEGIN:VTIMEZONE\n"
             ."TZID:America/Los_Angeles\n"
@@ -56,7 +56,7 @@
     $mail->FromName = "IVC Automatic System Generated";
     $mail->AddAddress($Email, $Name);
     $mail->IsHTML(true); // send as HTML
-    $mail->addStringAttachment($ical, 'dsps proctor schedule.ics');
+    $mail->addStringAttachment($ical, 'dsps exams schedule.ics');
 //    $mail->AddStringAttachment($ical, "dsps proctor schedule.ics", "7bit", "text/calendar; charset=utf-8; method=REQUEST");
     $mail->Subject = $Subject;
     $mail->Body = $Message;

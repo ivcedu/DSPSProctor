@@ -204,9 +204,6 @@ function getStudentCourseInfo() {
     var cur_term = tardis_getCurrentTerm();
     $('#new_protor_title').html("New Test Proctoring (" + getCurrentSemester(cur_term) + ")");
     
-    // testing
-    stu_id = "1029202";
-    
     var html = "";
     var result = new Array(); 
     result = tardis_getStudentCourseList(stu_id, cur_term);
@@ -356,9 +353,7 @@ function sendEmailToDSPS_1() {
     message += "Please click below ticket # to open DSPS 1 review page<br><br>";
     message += "<a href='" + str_url + "?proctor_id=" + proctor_id + "'>" + section_num + "</a><br><br>";
     
-    // testing
-    proc_sendEmail("vptest@ivc.edu", "Angie Bates", subject, message);
-//    proc_sendEmail("abates@ivc.edu", "Angie Bates", subject, message);
+    proc_sendEmail("ivcdspsexams@ivc.edu", "DSPS Exams", subject, message);
 }
 
 function sendEmailToStudent() {
@@ -376,6 +371,6 @@ function sendEmailToStudent() {
     message += "Test Time: <b>" + $('#test_time').val() + "</b><br><br>";
     
     // testing
-    email = "stafftest@ivc.edu";
+//    email = "stafftest@ivc.edu";
     proc_sendEmail(email, name, subject, message);
 }
