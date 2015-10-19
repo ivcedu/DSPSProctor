@@ -53,7 +53,7 @@ $(document).ready(function() {
                         return false;
                     }
                 }
-                else {
+                else {                    
                     if (url_param === null) {
                         window.open('instructorHome.html', '_self');
                         return false;
@@ -64,7 +64,7 @@ $(document).ready(function() {
                     }
                 }
             }
-            else {
+            else {                
                 window.open('newProctor.html', '_self');
                 return false;
             }

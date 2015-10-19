@@ -51,7 +51,7 @@ $(document).ready(function() {
             case "Review 1":
                 var str_url = location.href;
                 sessionStorage.setItem('ss_dsps_proctor_referrer', str_url);
-                window.open('dspsReview_1.html?proctor_id=' + proctor_id, '_self');
+                window.open('printProctor.html?proctor_id=' + proctor_id, '_self');
                 break;
             case "Instructor Review":
                     window.open('instructorReview.html?proctor_id=' + proctor_id, '_self');

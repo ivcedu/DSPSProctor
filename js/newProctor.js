@@ -189,7 +189,12 @@ function formValidation() {
 function setDatePickerMinDate() {
     var cur_date = new Date();
     cur_date.setDate(cur_date.getDate()+7);
+    
+    var max_date = new Date(cur_date);
+    max_date.setMonth(max_date.getMonth()+1);
+    
     $('#test_date').datepicker( "option", "minDate", cur_date);
+    $('#test_date').datepicker( "option", "maxDate", max_date);
 }
 
 function getStudentInfo() {
@@ -336,6 +341,10 @@ function sendEmailToDSPS_1() {
     var message = "Dear Angie Bates,<br><br>";
     message += "A test proctoring request has been submitted to DSPS.<br><br>";
     
+    if ($('#comments').val() !== "") {
+        message += "<b>Student Comments:</b><br>" + $('#comments').val().replace(/\n/g, "<br>") + "<br><br>";
+    }
+    
     message += "Student Name: <b>" + $('#stu_name').val() + "</b><br>";
     message += "Student ID: <b>" + $('#stu_id').val() + "</b><br>";
     message += "Instructor Name: <b>" + $('#inst_list').val() + "</b><br>";
@@ -343,16 +352,14 @@ function sendEmailToDSPS_1() {
     message += "Course: <b>" + $('#course_list').val() + "</b><br>";
     message += "Test Date: <b>" + $('#test_date').val() + "</b><br>";
     message += "Test Time: <b>" + $('#test_time').val() + "</b><br><br>";
-    
-    if ($('#comments').val() !== "") {
-        message += "Student Comments:<br>" + $('#comments').val().replace(/\n/g, "<br>") + "<br><br>";
-    }
-    
+
     var str_url = location.href;
     str_url = str_url.replace("newProctor.html", "dspsReview_1.html");
     message += "Please click below ticket # to open DSPS 1 review page<br><br>";
     message += "<a href='" + str_url + "?proctor_id=" + proctor_id + "'>" + section_num + "</a><br><br>";
     
+    // testing
+//    proc_sendEmail("vptest@ivc.edu", "DSPS Exams", subject, message);
     proc_sendEmail("ivcdspsexams@ivc.edu", "DSPS Exams", subject, message);
 }
 
@@ -362,7 +369,8 @@ function sendEmailToStudent() {
     
     var subject = "DSPS Test Proctoring Request";
     var message = "Dear " + name + ",<br><br>";
-    message += "Your test proctoring request that was submitted on <b>" + new Date().toLocaleString() + "</b> is being processed and an email has been sent to your instructor for their approval.<br><br>";    
+    var cur_date = new Date().toLocaleString();
+    message += "Your test proctoring request that was submitted on <b>" + cur_date + "</b> is being processed and an email has been sent to your instructor for their approval.<br><br>";    
     
     message += "Instructor Name: <b>" + $('#inst_list').val() + "</b><br>";
     message += "Ticket #: <b>" + section_num + "</b><br>";
@@ -371,6 +379,6 @@ function sendEmailToStudent() {
     message += "Test Time: <b>" + $('#test_time').val() + "</b><br><br>";
     
     // testing
-//    email = "stafftest@ivc.edu";
+//    proc_sendEmail("stafftest@ivc.edu", name, subject, message);
     proc_sendEmail(email, name, subject, message);
 }

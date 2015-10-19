@@ -281,17 +281,17 @@ function sendEmailToInstructor() {
     var message = "Dear " + inst_name + ",<br><br>";
     message += "New proctor test request has been submitted and DSPS Review 1 has been Accepted<br><br>";
     
+    if ($('#dsps_comments').val() !== "") {
+        message += "<b>Comments:</b><br>" + $('#dsps_comments').val().replace(/\n/g, "<br>") + "<br><br>";
+    }
+    
     message += "Student Name: <b>" + $('#stu_name').html() + "</b><br>";
     message += "Student ID: <b>" + $('#stu_id').html() + "</b><br>";
     message += "Ticket #: <b>" + section_num + "</b><br>";
     message += "Course: <b>" + $('#course_id').html() + "</b><br>";
     message += "Test Date: <b>" + $('#test_date').html() + "</b><br>";
     message += "Test Time: <b>" + $('#test_time').html() + "</b><br><br>";
-    
-    if ($('#dsps_comments').val() !== "") {
-        message += "Comments:<br>" + $('#dsps_comments').val().replace(/\n/g, "<br>") + "<br><br>";
-    }
-    
+
     var str_url = location.href;
     str_url = str_url.replace("dspsReview_1.html", "instructorReview.html");
     message += "Please click below ticket # to open Instructor Review page<br><br>";
@@ -305,7 +305,12 @@ function sendEmailToInstructor() {
 function sendEmailToStudentDeny() {
     var subject = "Test proctoring request has been Denied";
     var message = "Dear " + $('#stu_name').html() + ",<br><br>";
-    message += "Your test proctoring request that was submitted on <b>" + date_submitted + "</b> has been <b>Denied;</b><br>";
+    message += "Your test proctoring request that was submitted on <b>" + date_submitted + "</b> has been <b>Denied;</b><br><br>";
+    
+    if ($('#dsps_comments').val() !== "") {
+        message += "<b>Comments:</b><br>" + $('#dsps_comments').val().replace(/\n/g, "<br>") + "<br><br>";
+    }
+    
     message += "Please contact the DSPS office as soon as possible regarding your request at 949.451.5630 or ivcdspsexams@ivc.edu<br>";
     message += "DSPS office hours are Monday through Thursday 8 AM - 5 PM, and Friday 8 AM - 3 PM<br><br>";
     
@@ -314,10 +319,6 @@ function sendEmailToStudentDeny() {
     message += "Course: <b>" + $('#course_id').html() + "</b><br>";
     message += "Test Date: <b>" + $('#test_date').html() + "</b><br>";
     message += "Test Time: <b>" + $('#test_time').html() + "</b><br><br>";
-    
-    if ($('#dsps_comments').val() !== "") {
-        message += "Comments:<br>" + $('#dsps_comments').val().replace(/\n/g, "<br>");
-    }
     
     // testing
 //    proc_sendEmail("stafftest@ivc.edu", $('#stu_name').html(), subject, message);
@@ -329,16 +330,16 @@ function sendEmailToStudentCanceled() {
     var message = "Dear " + $('#stu_name').html() + ",<br><br>";
     message += "Your test proctoring request that was submitted on <b>" + date_submitted + "</b> has been <b>Canceled;</b><br><br>";
     
+    if ($('#dsps_comments').val() !== "") {
+        message += "<b>Comments:</b><br>" + $('#dsps_comments').val().replace(/\n/g, "<br>") + "<br><br>";
+    }
+    
     message += "Instructor Name: <b>" + inst_name + "</b><br>";
     message += "Ticket #: <b>" + section_num + "</b><br>";
     message += "Course: <b>" + $('#course_id').html() + "</b><br>";
     message += "Test Date: <b>" + $('#test_date').html() + "</b><br>";
     message += "Test Time: <b>" + $('#test_time').html() + "</b><br><br>";
-    
-    if ($('#dsps_comments').val() !== "") {
-        message += "Comments:<br>" + $('#dsps_comments').val().replace(/\n/g, "<br>");
-    }
-    
+
     // testing
 //    proc_sendEmail("stafftest@ivc.edu", $('#stu_name').html(), subject, message);
     proc_sendEmail(stu_email, $('#stu_name').html(), subject, message);

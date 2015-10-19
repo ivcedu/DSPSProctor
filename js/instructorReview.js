@@ -106,48 +106,109 @@ $(document).ready(function() {
             $('#attachment_file').filestyle('clear');
         }
     });
-
-    // mailbox check event /////////////////////////////////////////////////////
-    $('#ckb_mailbox').change(function() {
-        if ($(this).is(':checked')) {
+    
+    // return exam radio button check event /////////////////////////////////////
+    $('input[name=rdo_return_exam]').change(function() {
+        var select = $(this).val();
+        if (select === "mailbox") {
             $('#cbo_mail_bld').prop('disabled', false);
             $('#cbo_mail_bld').selectpicker('refresh');
             $('#bldg').prop('readonly', false);
+            
+            $('#cbo_faculty_bld').prop('disabled', true);
+            $('#cbo_faculty_bld').selectpicker('refresh');
+            $('#office').val("");
+            $('#office').prop('readonly', true);
+            
+            $('#sel_se_option').hide();
+            $('#se_option').val("1");
+            $('#se_option').selectpicker('refresh');
+        }
+        else if (select === "faculty") {
+            $('#cbo_faculty_bld').prop('disabled', false);
+            $('#cbo_faculty_bld').selectpicker('refresh');
+            $('#office').prop('readonly', false);
+            
+            $('#cbo_mail_bld').prop('disabled', true);
+            $('#cbo_mail_bld').selectpicker('refresh');
+            $('#bldg').val("");
+            $('#bldg').prop('readonly', true);
+            
+            $('#sel_se_option').hide();
+            $('#se_option').val("1");
+            $('#se_option').selectpicker('refresh');
+        }
+        else if (select === "scan_email") {
+            $('#sel_se_option').show();
+            
+            $('#cbo_mail_bld').prop('disabled', true);
+            $('#cbo_mail_bld').selectpicker('refresh');
+            $('#bldg').val("");
+            $('#bldg').prop('readonly', true);
+            
+            $('#cbo_faculty_bld').prop('disabled', true);
+            $('#cbo_faculty_bld').selectpicker('refresh');
+            $('#office').val("");
+            $('#office').prop('readonly', true);
         }
         else {
             $('#cbo_mail_bld').prop('disabled', true);
             $('#cbo_mail_bld').selectpicker('refresh');
             $('#bldg').val("");
             $('#bldg').prop('readonly', true);
-        }
-    });
-    
-    // faculty office check event //////////////////////////////////////////////
-    $('#ckb_faculty').change(function() {
-        if ($(this).is(':checked')) {
-            $('#cbo_faculty_bld').prop('disabled', false);
-            $('#cbo_faculty_bld').selectpicker('refresh');
-            $('#office').prop('readonly', false);
-        }
-        else {
+            
             $('#cbo_faculty_bld').prop('disabled', true);
             $('#cbo_faculty_bld').selectpicker('refresh');
             $('#office').val("");
             $('#office').prop('readonly', true);
-        }
-    });
-    
-    // scan and email check event //////////////////////////////////////////////
-    $('#ckb_scan_email').change(function() {
-        if ($(this).is(':checked')) {
-            $('#sel_se_option').show();
-        }
-        else {
+            
             $('#sel_se_option').hide();
             $('#se_option').val("1");
             $('#se_option').selectpicker('refresh');
         }
     });
+
+//    // mailbox check event /////////////////////////////////////////////////////
+//    $('#ckb_mailbox').change(function() {
+//        if ($(this).is(':checked')) {
+//            $('#cbo_mail_bld').prop('disabled', false);
+//            $('#cbo_mail_bld').selectpicker('refresh');
+//            $('#bldg').prop('readonly', false);
+//        }
+//        else {
+//            $('#cbo_mail_bld').prop('disabled', true);
+//            $('#cbo_mail_bld').selectpicker('refresh');
+//            $('#bldg').val("");
+//            $('#bldg').prop('readonly', true);
+//        }
+//    });
+    
+//    // faculty office check event //////////////////////////////////////////////
+//    $('#ckb_faculty').change(function() {
+//        if ($(this).is(':checked')) {
+//            $('#cbo_faculty_bld').prop('disabled', false);
+//            $('#cbo_faculty_bld').selectpicker('refresh');
+//            $('#office').prop('readonly', false);
+//        }
+//        else {            
+//            $('#cbo_faculty_bld').prop('disabled', true);
+//            $('#cbo_faculty_bld').selectpicker('refresh');
+//            $('#office').val("");
+//            $('#office').prop('readonly', true);
+//        }
+//    });
+    
+//    // scan and email check event //////////////////////////////////////////////
+//    $('#ckb_scan_email').change(function() {
+//        if ($(this).is(':checked')) {
+//            $('#sel_se_option').show();
+//        }
+//        else {            
+//            $('#sel_se_option').hide();
+//            $('#se_option').val("1");
+//            $('#se_option').selectpicker('refresh');
+//        }
+//    });
     
     // calculator radio button check event /////////////////////////////////////
     $('input[name=rdo_calculator]').change(function() {
@@ -167,7 +228,7 @@ $(document).ready(function() {
     // calculator type change event ////////////////////////////////////////////
     $('#cal_type').change(function() {
         var select = $(this).val();
-        if (select === "3") {
+        if (select === "4") {
             $('#cal_type_other').val("");
             $('#sel_cal_other').show();
         }
@@ -352,6 +413,9 @@ function formValidation() {
     }
     if (typeof $('input[name="rdo_exam"]:checked').val() === 'undefined') {
         err += "Exam Attachment or Exam Drop Off option is a required field\n";
+    }
+    if (typeof $('input[name="rdo_return_exam"]:checked').val() === 'undefined') {
+        err += "Return Exam To options are required field\n";
     }
     if (typeof $('input[name="rdo_notes"]:checked').val() === 'undefined'
         || typeof $('input[name="rdo_book"]:checked').val() === 'undefined'
@@ -727,6 +791,10 @@ function sendEmailToDSPS_2() {
     var message = "Dear Angie Bates,<br><br>";
     message += "Instructor review has been Accepted<br><br>";
     
+    if ($('#dsps_comments').val() !== "") {
+        message += "<b>Comments:</b><br>" + $('#dsps_comments').val().replace(/\n/g, "<br>") + "<br><br>";
+    }
+    
     message += "Student Name: <b>" + $('#stu_name').html() + "</b><br>";
     message += "Student ID: <b>" + $('#stu_id').html() + "</b><br>";
     message += "Instructor Name: <b>" + inst_name + "</b><br>";
@@ -735,22 +803,25 @@ function sendEmailToDSPS_2() {
     message += "Test Date: <b>" + $('#test_date').html() + "</b><br>";
     message += "Test Time: <b>" + $('#test_time').html() + "</b><br><br>";
     
-    if ($('#dsps_comments').val() !== "") {
-        message += "Comments:<br>" + $('#dsps_comments').val().replace(/\n/g, "<br>") + "<br><br>";
-    }
-    
     var str_url = location.href;
     str_url = str_url.replace("instructorReview.html", "dspsReview_2.html");
     message += "Please click below ticket # to open DSPS 2 review page<br><br>";
     message += "<a href='" + str_url + "'>" + section_num + "</a><br><br>";
     
+        // testing
+//    proc_sendEmail("vptest@ivc.edu", "DSPS Exams", subject, message);
     proc_sendEmail("ivcdspsexams@ivc.edu", "DSPS Exams", subject, message);
 }
 
 function sendEmailToStudentDeny() {
     var subject = "Test proctoring request has been Denied";
     var message = "Dear " + $('#stu_name').html() + ",<br><br>";
-    message += "Your test proctoring request that was submitted on <b>" + date_submitted + "</b> has been <b>Denied;</b><br>";
+    message += "Your test proctoring request that was submitted on <b>" + date_submitted + "</b> has been <b>Denied;</b><br><br>";
+    
+    if ($('#dsps_comments').val() !== "") {
+        message += "<b>Comments:</b><br>" + $('#dsps_comments').val().replace(/\n/g, "<br>") + "<br><br>";
+    }
+    
     message += "Please contact the DSPS office as soon as possible regarding your request at 949.451.5630 or ivcdspsexams@ivc.edu<br>";
     message += "DSPS office hours are Monday through Thursday 8 AM - 5 PM, and Friday 8 AM - 3 PM<br><br>";
     
@@ -759,10 +830,6 @@ function sendEmailToStudentDeny() {
     message += "Course: <b>" + $('#course_id').html() + "</b><br>";
     message += "Test Date: <b>" + $('#test_date').html() + "</b><br>";
     message += "Test Time: <b>" + $('#test_time').html() + "</b><br><br>";
-    
-    if ($('#dsps_comments').val() !== "") {
-        message += "Comments:<br>" + $('#dsps_comments').val().replace(/\n/g, "<br>");
-    }
     
     // testing
 //    proc_sendEmail("stafftest@ivc.edu", $('#stu_name').html(), subject, message);
@@ -774,6 +841,10 @@ function sendEmailToDSPSDeny() {
     var message = "DSPS Exam,<br><br>";
     message += "Instructor review has been <b>Denied</b><br><br>";
     
+    if ($('#dsps_comments').val() !== "") {
+        message += "<b>Comments:</b><br>" + $('#dsps_comments').val().replace(/\n/g, "<br>") + "<br><br>";
+    }
+    
     message += "Student Name: <b>" + $('#stu_name').html() + "</b><br>";
     message += "Student ID: <b>" + $('#stu_id').html() + "</b><br>";
     message += "Instructor Name: <b>" + inst_name + "</b><br>";
@@ -782,9 +853,7 @@ function sendEmailToDSPSDeny() {
     message += "Test Date: <b>" + $('#test_date').html() + "</b><br>";
     message += "Test Time: <b>" + $('#test_time').html() + "</b><br><br>";
     
-    if ($('#dsps_comments').val() !== "") {
-        message += "Comments:<br>" + $('#dsps_comments').val().replace(/\n/g, "<br>");
-    }
-    
+    // testing
+//    proc_sendEmail("vptest@ivc.edu", "DSPS Exams", subject, message);
     proc_sendEmail("ivcdspsexams@ivc.edu", "DSPS Exams", subject, message);
 }

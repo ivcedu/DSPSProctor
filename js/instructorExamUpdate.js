@@ -548,6 +548,10 @@ function sendEmailToDSPSTestExamChange() {
     var message = "Dear Angie Bates,<br><br>";
     message += "Instructor changed test exam option.<br><br>";
     
+    if ($('#inst_comments').val() !== "") {
+        message += "<b>Comments:</b><br>" + $('#inst_comments').val().replace(/\n/g, "<br>") + "<br><br>";
+    }
+    
     message += "Student Name: <b>" + $('#stu_name').html() + "</b><br>";
     message += "Student ID: <b>" + $('#stu_id').html() + "</b><br>";
     message += "Instructor Name: <b>" + inst_name + "</b><br>";
@@ -556,14 +560,12 @@ function sendEmailToDSPSTestExamChange() {
     message += "Test Date: <b>" + $('#test_date').html() + "</b><br>";
     message += "Test Time: <b>" + $('#test_time').html() + "</b><br><br>";
     
-    if ($('#inst_comments').val() !== "") {
-        message += "Comments:<br>" + $('#inst_comments').val().replace(/\n/g, "<br>") + "<br><br>";
-    }
-    
     var str_url = location.href;
     str_url = str_url.replace("instructorReview.html", "dspsReview_2.html");
     message += "Please click below ticket # to open DSPS 2 review page<br><br>";
     message += "<a href='" + str_url + "'>" + section_num + "</a><br><br>";
     
+    // testing
+//    proc_sendEmail("vptest@ivc.edu", "DSPS Exams", subject, message);
     proc_sendEmail("ivcdspsexams@ivc.edu", "DSPS Exams", subject, message);
 }
