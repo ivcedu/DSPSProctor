@@ -1,5 +1,5 @@
 ////////////////////////////////////////////////////////////////////////////////
-function localData_login(loginDisplayName, loginEmail, loginPhone, loginID, loginType) {
+function localData_login(loginDisplayName, loginEmail, loginPhone, loginID, loginType, username, password) {
 //    var cur_date_time = new Date();
 //    cur_date_time.setHours(cur_date_time.getHours() + 2);
 //    localStorage.setItem('ls_dsps_proctor_expiration_date_time', cur_date_time);
@@ -9,6 +9,8 @@ function localData_login(loginDisplayName, loginEmail, loginPhone, loginID, logi
     sessionStorage.setItem('ls_dsps_proctor_loginPhone', objToString(loginPhone));
     sessionStorage.setItem('ls_dsps_proctor_loginID', objToString(loginID));
     sessionStorage.setItem('ls_dsps_proctor_loginType', objToString(loginType));
+    sessionStorage.setItem('ls_dsps_proctor_username', objToString(username));
+    sessionStorage.setItem('ls_dsps_proctor_password', objToString(password));
 }
 
 //function IsLoginExpired() {

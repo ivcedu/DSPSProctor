@@ -13,9 +13,16 @@ var new_date = "";
 var new_time = "";
 ////////////////////////////////////////////////////////////////////////////////
 window.onload = function() {   
-    if (sessionStorage.key(0) !== null) {   
-        defaultHideDisalbe();
+    if (sessionStorage.key(0) !== null) { 
         getURLParameters();
+        // email link validation
+        if (!emailLinkValidation()) {
+            sessionStorage.setItem('ls_dsps_review_step', "Complete");
+            window.open('emailAccessError.html', '_self');
+            return false;
+        }
+        
+        defaultHideDisalbe();
         setProctor();
         setAccom();
         setInstForm();
@@ -233,6 +240,27 @@ $(document).ready(function() {
     // timepicker
     $('#mod_new_test_time').timepicker({template: 'modal'});
 });
+
+////////////////////////////////////////////////////////////////////////////////
+function emailLinkValidation() {
+    var result = new Array();
+    result = db_getProctor(proctor_id);
+    
+    if (result.length === 1) {
+        var step_id = result[0]['StepID'];
+        var status_id = result[0]['StatusID'];
+        
+        if (step_id === "4" && status_id === "2") {
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+    else {
+        return false;
+    }
+}
 
 ////////////////////////////////////////////////////////////////////////////////
 function defaultHideDisalbe() {

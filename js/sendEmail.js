@@ -27,12 +27,12 @@ function proc_sendEmailWithCalendar(email, name, subject, message, DateStart, Da
     return Result;
 }
 
-function proc_sendEmailToTechSupport(Email, Name, CCEmail, CCName, Subject, Message, StrImages) {
+function proc_sendEmailToTechSupport(Email, Name, FromEmail, FromName, Password, Subject, Message, StrImages) {
     var Result = false;
     $.ajax({
         type:"POST",
         url:"php/sendEmailToTechSupport.php",
-        data:{Email:Email, Name:Name, CCEmail:CCEmail, CCName:CCName, Subject:Subject, Message:Message, StrImages:StrImages},
+        data:{Email:Email, Name:Name, FromEmail:FromEmail, FromName:FromName, Password:Password, Subject:Subject, Message:Message, StrImages:StrImages},
         async: false,  
         success:function(data) {
             Result = JSON.parse(data);

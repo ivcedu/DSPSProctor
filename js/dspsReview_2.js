@@ -11,8 +11,15 @@ var str_img = "";
 ////////////////////////////////////////////////////////////////////////////////
 window.onload = function() {   
     if (sessionStorage.key(0) !== null) {
-        defaultHideDisalbe();
         getURLParameters();
+        // email link validation
+        if (!emailLinkValidation()) {
+            sessionStorage.setItem('ls_dsps_review_step', "Review 2");
+            window.open('emailAccessError.html', '_self');
+            return false;
+        }
+        
+        defaultHideDisalbe();
         setProctor();
         setAccom();
         setInstForm();
@@ -205,6 +212,27 @@ $(document).ready(function() {
     // timepicker
 //    $('#test_time').timepicker();
 });
+
+////////////////////////////////////////////////////////////////////////////////
+function emailLinkValidation() {
+    var result = new Array();
+    result = db_getProctor(proctor_id);
+    
+    if (result.length === 1) {
+        var step_id = result[0]['StepID'];
+        var status_id = result[0]['StatusID'];
+        
+        if (step_id === "3" && status_id === "2") {
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+    else {
+        return false;
+    }
+}
 
 ////////////////////////////////////////////////////////////////////////////////
 function defaultHideDisalbe() {

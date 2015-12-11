@@ -4,6 +4,7 @@ window.onload = function() {
     if (sessionStorage.key(0) !== null) {   
         $('#mod_dialog_box').modal('hide');
         $('#mod_tech_support').modal('hide');
+        $('#mod_tech_processing').hide();
         $('#login_name').html(sessionStorage.getItem('ls_dsps_proctor_loginDisplayName'));
         getAdminProctorList("All", "");
         initializeTable();
@@ -131,24 +132,60 @@ $(document).ready(function() {
     });
     
     // modal submit button click ///////////////////////////////////////////////
-    $('#mod_tech_btn_submit').click(function() { 
-        if (sendEmailToTechSupport()) {
-            $('#mod_tech_support').modal('hide');
-            alert("Your request has been submitted successfully");
-        }
-        else {
-            $('#mod_tech_support').modal('hide');
-            alert("Sending email error!");
-        }
+    $('#mod_tech_btn_submit').click(function() {        
+        $(this).hide();
+        $('#mod_tech_btn_close').prop('disabled', true);
+        $('#mod_tech_processing').show();
+        $('#mod_tech_msg_end').hide();
+        
+        var data = {'Email': 'ivctech@ivc.edu',
+                    'Name': '',
+                    'FromEmail': sessionStorage.getItem('ls_dsps_proctor_loginEmail'),
+                    'FromName': sessionStorage.getItem('ls_dsps_proctor_loginDisplayName'),
+                    'Password': sessionStorage.getItem('ls_dsps_proctor_password'),
+                    'Subject': 'DSPS Exams Ticket',
+                    'Message': 'Problems: ' + $('#mod_tech_problems').val().replace(/\n/g, "<br>"),
+                    'StrImages': str_img.replace("data:image/png;base64,", "")};
+        var obj_JSON = JSON.stringify(data);
+        
+        var web_worker = new Worker('js/web_worker.js');
+        web_worker.addEventListener('message', function(e) {
+            if (e.data === "true") {
+                $('#mod_tech_msg_end').html("Email has been sent to IVC Tech successfully");
+            }
+            else {
+                $('#mod_tech_msg_end').html("Sending email failed, please call 949.451.5504");
+            }
+
+            $('#mod_tech_progress_bar').hide();
+            $('#mod_tech_msg_end').show();
+            $('#mod_tech_btn_close').prop('disabled', false); 
+        }, false);
+        
+        web_worker.postMessage({'parent_site': sessionStorage.getItem('m_parentSite'), 'obj_json': obj_JSON});
+
+//        web_worker.postMessage({'parent_site': sessionStorage.getItem('m_parentSite'),
+//                                'login_email': sessionStorage.getItem('ls_dsps_proctor_loginEmail'),
+//                                'login_name': sessionStorage.getItem('ls_dsps_proctor_loginDisplayName'),
+//                                'password': sessionStorage.getItem('ls_dsps_proctor_password'),
+//                                'problems': $('#mod_tech_problems').val().replace(/\n/g, "<br>"),
+//                                'img_base64': str_img.replace("data:image/png;base64,", "")});
+
+//        setTimeout(function() {
+//            sendEmailToTechSupport();
+//            $('#mod_tech_msg_start').hide();
+//            $('#mod_tech_msg_end').show();
+//            $('#mod_tech_btn_close').prop('disabled', false);            
+//        }, 1000);
     });
     
     // get screen shot image ///////////////////////////////////////////////////
     html2canvas($('body'), {
-        onrendered: function(canvas) { str_img = canvas.toDataURL("image/jpg"); }
+        onrendered: function(canvas) { str_img = canvas.toDataURL("image/png"); }
     });
     
     // popover
-    $('#nav_capture').popover({content:"Contact IVC Tech Support", placement:"bottom"});
+    $('#nav_capture').popover({content:"Report an issue", placement:"bottom"});
     
     // selectpicker
     $('.selectpicker').selectpicker();
@@ -217,11 +254,13 @@ function capture() {
 
 ////////////////////////////////////////////////////////////////////////////////
 function sendEmailToTechSupport() {
-    var subject = "Request for New Ticket";
-    var message = "New tickert has been requested from <b>" + sessionStorage.getItem('ls_dsps_proctor_loginDisplayName') + "</b> (" + sessionStorage.getItem('ls_dsps_proctor_loginEmail') + ")<br><br>";
-    message += "Application Web Site: <b>Home</b><br><br>";
-    message += "<b>Problems:</b><br>" + $('#mod_tech_problems').val().replace(/\n/g, "<br>");
+    var login_email = sessionStorage.getItem('ls_dsps_proctor_loginEmail');
+    var login_name = sessionStorage.getItem('ls_dsps_proctor_loginDisplayName');
+    var password = sessionStorage.getItem('ls_dsps_proctor_password');
+    
+    var subject = "DSPS Exams Ticket";
+    var message = "Problems: " + $('#mod_tech_problems').val().replace(/\n/g, "<br>");
 //    message += "<img src='cid:screen_shot'/>";    
     var img_base64 = str_img.replace("data:image/png;base64,", "");
-    return proc_sendEmailToTechSupport("presidenttest@ivc.edu", "Do Not Reply", "", "", subject, message, img_base64);
+    return proc_sendEmailToTechSupport("ivctech@ivc.edu", "", login_email, login_name, password, subject, message, img_base64);
 }

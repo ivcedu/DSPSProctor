@@ -20,6 +20,14 @@ var str_img = "";
 ////////////////////////////////////////////////////////////////////////////////
 window.onload = function() {   
     if (sessionStorage.key(0) !== null) {
+        getURLParameters();
+        // email link validation
+        if (!emailLinkValidation()) {
+            sessionStorage.setItem('ls_dsps_review_step', "Instructor Review");
+            window.open('emailAccessError.html', '_self');
+            return false;
+        }
+        
         target = $('#spinner')[0];
         spinner = new Spinner();
         defaultHideDisalbe();
@@ -27,7 +35,6 @@ window.onload = function() {
         getCalType();
         getInternet();
         getIVCBLDList();
-        getURLParameters();
         setProctor();
         setAccom();
         setInstForm();
@@ -167,48 +174,6 @@ $(document).ready(function() {
             $('#se_option').selectpicker('refresh');
         }
     });
-
-//    // mailbox check event /////////////////////////////////////////////////////
-//    $('#ckb_mailbox').change(function() {
-//        if ($(this).is(':checked')) {
-//            $('#cbo_mail_bld').prop('disabled', false);
-//            $('#cbo_mail_bld').selectpicker('refresh');
-//            $('#bldg').prop('readonly', false);
-//        }
-//        else {
-//            $('#cbo_mail_bld').prop('disabled', true);
-//            $('#cbo_mail_bld').selectpicker('refresh');
-//            $('#bldg').val("");
-//            $('#bldg').prop('readonly', true);
-//        }
-//    });
-    
-//    // faculty office check event //////////////////////////////////////////////
-//    $('#ckb_faculty').change(function() {
-//        if ($(this).is(':checked')) {
-//            $('#cbo_faculty_bld').prop('disabled', false);
-//            $('#cbo_faculty_bld').selectpicker('refresh');
-//            $('#office').prop('readonly', false);
-//        }
-//        else {            
-//            $('#cbo_faculty_bld').prop('disabled', true);
-//            $('#cbo_faculty_bld').selectpicker('refresh');
-//            $('#office').val("");
-//            $('#office').prop('readonly', true);
-//        }
-//    });
-    
-//    // scan and email check event //////////////////////////////////////////////
-//    $('#ckb_scan_email').change(function() {
-//        if ($(this).is(':checked')) {
-//            $('#sel_se_option').show();
-//        }
-//        else {            
-//            $('#sel_se_option').hide();
-//            $('#se_option').val("1");
-//            $('#se_option').selectpicker('refresh');
-//        }
-//    });
     
     // calculator radio button check event /////////////////////////////////////
     $('input[name=rdo_calculator]').change(function() {
@@ -391,6 +356,27 @@ $(document).ready(function() {
     $('#comments').autosize();
     $('#dsps_comments').autosize();
 });
+
+////////////////////////////////////////////////////////////////////////////////
+function emailLinkValidation() {
+    var result = new Array();
+    result = db_getProctor(proctor_id);
+    
+    if (result.length === 1) {
+        var step_id = result[0]['StepID'];
+        var status_id = result[0]['StatusID'];
+        
+        if (step_id === "2" && status_id === "2") {
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+    else {
+        return false;
+    }
+}
 
 ////////////////////////////////////////////////////////////////////////////////
 function startSpin() {

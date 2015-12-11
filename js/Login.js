@@ -102,7 +102,7 @@ function loginInfo() {
             return;
         }
 
-        localData_login(display_name, email, phone, loginID, login_type);
+        localData_login(display_name, email, phone, loginID, login_type, username, password);
         if (location.href.indexOf("ireport.ivc.edu") >= 0) {
             sessionStorage.setItem('m_parentSite', 'https://ireport.ivc.edu');
         }

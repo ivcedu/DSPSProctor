@@ -10,10 +10,17 @@ var section_num = "";
 var str_img = "";
 ////////////////////////////////////////////////////////////////////////////////
 window.onload = function() {       
-    if (sessionStorage.key(0) !== null) {        
+    if (sessionStorage.key(0) !== null) {
         $('#mod_dialog_box').modal('hide');
         $('#mod_tech_support').modal('hide');
         getURLParameters();
+        // email link validation
+        if (!emailLinkValidation()) {
+            sessionStorage.setItem('ls_dsps_review_step', "Review 1");
+            window.open('emailAccessError.html', '_self');
+            return false;
+        }
+        
         setProctor();
         setAccom();
         getTransactionHistory();
@@ -174,6 +181,27 @@ $(document).ready(function() {
     $('#comments').autosize();
     $('#dsps_comments').autosize();
 });
+
+////////////////////////////////////////////////////////////////////////////////
+function emailLinkValidation() {
+    var result = new Array();
+    result = db_getProctor(proctor_id);
+    
+    if (result.length === 1) {
+        var step_id = result[0]['StepID'];
+        var status_id = result[0]['StatusID'];
+        
+        if (step_id === "1" && status_id === "1") {
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+    else {
+        return false;
+    }
+}
 
 ////////////////////////////////////////////////////////////////////////////////
 function setProctor() {
