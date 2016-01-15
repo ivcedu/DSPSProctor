@@ -305,9 +305,9 @@ function sendEmailToTechSupport() {
 
 ////////////////////////////////////////////////////////////////////////////////
 function sendEmailToInstructor() {
-    var subject = "New Proctor Test Request";
+    var subject = "New Test Proctoring Request";
     var message = "Dear " + inst_name + ",<br><br>";
-    message += "New proctor test request has been submitted and DSPS Review 1 has been Accepted<br><br>";
+    message += "A new DSPS test proctoring request has been submitted, reviewed and accepted.<br><br>";
     
     if ($('#dsps_comments').val() !== "") {
         message += "<b>Comments:</b><br>" + $('#dsps_comments').val().replace(/\n/g, "<br>") + "<br><br>";

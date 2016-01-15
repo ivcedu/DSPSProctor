@@ -522,9 +522,9 @@ function sendEmailToStudentCancel() {
 }
 
 function sendEmailToInstructorReview2Accept() {
-    var subject = "Proctor Request 2 Review Accept";
+    var subject = "Test Proctoring Confirmation";
     var message = "Dear " + inst_name + ",<br><br>";
-    message += "Proctor test request DSPS Review 2 has been Accepted<br><br>";
+    message += "The test proctoring request below has been accepted and confirmed.<br><br>";
     
     if ($('#dsps_comments').val() !== "") {
         message += "<b>Comments:</b><br>" + $('#dsps_comments').val().replace(/\n/g, "<br>") + "<br><br>";
