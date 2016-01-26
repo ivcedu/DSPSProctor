@@ -369,8 +369,10 @@ function sendEmailToStudent() {
     
     var subject = "DSPS Test Proctoring Request";
     var message = "Dear " + name + ",<br><br>";
-    var cur_date = new Date().toLocaleString();
-    message += "Your test proctoring request that was submitted on <b>" + cur_date + "</b> is being processed and an email has been sent to your instructor for their approval.<br><br>";    
+//    var cur_date = new Date().toLocaleString();
+    var str_cur_date = getCurrentDateTimeString();
+    
+    message += "Your test proctoring request that was submitted on <b>" + str_cur_date + "</b> is being processed and an email has been sent to your instructor for their approval.<br><br>";    
     
     message += "Instructor Name: <b>" + $('#inst_list').val() + "</b><br>";
     message += "Ticket #: <b>" + section_num + "</b><br>";

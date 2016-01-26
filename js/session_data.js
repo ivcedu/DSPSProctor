@@ -174,6 +174,26 @@ function convertStringDateTimeToDBDateFormat(str_date, str_time, duration) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+function getCurrentDateTimeString() {
+    var cur_dt = new Date();
+    
+    var yr = cur_dt.getFullYear();
+    var mo = cur_dt.getMonth() + 1;
+    var dy = cur_dt.getDate();
+    var hr = cur_dt.getHours();
+    var mi = cur_dt.getMinutes();
+    var shift = "AM";
+    if (hr >= 12) {
+        if (hr > 12) {
+            hr -= 12;
+        }
+        shift = "PM";
+    }
+    
+    return mo + "/" + dy + "/" + yr + ", " + hr + ":" + mi + " " + shift;
+}
+
+////////////////////////////////////////////////////////////////////////////////
 function getDTUIStamp() {
     var result = "";
     var cur_dt = new Date();
