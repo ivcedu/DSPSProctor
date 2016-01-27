@@ -305,7 +305,7 @@ function sendEmailToTechSupport() {
 
 ////////////////////////////////////////////////////////////////////////////////
 function sendEmailToInstructor() {
-    var subject = "New Test Proctoring Request";
+    var subject = "Test Proctoring Request: New";
     var message = "Dear " + inst_name + ",<br><br>";
     message += "A new DSPS test proctoring request has been submitted, reviewed and accepted.<br><br>";
     
@@ -322,7 +322,7 @@ function sendEmailToInstructor() {
 
     var str_url = location.href;
     str_url = str_url.replace("dspsReview_1.html", "instructorReview.html");
-    message += "Please click below ticket # to open Instructor Review page<br><br>";
+    message += "Please click the ticket number below to open the Instructor Review page<br><br>";
     message += "<a href='" + str_url + "'>" + section_num + "</a><br><br>";
     
     // testing

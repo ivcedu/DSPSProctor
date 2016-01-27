@@ -498,9 +498,9 @@ function sendEmailToTechSupport() {
 
 ////////////////////////////////////////////////////////////////////////////////
 function sendEmailToInstructorCompleted() {
-    var subject = "Proctor Request Completed";
+    var subject = "Test Proctoring Request: Completed";
     var message = "Dear " + inst_name + ",<br><br>";
-    message += "Proctor test request has been Completed<br><br>";
+    message += "Proctor test request has been completed<br><br>";
     
     if ($('#dsps_comments').val() !== "") {
         message += "<b>Comments:</b><br>" + $('#dsps_comments').val().replace(/\n/g, "<br>") + "<br><br>";
@@ -519,9 +519,9 @@ function sendEmailToInstructorCompleted() {
 }
 
 function sendEmailToInstructorNoShow() {
-    var subject = "Proctor Request Student No Show";
+    var subject = "Test Proctoring Request: No Show";
     var message = "Dear " + inst_name + ",<br><br>";
-    message += "Student did not show up for this exam.<br><br>";
+    message += "The student below did not show up for this exam<br><br>";
     
     if ($('#dsps_comments').val() !== "") {
         message += "<b>Comments:</b><br>" + $('#dsps_comments').val().replace(/\n/g, "<br>") + "<br><br>";
@@ -570,11 +570,12 @@ function sendEmailToInstructorExamNotReceived() {
 function sendEmailToStudentExamNotReceived() {
     var subject = "Proctor Request Exam Not Received";
     var message = "Dear " + $('#stu_name').html() + ",<br><br>";
-    message += "We did not received exam form instructor<br><br>";
+    message += "We did not receive the exam from your instructor.<br>";
+    message += "It has been rescheduled for (<b>" + new_date + " " + new_time + "</b>)<br><br>";
     
-    if ($('#dsps_comments').val() !== "") {
-        message += "<b>Comments:</b><br>" + $('#dsps_comments').val().replace(/\n/g, "<br>") + "<br><br>";
-    }
+//    if ($('#dsps_comments').val() !== "") {
+//        message += "<b>Comments:</b><br>" + $('#dsps_comments').val().replace(/\n/g, "<br>") + "<br><br>";
+//    }
     
     message += "Instructor Name: <b>" + inst_name + "</b><br>";
     message += "Ticket #: <b>" + section_num + "</b><br>";
@@ -583,7 +584,7 @@ function sendEmailToStudentExamNotReceived() {
     message += "Test Time: <b>" + $('#test_time').html() + "</b><br>";
     message += "Time allotted in class: <b>" + $('#allow_min').html() + "</b> minutes<br><br>";
     
-    message += "It has been rescheduled for (<b>" + new_date + " " + new_time + "</b>)<br><br>Thank you!";
+    message += "Thank you!";
 
     // testing
     var cal_title = "DSPS Exams Test: " + $('#stu_name').html() + " (" + $('#course_id').html() + ")";
