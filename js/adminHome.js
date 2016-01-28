@@ -45,6 +45,12 @@ $(document).ready(function() {
         return false;
     });
     
+    // admin click /////////////////////////////////////////////////////////////
+    $('#nav_admin').click(function() { 
+        window.open('adminSetting.html', '_self');
+        return false;
+    });
+    
     // filter option change event //////////////////////////////////////////////
     $('#filter_option').change(function() {
         switch ($(this).val()) {
