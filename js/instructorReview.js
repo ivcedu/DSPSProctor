@@ -791,7 +791,7 @@ function sendEmailToDSPS_2() {
     
     var str_url = location.href;
     str_url = str_url.replace("instructorReview.html", "dspsReview_2.html");
-    message += "Please click below ticket # to open DSPS 2 review page<br><br>";
+    message += "Please click on the ticket number below to open DSPS 2 review page<br><br>";
     message += "<a href='" + str_url + "'>" + section_num + "</a><br><br>";
     
         // testing

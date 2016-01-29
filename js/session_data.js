@@ -182,6 +182,7 @@ function getCurrentDateTimeString() {
     var dy = cur_dt.getDate();
     var hr = cur_dt.getHours();
     var mi = cur_dt.getMinutes();
+    var str_min = "";
     var shift = "AM";
     if (hr >= 12) {
         if (hr > 12) {
@@ -189,8 +190,11 @@ function getCurrentDateTimeString() {
         }
         shift = "PM";
     }
+    if (mi < 10) {
+        str_min = "0" + mi;
+    }
     
-    return mo + "/" + dy + "/" + yr + ", " + hr + ":" + mi + " " + shift;
+    return mo + "/" + dy + "/" + yr + ", " + hr + ":" + str_min + " " + shift;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
