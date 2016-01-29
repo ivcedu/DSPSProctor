@@ -475,6 +475,8 @@ function sendEmailToStudentAccepted() {
     var message = "Dear " + $('#stu_name').html() + ",<br><br>";
     message += "Your test proctoring request that was submitted on <b>" + date_submitted + "</b> has been approved<br><br>";
     
+    message += "This is a reminder that you are scheduled to have the exam below proctored by DSPS. Please arrive 15 minutes early and bring a valid picture ID";
+    
     if ($('#dsps_comments').val() !== "") {
         message += "<b>Comments:</b><br>" + $('#dsps_comments').val().replace(/\n/g, "<br>") + "<br><br>";
     }
@@ -485,8 +487,6 @@ function sendEmailToStudentAccepted() {
     message += "Test Date: <b>" + $('#test_date').val() + "</b><br>";
     message += "Test Time: <b>" + $('#test_time').val() + "</b><br>";
     message += "Time allotted in class: <b>" + $('#allow_min').html() + "</b> minutes<br><br>";
-
-    message += "This is a reminder that you are scheduled to have the above exam proctored in DSPS. Please arrive 15 minutes early and bring a valid picture ID";
 
     var cal_title = "DSPS Exams Test: " + $('#stu_name').html() + " (" + $('#course_id').html() + ")";
     var db_start_date = convertStringDateTimeToDBDateFormat($('#test_date').val(), $('#test_time').val(), "");
