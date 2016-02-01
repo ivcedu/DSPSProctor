@@ -372,7 +372,7 @@ function sendEmailToStudent() {
 //    var cur_date = new Date().toLocaleString();
     var str_cur_date = getCurrentDateTimeString();
     
-    message += "Your test proctoring request that was submitted on <b>" + str_cur_date + "</b> is being processed and an email has been sent to your instructor for their approval.<br><br>";    
+    message += "Your test proctoring request that was submitted on <b>" + str_cur_date + "</b> is <b>being processed</b> and an email has been sent to your instructor for their approval.<br><br>";    
     
     message += "Instructor Name: <b>" + $('#inst_list').val() + "</b><br>";
     message += "Ticket #: <b>" + section_num + "</b><br>";
