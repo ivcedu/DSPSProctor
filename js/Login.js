@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////////////////////////////////
 window.onload = function() {
-    $('#logn_error').hide();
+    $('#login_error').hide();
     var curBrowser = bowser.name;
     var curVersion = Number(bowser.version);
     
@@ -70,7 +70,7 @@ $(document).ready(function() {
             }
         }
         else {
-            $('#logn_error').show();
+            $('#login_error').show();
             this.blur();
         }
     });
@@ -99,7 +99,7 @@ function loginInfo() {
         
         if (email === null || typeof email === 'undefined') {
             alert("Login error: There was an error getting login user information from Active Direcy please try again");
-            return;
+            return false;
         }
 
         localData_login(display_name, email, phone, loginID, login_type, username, password);
