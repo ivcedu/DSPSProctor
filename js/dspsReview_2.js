@@ -475,7 +475,7 @@ function sendEmailToStudentAccepted() {
     var message = "Dear " + $('#stu_name').html() + ",<br><br>";
     message += "Your test proctoring request that was submitted on <b>" + date_submitted + "</b> has been <b>approved</b><br><br>";
     
-    message += "This is a reminder that you are scheduled to have the exam below proctored by DSPS. Please arrive 15 minutes early and bring a valid picture ID";
+    message += "This is a reminder that you are scheduled to have the exam below proctored by DSPS. Please arrive 15 minutes early and bring a valid picture ID<br><br>";
     
     if ($('#dsps_comments').val() !== "") {
         message += "<b>Comments:</b><br>" + $('#dsps_comments').val().replace(/\n/g, "<br>") + "<br><br>";
