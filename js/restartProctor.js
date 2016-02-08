@@ -413,7 +413,7 @@ function sendEmailToStudentRestart() {
     message += "Test Date: <b>" + $('#test_date').val() + "</b><br>";
     message += "Test Time: <b>" + $('#test_time').val() + "</b><br>";
     
-    // testing
+    // demo setup
 //    proc_sendEmail("stafftest@ivc.edu", $('#stu_name').html(), subject, message);
     proc_sendEmail(stu_email, $('#stu_name').html(), subject, message);
 }
@@ -433,7 +433,7 @@ function sendEmailToInstructorRestart() {
     message += "Please click below ticket # to open Instructor Review page<br><br>";
     message += "<a href='" + location.href + "'>" + section_num + "</a><br><br>";
     
-    // testing
+    // demo setup
 //    proc_sendEmail("deantest@ivc.edu", inst_name, subject, message);
     proc_sendEmail(inst_email, inst_name, subject, message);
 }

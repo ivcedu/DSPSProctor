@@ -97,6 +97,20 @@ function loginInfo() {
         var loginID = result[3];
         var login_type = result[4];
         
+        // demo setup
+//        if (display_name === "deantest") {
+//            email = "gbrogan@ivc.edu";
+//            phone = "949.451.5596";
+//            loginID = "9999995";
+//            login_type = "Staff";
+//        }
+//        else if (display_name === "Staff1") {
+//            email = "cherbert1@ivc.edu";
+//            phone = "949.451.5596";
+//            loginID = "1030536";
+//            login_type = "Student";
+//        }
+        
         if (email === null || typeof email === 'undefined') {
             alert("Login error: There was an error getting login user information from Active Direcy please try again");
             return false;

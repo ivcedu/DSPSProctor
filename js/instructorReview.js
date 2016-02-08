@@ -794,8 +794,8 @@ function sendEmailToDSPS_2() {
     message += "Please click on the ticket number below to open DSPS 2 review page<br><br>";
     message += "<a href='" + str_url + "'>" + section_num + "</a><br><br>";
     
-        // testing
-//    proc_sendEmail("vptest@ivc.edu", "DSPS Exams", subject, message);
+    // demo setup
+//    proc_sendEmail("presidenttest@ivc.edu", "DSPS Exams", subject, message);
     proc_sendEmail("ivcdspsexams@ivc.edu", "DSPS Exams", subject, message);
 }
 
@@ -817,7 +817,7 @@ function sendEmailToStudentDeny() {
     message += "Test Date: <b>" + $('#test_date').html() + "</b><br>";
     message += "Test Time: <b>" + $('#test_time').html() + "</b><br><br>";
     
-    // testing
+    // demo setup
 //    proc_sendEmail("stafftest@ivc.edu", $('#stu_name').html(), subject, message);
     proc_sendEmail(stu_email, $('#stu_name').html(), subject, message);
 }
@@ -839,7 +839,7 @@ function sendEmailToDSPSDeny() {
     message += "Test Date: <b>" + $('#test_date').html() + "</b><br>";
     message += "Test Time: <b>" + $('#test_time').html() + "</b><br><br>";
     
-    // testing
-//    proc_sendEmail("vptest@ivc.edu", "DSPS Exams", subject, message);
+    // demo setup
+//    proc_sendEmail("presidenttest@ivc.edu", "DSPS Exams", subject, message);
     proc_sendEmail("ivcdspsexams@ivc.edu", "DSPS Exams", subject, message);
 }

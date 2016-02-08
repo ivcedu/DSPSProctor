@@ -358,8 +358,8 @@ function sendEmailToDSPS_1() {
     message += "Please click below ticket # to open DSPS 1 review page<br><br>";
     message += "<a href='" + str_url + "?proctor_id=" + proctor_id + "'>" + section_num + "</a><br><br>";
     
-    // testing
-//    proc_sendEmail("vptest@ivc.edu", "DSPS Exams", subject, message);
+    // demo setup
+//    proc_sendEmail("presidenttest@ivc.edu", "DSPS Exams", subject, message);
     proc_sendEmail("ivcdspsexams@ivc.edu", "DSPS Exams", subject, message);
 }
 
@@ -380,7 +380,7 @@ function sendEmailToStudent() {
     message += "Test Date: <b>" + $('#test_date').val() + "</b><br>";
     message += "Test Time: <b>" + $('#test_time').val() + "</b><br><br>";
     
-    // testing
+    // demo setup
 //    proc_sendEmail("stafftest@ivc.edu", name, subject, message);
     proc_sendEmail(email, name, subject, message);
 }

@@ -565,7 +565,7 @@ function sendEmailToDSPSTestExamChange() {
     message += "Please click below ticket # to open DSPS 2 review page<br><br>";
     message += "<a href='" + str_url + "'>" + section_num + "</a><br><br>";
     
-    // testing
-//    proc_sendEmail("vptest@ivc.edu", "DSPS Exams", subject, message);
+    // demo setup
+//    proc_sendEmail("presidenttest@ivc.edu", "DSPS Exams", subject, message);
     proc_sendEmail("ivcdspsexams@ivc.edu", "DSPS Exams", subject, message);
 }

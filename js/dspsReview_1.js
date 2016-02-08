@@ -325,7 +325,7 @@ function sendEmailToInstructor() {
     message += "Please click the ticket number below to open the Instructor Review page<br><br>";
     message += "<a href='" + str_url + "'>" + section_num + "</a><br><br>";
     
-    // testing
+    // demo setup
 //    proc_sendEmail("deantest@ivc.edu", inst_name, subject, message);
     proc_sendEmail(inst_email, inst_name, subject, message);
 }
@@ -348,7 +348,7 @@ function sendEmailToStudentDeny() {
     message += "Test Date: <b>" + $('#test_date').html() + "</b><br>";
     message += "Test Time: <b>" + $('#test_time').html() + "</b><br><br>";
     
-    // testing
+    // demo setup
 //    proc_sendEmail("stafftest@ivc.edu", $('#stu_name').html(), subject, message);
     proc_sendEmail(stu_email, $('#stu_name').html(), subject, message);
 }
@@ -368,7 +368,7 @@ function sendEmailToStudentCanceled() {
     message += "Test Date: <b>" + $('#test_date').html() + "</b><br>";
     message += "Test Time: <b>" + $('#test_time').html() + "</b><br><br>";
 
-    // testing
+    // demo setup
 //    proc_sendEmail("stafftest@ivc.edu", $('#stu_name').html(), subject, message);
     proc_sendEmail(stu_email, $('#stu_name').html(), subject, message);
 }

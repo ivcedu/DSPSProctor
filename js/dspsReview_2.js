@@ -492,7 +492,7 @@ function sendEmailToStudentAccepted() {
     var db_start_date = convertStringDateTimeToDBDateFormat($('#test_date').val(), $('#test_time').val(), "");
     var db_end_date = convertStringDateTimeToDBDateFormat($('#test_date').val(), $('#test_time').val(), $('#allow_min').html());
     
-    // testing
+    // demo setup
 //    proc_sendEmailWithCalendar("stafftest@ivc.edu", $('#stu_name').html(), subject, message, db_start_date, db_end_date, cal_title, "SSC 171", "DSPS Test Schedule");
     proc_sendEmailWithCalendar(stu_email, $('#stu_name').html(), subject, message, db_start_date, db_end_date, cal_title, "SSC 171", "DSPS Test Schedule");
 }
@@ -516,7 +516,7 @@ function sendEmailToStudentCancel() {
     message += "Test Time: <b>" + $('#test_time').val() + "</b><br>";
     message += "Time allotted in class: <b>" + $('#allow_min').html() + "</b> minutes<br><br>";
     
-    // testing
+    // demo setup
 //    proc_sendEmail("stafftest@ivc.edu", $('#stu_name').html(), subject, message);
     proc_sendEmail(stu_email, $('#stu_name').html(), subject, message);
 }
@@ -537,7 +537,7 @@ function sendEmailToInstructorReview2Accept() {
     message += "Test Date: <b>" + $('#test_date').val() + "</b><br>";
     message += "Test Time: <b>" + $('#test_time').val() + "</b><br><br>";
     
-    // testing
+    // demo setup
 //    proc_sendEmail("deantest@ivc.edu", inst_name, subject, message);
     proc_sendEmail(inst_email, inst_name, subject, message);
 }
@@ -558,7 +558,7 @@ function sendEmailToInstructorReview2Denied() {
     message += "Test Date: <b>" + $('#test_date').val() + "</b><br>";
     message += "Test Time: <b>" + $('#test_time').val() + "</b><br><br>";
     
-    // testing
+    // demo setup
 //    proc_sendEmail("deantest@ivc.edu", inst_name, subject, message);
     proc_sendEmail(inst_email, inst_name, subject, message);
 }
@@ -578,7 +578,7 @@ function sendEmailToStudentCanceled() {
     message += "Test Date: <b>" + $('#test_date').val() + "</b><br>";
     message += "Test Time: <b>" + $('#test_time').val() + "</b><br><br>";
     
-    // testing
+    // demo setup
 //    proc_sendEmail("stafftest@ivc.edu", $('#stu_name').html(), subject, message);
     proc_sendEmail(stu_email, $('#stu_name').html(), subject, message);
 }
@@ -599,7 +599,7 @@ function sendEmailToInstructorCanceled() {
     message += "Test Date: <b>" + $('#test_date').val() + "</b><br>";
     message += "Test Time: <b>" + $('#test_time').val() + "</b><br><br>";
     
-    // testing
+    // demo setup
 //    proc_sendEmail("deantest@ivc.edu", $('#stu_name').html(), subject, message);
     proc_sendEmail(stu_email, $('#stu_name').html(), subject, message);
 }
