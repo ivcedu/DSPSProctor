@@ -146,7 +146,22 @@ $(document).ready(function() {
     $('#test_date').datepicker();
     
     // timepicker
-    $('#test_time').timepicker();
+//    $('#test_time').timepicker();
+    
+    $('#test_time').timepicker().on('changeTime.timepicker', function(e) {    
+        var h= e.time.hours;
+        var m= e.time.minutes;
+        var mer= e.time.meridian;
+        //convert hours into minutes
+        m+=h*60;
+        //10:15 = 10h*60m + 15m = 615 min
+        if(mer === 'AM' && m < 480) {
+            $('#test_time').timepicker('setTime', '8:00 AM');
+        }
+        else if (mer === 'PM' && m > 360) {
+            $('#test_time').timepicker('setTime', '6:00 PM');
+        }
+    });
     
     $('#div_stu_name').popover({content:"student name field", placement:"bottom"});
     $('#div_stu_id').popover({content:"student ID field", placement:"bottom"});
