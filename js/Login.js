@@ -105,9 +105,9 @@ function loginInfo() {
 //            login_type = "Staff";
 //        }
 //        else if (display_name === "Staff1") {
-//            email = "cherbert1@ivc.edu";
+//            email = "aamini4@ivc.edu";
 //            phone = "949.451.5596";
-//            loginID = "1030536";
+//            loginID = "778552";
 //            login_type = "Student";
 //        }
         
