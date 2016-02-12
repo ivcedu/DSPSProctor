@@ -494,7 +494,7 @@ function setProctor() {
         $('#course_id').html(result[0]['CourseID']);
         $('#test_date').html(result[0]['TestDate']);
         $('#test_time').html(result[0]['TestTime']);
-        $('#comments').html(result[0]['Comments'].replace(/\n/g, "<br>"));
+        $('#comments').html(result[0]['Comments'].replace(/\n/g, "<br>")).css({height: 'auto'});
         
         stu_email = result[0]['StuEmail'];
         inst_name = result[0]['InstName'];

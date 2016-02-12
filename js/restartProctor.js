@@ -189,7 +189,7 @@ function setProctor() {
         $('#course_id').html(result[0]['CourseID']);
         $('#test_date').val(result[0]['TestDate']);
         $('#test_time').timepicker({defaultTime: result[0]['TestTime']});
-        $('#comments').html(result[0]['Comments'].replace(/\n/g, "<br>"));
+        $('#comments').html(result[0]['Comments'].replace(/\n/g, "<br>")).css({height: 'auto'});
         $('#inst_phone').html(result[0]['InstPhone']);
         
         stu_email = result[0]['StuEmail'];
