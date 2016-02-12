@@ -158,7 +158,7 @@ $(document).ready(function() {
         if(mer === 'AM' && m < 480) {
             $('#test_time').timepicker('setTime', '8:00 AM');
         }
-        else if (mer === 'PM' && m > 360) {
+        else if (mer === 'PM' && m > 360 && m < 720) {
             $('#test_time').timepicker('setTime', '6:00 PM');
         }
     });
