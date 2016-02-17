@@ -25,13 +25,11 @@
                 if (array_key_exists('mail', $data[0])) {
                     $email = $data[0]["mail"][0];
                 }
-                if (array_key_exists('telephonenumber', $data[0])) {
-                    $phone = $data[0]["telephonenumber"][0];
-                }
 
-                $result = array($display_name, $email, $phone, "", "Staff");
-            }
-        }  
+                $result = array($display_name, $email, "", "Staff");
+            } 
+        }
+        
         ldap_close($ldapconn);
     }
     echo json_encode($result);

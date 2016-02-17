@@ -102,6 +102,12 @@ $(document).ready(function() {
         $('#mod_tech_support').modal('show');
     });
     
+    // only accept numbers for alloted /////////////////////////////////////////
+    $('#allow_min').change(function() {
+        var allow_min = $.trim($(this).val().replace(/[^0-9\.]/g, ''));
+        $(this).val(allow_min);
+    });
+    
     // exam radio button check event ///////////////////////////////////////////
     $('input[name=rdo_exam]').change(function() {
         var select = $(this).val();

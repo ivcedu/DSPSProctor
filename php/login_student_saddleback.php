@@ -1,10 +1,10 @@
 <?php
-    $server = "ISTDC1.student.ivc.edu ISTDC2.student.ivc.edu";
-    $baseDN = "dc=student,dc=ivc,dc=edu";
+    $server = "sdc1.student.saddleback.edu sdc2.student.saddleback.edu sdc3.student.saddleback.edu sdc4.student.saddleback.edu";
+    $baseDN = "dc=student,dc=saddleback,dc=edu";
          
     $username = filter_input(INPUT_POST, 'username');
     $password = filter_input(INPUT_POST, 'password');
-    $login = "IVC-STUDENT\\".$username;
+    $login = "SC-STUDENT\\".$username;
     $result = array();
 
     $ldapconn = ldap_connect($server);   

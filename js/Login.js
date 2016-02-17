@@ -77,14 +77,17 @@ $(document).ready(function() {
 });
 
 ////////////////////////////////////////////////////////////////////////////////
-function loginInfo() {   
-    var result = new Array();
-    var username = $('#username').val().toLowerCase().replace("@ivc.edu", "");
+function loginInfo() {    
+    var username = $('#username').val().toLowerCase().replace("@ivc.edu", "").replace("@saddleback.edu", "");
     var password = $('#password').val();
     
+    var result = new Array();
     result = getLoginUserInfo("php/login.php", username, password);
     if (result.length === 0) {
         result = getLoginUserInfo("php/login_student.php", username, password);
+    }
+    if (result.length === 0) {
+        result = getLoginUserInfo("php/login_student_saddleback.php", username, password);
     }
     
     if (result.length === 0) {
@@ -93,21 +96,18 @@ function loginInfo() {
     else {
         var display_name = result[0];
         var email = result[1];
-        var phone = result[2];
-        var loginID = result[3];
-        var login_type = result[4];
+        var loginID = result[2];
+        var login_type = result[3];
         
         // demo setup
-//        if (display_name === "deantest") {
+//        if (display_name === "deantest staffgen") {
 //            email = "gbrogan@ivc.edu";
-//            phone = "949.451.5596";
 //            loginID = "9999995";
 //            login_type = "Staff";
 //        }
 //        else if (display_name === "Staff1") {
-//            email = "aamini4@ivc.edu";
-//            phone = "949.451.5596";
-//            loginID = "778552";
+//            email = "droh1@ivc.edu";
+//            loginID = "305130";
 //            login_type = "Student";
 //        }
         
@@ -116,7 +116,7 @@ function loginInfo() {
             return false;
         }
 
-        localData_login(display_name, email, phone, loginID, login_type, username, password);
+        localData_login(display_name, email, loginID, login_type, username, password);
         if (location.href.indexOf("ireport.ivc.edu") >= 0) {
             sessionStorage.setItem('m_parentSite', 'https://ireport.ivc.edu');
         }

@@ -3,7 +3,6 @@ function getLoginUserInfo(php_file, user, pass) {
     var result = new Array();
     $.ajax({
         type:"POST",
-        datatype:"json",
         url:php_file,
         data:{username:user, password:pass},
         async: false,  
