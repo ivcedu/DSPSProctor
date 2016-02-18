@@ -228,12 +228,22 @@ function getStudentCourseInfo() {
     var result = new Array(); 
     result = tardis_getStudentCourseList(stu_id, cur_term);
     if (result.length !== 0) {
-        for(var i = 0; i < result.length; i++) {             
+        for(var i = 0; i < result.length; i++) { 
+            var inst_duplicate = false;
+            $.each(m_ar_courses, function(index) {
+                var ar_inst = m_ar_courses[index];
+                if (!$.inArray(result[i]['InstructorName'], ar_inst)) {
+                    inst_duplicate = true;
+                }
+            });
+            
             var ar_crs = new Array();
             ar_crs.push(result[i]['InstructorName'], result[i]['InstructorUID'], result[i]['CourseID'], result[i]['SectionNum']);
             m_ar_courses.push(ar_crs);
             
-            html += "<option value='" + result[i]['InstructorName'] + "'>" + result[i]['InstructorName'] + "</option>";
+            if (!inst_duplicate) {
+                html += "<option value='" + result[i]['InstructorName'] + "'>" + result[i]['InstructorName'] + "</option>";
+            }
         }
     }
     
