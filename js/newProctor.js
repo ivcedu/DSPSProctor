@@ -90,6 +90,17 @@ $(document).ready(function() {
         
         $(this).prop("disabled", true);
         proctor_id = insertProctor();
+        if (proctor_id === "0") {
+            $('#inst_list').val("Select...");
+            $('#inst_list').selectpicker('refresh');
+            setCourseInfo("Select...");
+            $('#test_date').val("");
+            var err_msg = "We are unable to process your request as the instructor does not have an IVC email address. Please go into the IVC DSPS office to manually schedule this exam. ";
+            err_msg += "You may contact the IVC DSPS office at (949) 451-5630, video phone (949) 333-0260, and email ivcdsps@ivc.edu";
+            alert(err_msg);
+            return false;
+        }
+        
         insertAccom(proctor_id);
         db_insertTransaction(proctor_id, sessionStorage.getItem('ls_dsps_proctor_loginDisplayName'), "Proctor request submitted");
         db_insertProctorLog(proctor_id, sessionStorage.getItem('ls_dsps_proctor_loginDisplayName'), 6, 1);
@@ -296,19 +307,26 @@ function insertProctor() {
     
     var sel_inst = $('#inst_list').val();
     var inst_id = getInstructorID(sel_inst);
+    
     var ldap_result = new Array();
     ldap_result = ldap_getUser(inst_id);
-    var inst_name = ldap_result[0];
-    var inst_email = ldap_result[1];
     
-    course_id = $('#course_list').val();
-    section_num = getSectionNum(course_id);
-    
-    var test_date = $('#test_date').val();
-    var test_time = $('#test_time').val();
-    var comments = textReplaceApostrophe($('#comments').val());
-    
-    return db_insertProctor(stu_name, stu_email, stu_ID, inst_name, inst_email, course_id, section_num, test_date, test_time, comments);
+    if (ldap_result.length === 0) {
+        return "0";
+    }
+    else {
+        var inst_name = ldap_result[0];
+        var inst_email = ldap_result[1];
+
+        course_id = $('#course_list').val();
+        section_num = getSectionNum(course_id);
+
+        var test_date = $('#test_date').val();
+        var test_time = $('#test_time').val();
+        var comments = textReplaceApostrophe($('#comments').val());
+
+        return db_insertProctor(stu_name, stu_email, stu_ID, inst_name, inst_email, course_id, section_num, test_date, test_time, comments);
+    }
 }
 
 function insertAccom(proctor_id) {

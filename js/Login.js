@@ -106,8 +106,8 @@ function loginInfo() {
 //            login_type = "Staff";
 //        }
 //        else if (display_name === "Staff1") {
-//            email = "pkapata0@ivc.edu";
-//            loginID = "971319";
+//            email = "yadimor0@ivc.edu";
+//            loginID = "783042";
 //            login_type = "Student";
 //        }
         
