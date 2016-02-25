@@ -30,7 +30,7 @@
                     $etype = $data[0]["employeetype"][0];
                 }
                 
-                $result = array($name, $email, $phone, $etype);
+                $result = array($display_name, $email, $phone, $etype);
             }  
         }
         
