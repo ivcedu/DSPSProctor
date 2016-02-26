@@ -82,16 +82,11 @@ $(document).ready(function() {
                 return false;
             }
         }
-
-//        // only works for safari, chrome, firefox
-//        window.open(document.referrer, '_self');
-//        return false;
     });
 
     $('#nav_logout').click(function() { 
-        var parent_site = sessionStorage.getItem('m_parentSite');
         sessionStorage.clear();
-        window.open(parent_site, '_self');
+        window.open("Login.html", '_self');
         return false;
     });
     

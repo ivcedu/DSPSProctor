@@ -13,12 +13,27 @@ function getLoginUserInfo(php_file, user, pass) {
     return result;
 }
 
-// search LDAP user ////////////////////////////////////////////////////////////
+// search LDAP user IVC ////////////////////////////////////////////////////////
 function ldap_getUser(userID) {
     var result = new Array();
     $.ajax({
         type:"POST",
         url:"php/ldap_searchUser.php",
+        data:{userID:userID},
+        async: false,  
+        success:function(data) {
+            result = JSON.parse(data);
+        }
+    });
+    return result;
+}
+
+// search LDAP user Saddleback /////////////////////////////////////////////////
+function ldap_getUserSaddleback(userID) {
+    var result = new Array();
+    $.ajax({
+        type:"POST",
+        url:"php/ldap_searchUser_saddleback.php",
         data:{userID:userID},
         async: false,  
         success:function(data) {

@@ -1,31 +1,33 @@
 <?php
-    $server = "idc1.ivc.edu idc2.ivc.edu idc3.vic.edu";
-    $baseDN = "dc=ivc,dc=edu";
-    
-    $userID = filter_input(INPUT_POST, 'userID');
+    $server = "dc1.saddleback.edu dc2.saddleback.edu dc3.saddleback.edu dc4.saddleback.edu";
+    $baseDN = "dc=saddleback,dc=edu";
+         
+    $username = filter_input(INPUT_POST, 'username');
+    $password = filter_input(INPUT_POST, 'password');
+    $login = "SADDLEBACK\\".$username;
     $result = array();
-    
-    $ldapconn = ldap_connect($server);
-    if($ldapconn) {
+
+    $ldapconn = ldap_connect($server);   
+    if($ldapconn) {          
         ldap_set_option($ldapconn, LDAP_OPT_PROTOCOL_VERSION, 3);
         ldap_set_option($ldapconn, LDAP_OPT_REFERRALS, 0);
-        
-        $ldapbind = ldap_bind($ldapconn, "IVCSTAFF\\stafftest", "staff");
+
+        $ldapbind = ldap_bind($ldapconn, $login, $password);  
         if($ldapbind) {
-            $filter = "(&(objectClass=user)(objectCategory=person)(cn=".$userID."))";
+            $filter = "(&(objectClass=user)(objectCategory=person)(cn=".$username."))";
             $ladp_result = ldap_search($ldapconn, $baseDN, $filter);
             $data = ldap_get_entries($ldapconn, $ladp_result);
-            
-            if ($data != null && $data["count"] === 1) {
+
+            if ($data != null) {
                 if (array_key_exists('displayname', $data[0])) {
                     $display_name = $data[0]["displayname"][0];
                 }
                 if (array_key_exists('mail', $data[0])) {
                     $email = $data[0]["mail"][0];
                 }
-                
-                $result = array($display_name, $email);
-            }  
+
+                $result = array($display_name, $email, "", "Staff");
+            } 
         }
         
         ldap_close($ldapconn);

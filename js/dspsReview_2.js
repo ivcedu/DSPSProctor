@@ -75,9 +75,8 @@ $(document).ready(function() {
     });
     
     $('#nav_logout').click(function() { 
-        var parent_site = sessionStorage.getItem('m_parentSite');
         sessionStorage.clear();
-        window.open(parent_site, '_self');
+        window.open("Login.html", '_self');
         return false;
     });
     

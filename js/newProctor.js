@@ -74,9 +74,8 @@ $(document).ready(function() {
     
     // submit button click /////////////////////////////////////////////////////
     $('#btn_cancel').click(function() { 
-        var parent_site = sessionStorage.getItem('m_parentSite');
         sessionStorage.clear();
-        window.open(parent_site, '_self');
+        window.open("Login.html", '_self');
         return false;
     });
     
@@ -91,13 +90,9 @@ $(document).ready(function() {
         $(this).prop("disabled", true);
         proctor_id = insertProctor();
         if (proctor_id === "0") {
-            $('#inst_list').val("Select...");
-            $('#inst_list').selectpicker('refresh');
-            setCourseInfo("Select...");
-            $('#test_date').val("");
-            var err_msg = "We are unable to process your request as the instructor does not have an IVC email address. Please go into the IVC DSPS office to manually schedule this exam. ";
-            err_msg += "You may contact the IVC DSPS office at (949) 451-5630, video phone (949) 333-0260, and email ivcdsps@ivc.edu";
-            alert(err_msg);
+            alert("DSPS Exam: AD system error, please contact IVC Tech Support at 949.451.5696");
+            sessionStorage.clear();
+            window.open("Login.html", '_self');
             return false;
         }
         
@@ -310,6 +305,9 @@ function insertProctor() {
     
     var ldap_result = new Array();
     ldap_result = ldap_getUser(inst_id);
+    if (ldap_result.length === 0) {
+        ldap_result = ldap_getUserSaddleback(inst_id);
+    }
     
     if (ldap_result.length === 0) {
         return "0";

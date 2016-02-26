@@ -1,6 +1,5 @@
 ////////////////////////////////////////////////////////////////////////////////
 window.onload = function() {
-    $('#login_error').hide();
     var curBrowser = bowser.name;
     var curVersion = Number(bowser.version);
     
@@ -37,8 +36,9 @@ $(document).ready(function() {
     
     $('#btn_login').click(function() { 
         var url_param = sessionStorage.getItem('ls_dsps_url_param');
+        var login_error = loginInfo();
         
-        if(loginInfo()) {
+        if(login_error === "") {
             var login_type = sessionStorage.getItem('ls_dsps_proctor_loginType');
             if (login_type === "Staff") {
                 var result = new Array();
@@ -70,28 +70,39 @@ $(document).ready(function() {
             }
         }
         else {
-            $('#login_error').show();
+            $('#login_error').html(login_error);
             this.blur();
         }
     });
 });
 
 ////////////////////////////////////////////////////////////////////////////////
-function loginInfo() {    
-    var username = $('#username').val().toLowerCase().replace("@ivc.edu", "").replace("@saddleback.edu", "");
+function loginInfo() {
+    var username = $('#username').val().toLowerCase();
     var password = $('#password').val();
+    var error = loginEmailValidation(username);
+    if(error !== "") {
+        return error;
+    }
     
     var result = new Array();
-    result = getLoginUserInfo("php/login.php", username, password);
-    if (result.length === 0) {
-        result = getLoginUserInfo("php/login_student.php", username, password);
+    if (username.indexOf("@ivc.edu") >= 1) {
+        username = username.replace("@ivc.edu", "");
+        result = getLoginUserInfo("php/login.php", username, password);
+        if (result.length === 0) {
+            result = getLoginUserInfo("php/login_student.php", username, password);
+        }
     }
-    if (result.length === 0) {
-        result = getLoginUserInfo("php/login_student_saddleback.php", username, password);
-    }
+    else {
+        username = username.replace("@saddleback.edu", "");
+        result = getLoginUserInfo("php/login_saddleback.php", username, password);
+        if (result.length === 0) {
+            result = getLoginUserInfo("php/login_student_saddleback.php", username, password);
+        }
+    }   
     
     if (result.length === 0) {
-        return false;
+        return "Invalid Email or Password";
     }
     else {
         var display_name = result[0];
@@ -106,23 +117,33 @@ function loginInfo() {
 //            login_type = "Staff";
 //        }
 //        else if (display_name === "Staff1") {
-//            email = "yadimor0@ivc.edu";
-//            loginID = "783042";
+//            email = "mperez100@ivc.edu";
+//            loginID = "388860";
 //            login_type = "Student";
 //        }
         
         if (email === null || typeof email === 'undefined') {
-            alert("Login error: There was an error getting login user information from Active Direcy please try again");
-            return false;
-        }
-
-        localData_login(display_name, email, loginID, login_type, username, password);
-        if (location.href.indexOf("ireport.ivc.edu") >= 0) {
-            sessionStorage.setItem('m_parentSite', 'https://ireport.ivc.edu');
+            return "AD Login System Error";
         }
         else {
-            sessionStorage.setItem('m_parentSite', 'https://services.ivc.edu');
+            localData_login(display_name, email, loginID, login_type, username, password);
+            if (location.href.indexOf("ireport.ivc.edu") >= 0) {
+                sessionStorage.setItem('m_parentSite', 'https://ireport.ivc.edu');
+            }
+            else {
+                sessionStorage.setItem('m_parentSite', 'https://services.ivc.edu');
+            }
+            return "";
         }
-        return true;
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+function loginEmailValidation(login_email) {    
+    if (login_email.indexOf("@ivc.edu") !== -1 || login_email.indexOf("@saddleback.edu") !== -1) {
+        return "";
+    }
+    else {
+        return "Invalid Email";
     }
 }
