@@ -404,7 +404,7 @@ function formValidation() {
     }
     else {
         if (!isValidPhoneNumber($('#inst_phone').val())) {
-            err += "Contact information is an INVALID\n";
+            err += "Contact information is an INVALID please use sample format (949-451-5696)\n";
         }
     }
     if (typeof $('input[name="rdo_exam"]:checked').val() === 'undefined') {
