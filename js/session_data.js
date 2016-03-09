@@ -94,6 +94,11 @@ function isValidPhoneNumber(phoneNumber) {
     return pattern.test(phoneNumber);
 }
 
+function isValidNumber(number) {
+    var pattern = new RegExp(/^\d+$/);
+    return pattern.test(number);
+}
+
 ////////////////////////////////////////////////////////////////////////////////
 function convertDBDateTimeToString(date_time) {
     if (date_time === null || date_time === "") {

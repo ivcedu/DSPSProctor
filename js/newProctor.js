@@ -80,7 +80,7 @@ $(document).ready(function() {
     });
     
     // submit button click /////////////////////////////////////////////////////
-    $('#btn_submit').click(function() {
+    $('#btn_submit').click(function() {        
         var err = formValidation();
         if (err !== "") {
             alert(err);

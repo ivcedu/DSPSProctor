@@ -396,14 +396,19 @@ function stopSpin() {
 function formValidation() {
     var err = "";
     
-    if ($('#allow_min').val().replace(/[^0-9\.]/g, '') === "") {
+    if ($('#allow_min').val().replace(/\s+/g, '') === "") {
         err += "Time allotted (number only) in class is a required field\n";
+    }
+    else {
+        if (!isValidNumber($.trim($('#allow_min').val()))) {
+            err += "Time allotted is an INVALID please use number only\n";
+        }
     }
     if ($('#inst_phone').val().replace(/\s+/g, '') === "") {
         err += "Contact information during exam a required field\n";
     }
     else {
-        if (!isValidPhoneNumber($('#inst_phone').val())) {
+        if (!isValidPhoneNumber($.trim($('#inst_phone').val()))) {
             err += "Contact information is an INVALID please use sample format (949-451-5696)\n";
         }
     }
@@ -627,12 +632,12 @@ function getExamPDFList() {
 
 ////////////////////////////////////////////////////////////////////////////////
 function updateProctorInstructorPhone() {
-    var inst_phone = textReplaceApostrophe($('#inst_phone').val());
+    var inst_phone = textReplaceApostrophe($.trim($('#inst_phone').val()));
     return db_updateProctorInstPhone(proctor_id, inst_phone);
 }
 
 function insertInstForm() {
-    var allow_min = textReplaceApostrophe($('#allow_min').val());
+    var allow_min = textReplaceApostrophe($.trim($('#allow_min').val()));
     var mailbox = $('#ckb_mailbox').is(':checked');
     var mail_bld_id = $('#cbo_mail_bld').val();
     var bldg = textReplaceApostrophe($('#bldg').val());
