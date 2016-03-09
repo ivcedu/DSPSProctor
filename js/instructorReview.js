@@ -396,11 +396,16 @@ function stopSpin() {
 function formValidation() {
     var err = "";
     
-    if ($('#allow_min').val() === "") {
-        err += "Time allotted in class is a required field\n";
+    if ($('#allow_min').val().replace(/[^0-9\.]/g, '') === "") {
+        err += "Time allotted (number only) in class is a required field\n";
     }
-    if ($('#inst_phone').val() === "") {
+    if ($('#inst_phone').val().replace(/\s+/g, '') === "") {
         err += "Contact information during exam a required field\n";
+    }
+    else {
+        if (!isValidPhoneNumber($('#inst_phone').val())) {
+            err += "Contact information is an INVALID\n";
+        }
     }
     if (typeof $('input[name="rdo_exam"]:checked').val() === 'undefined') {
         err += "Exam Attachment or Exam Drop Off option is a required field\n";

@@ -89,6 +89,11 @@ function isValidEmailAddress(emailAddress) {
     return pattern.test(emailAddress);
 }
 
+function isValidPhoneNumber(phoneNumber) {
+    var pattern = new RegExp(/^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$/);
+    return pattern.test(phoneNumber);
+}
+
 ////////////////////////////////////////////////////////////////////////////////
 function convertDBDateTimeToString(date_time) {
     if (date_time === null || date_time === "") {
