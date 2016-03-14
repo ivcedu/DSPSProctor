@@ -307,6 +307,12 @@ $(document).ready(function() {
     
     // deny button click ///////////////////////////////////////////////////////
     $('#btn_deny').click(function() { 
+        $('#mod_deny_box').modal('show');
+    });
+    
+    // dialog deny yes button click ////////////////////////////////////////////
+    $('#mod_deny_btn_yes').click(function() { 
+        $('#mod_deny_box').modal('hide');
         if ($('#dsps_comments').val().replace(/\s+/g, '') === "") {
             alert("Please specify reasons for denial under Comments");
             return false;
@@ -326,6 +332,8 @@ $(document).ready(function() {
         $('#mod_dialog_box_header').html("Complete");
         $('#mod_dialog_box_body').html("Instructor Review has been Denied");
         $('#mod_dialog_box').modal('show');
+        
+        return false;
     });
     
     // dialog ok click /////////////////////////////////////////////////////////
@@ -434,6 +442,7 @@ function formValidation() {
 ////////////////////////////////////////////////////////////////////////////////
 function defaultHideDisalbe() {
     $('#mod_dialog_box').modal('hide');
+    $('#mod_deny_box').modal('hide');
     $('#mod_tech_support').modal('hide');
     $('#exam_attachment').hide();
     $('#sel_se_option').hide();
