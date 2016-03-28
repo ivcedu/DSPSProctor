@@ -214,19 +214,19 @@ function getAdminProctorList(search_option, search_value) {
         switch(result[i]['Step']) {
             case "Review 1":
                 dsps_1_body_html += setAdminProctorListHTML(result[i]['ProctorID'], result[i]['SectionNum'], result[i]['CourseID'], result[i]['StuName'], 
-                                                            result[i]['Status'], result[i]['InstName'], result[i]['TestDate'] + " " + result[i]['TestTime'], result[i]['Step']);
+                                                            result[i]['Status'], result[i]['InstName'], convertDBDateTimeToString(result[i]['TestDT']), result[i]['Step']);
                 break;
             case "Review 2":
                 dsps_2_body_html += setAdminProctorListHTML(result[i]['ProctorID'], result[i]['SectionNum'], result[i]['CourseID'], result[i]['StuName'], 
-                                                            result[i]['Status'], result[i]['InstName'], result[i]['TestDate'] + " " + result[i]['TestTime'], result[i]['Step']);
+                                                            result[i]['Status'], result[i]['InstName'], convertDBDateTimeToString(result[i]['TestDT']), result[i]['Step']);
                 break;
             case "Instructor Review":
                 inst_review_body_html += setAdminProctorListHTML(result[i]['ProctorID'], result[i]['SectionNum'], result[i]['CourseID'], result[i]['StuName'], 
-                                                                result[i]['Status'], result[i]['InstName'], result[i]['TestDate'] + " " + result[i]['TestTime'], result[i]['Step']);
+                                                                result[i]['Status'], result[i]['InstName'], convertDBDateTimeToString(result[i]['TestDT']), result[i]['Step']);
                 break;
             case "Complete":
                 dsps_complete_body_html += setAdminProctorListHTML(result[i]['ProctorID'], result[i]['SectionNum'], result[i]['CourseID'], result[i]['StuName'], 
-                                                                result[i]['Status'], result[i]['InstName'], result[i]['TestDate'] + " " + result[i]['TestTime'], result[i]['Step']);
+                                                                result[i]['Status'], result[i]['InstName'], convertDBDateTimeToString(result[i]['TestDT']), result[i]['Step']);
                 break;
             default:
                 break;
