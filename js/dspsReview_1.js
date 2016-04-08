@@ -11,9 +11,6 @@ var str_img = "";
 ////////////////////////////////////////////////////////////////////////////////
 window.onload = function() {       
     if (sessionStorage.key(0) !== null) {
-        $('#mod_dialog_box').modal('hide');
-        $('#mod_deny_box').modal('hide');
-        $('#mod_tech_support').modal('hide');
         getURLParameters();
         // email link validation
         if (!emailLinkValidation()) {
@@ -22,6 +19,7 @@ window.onload = function() {
             return false;
         }
         
+        defaultHideDisalbe();
         setProctor();
         setAccom();
         getTransactionHistory();
@@ -90,6 +88,7 @@ $(document).ready(function() {
     // accept button click /////////////////////////////////////////////////////
     $('#btn_accept').click(function() { 
         $(this).prop("disabled", true);
+        updateProctorTestDateTime();
         db_updateProctorStatus(proctor_id, 2, "DateDSPSReview1");
         db_updateProctorStep(proctor_id, 2, "DateDSPSReview1");
         db_insertProctorLog(proctor_id, sessionStorage.getItem('ls_dsps_proctor_loginDisplayName'), 1, 7);
@@ -188,6 +187,9 @@ $(document).ready(function() {
     // auto size
     $('#comments').autosize();
     $('#dsps_comments').autosize();
+    
+    // datepicker
+    $('#test_date').datepicker();
 });
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -212,6 +214,13 @@ function emailLinkValidation() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+function defaultHideDisalbe() {    
+    $('#mod_dialog_box').modal('hide');
+    $('#mod_deny_box').modal('hide');
+    $('#mod_tech_support').modal('hide');
+}
+
+////////////////////////////////////////////////////////////////////////////////
 function setProctor() {
     var result = new Array();
     result = db_getProctor(proctor_id);
@@ -221,8 +230,8 @@ function setProctor() {
         $('#stu_id').html(result[0]['StuID']);
         $('#inst_name').html(result[0]['InstName']);
         $('#course_id').html(result[0]['CourseID']);
-        $('#test_date').html(result[0]['TestDate']);
-        $('#test_time').html(result[0]['TestTime']);
+        $('#test_date').val(result[0]['TestDate']);
+        $('#test_time').timepicker({defaultTime: result[0]['TestTime']});
         $('#comments').html(result[0]['Comments'].replace(/\n/g, "<br>")).css({height: 'auto'});
         
         stu_email = result[0]['StuEmail'];
@@ -296,6 +305,13 @@ function getTransactionHistory() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+function updateProctorTestDateTime() {
+    var test_date = $('#test_date').val();
+    var test_time = $('#test_time').val();
+    db_updateProctorTestDT(proctor_id, test_date, test_time);
+}
+
+////////////////////////////////////////////////////////////////////////////////
 function capture() {    
     html2canvas($('body')).then(function(canvas) { str_img = canvas.toDataURL(); });
 }
@@ -325,8 +341,8 @@ function sendEmailToInstructor() {
     message += "Student ID: <b>" + $('#stu_id').html() + "</b><br>";
     message += "Ticket #: <b>" + section_num + "</b><br>";
     message += "Course: <b>" + $('#course_id').html() + "</b><br>";
-    message += "Test Date: <b>" + $('#test_date').html() + "</b><br>";
-    message += "Test Time: <b>" + $('#test_time').html() + "</b><br><br>";
+    message += "Test Date: <b>" + $('#test_date').val() + "</b><br>";
+    message += "Test Time: <b>" + $('#test_time').val() + "</b><br><br>";
 
     var str_url = location.href;
     str_url = str_url.replace("dspsReview_1.html", "instructorReview.html");
@@ -353,8 +369,8 @@ function sendEmailToStudentDeny() {
     message += "Instructor Name: <b>" + inst_name + "</b><br>";
     message += "Ticket #: <b>" + section_num + "</b><br>";
     message += "Course: <b>" + $('#course_id').html() + "</b><br>";
-    message += "Test Date: <b>" + $('#test_date').html() + "</b><br>";
-    message += "Test Time: <b>" + $('#test_time').html() + "</b><br><br>";
+    message += "Test Date: <b>" + $('#test_date').val() + "</b><br>";
+    message += "Test Time: <b>" + $('#test_time').val() + "</b><br><br>";
     
     // demo setup
 //    proc_sendEmail("stafftest@ivc.edu", $('#stu_name').html(), subject, message);
@@ -373,8 +389,8 @@ function sendEmailToStudentCanceled() {
     message += "Instructor Name: <b>" + inst_name + "</b><br>";
     message += "Ticket #: <b>" + section_num + "</b><br>";
     message += "Course: <b>" + $('#course_id').html() + "</b><br>";
-    message += "Test Date: <b>" + $('#test_date').html() + "</b><br>";
-    message += "Test Time: <b>" + $('#test_time').html() + "</b><br><br>";
+    message += "Test Date: <b>" + $('#test_date').val() + "</b><br>";
+    message += "Test Time: <b>" + $('#test_time').val() + "</b><br><br>";
 
     // demo setup
 //    proc_sendEmail("stafftest@ivc.edu", $('#stu_name').html(), subject, message);

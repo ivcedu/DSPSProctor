@@ -114,6 +114,7 @@ $(document).ready(function() {
     // complete button click ///////////////////////////////////////////////////
     $('#btn_complete').click(function() { 
         $(this).prop("disabled", true);
+        updateProctorTestDateTime();
         db_updateProctorStatus(proctor_id, 4, "DateDSPSComplete");
         db_updateProctorStep(proctor_id, 4, "DateDSPSComplete");
         db_insertProctorLog(proctor_id, sessionStorage.getItem('ls_dsps_proctor_loginDisplayName'), 4, 4);
@@ -234,6 +235,7 @@ $(document).ready(function() {
     $('.selectpicker').selectpicker();
     
     // datepicker
+    $('#test_date').datepicker();
     $('#mod_new_test_date').datepicker();
     
     // timepicker
@@ -282,8 +284,8 @@ function setProctor() {
         $('#stu_id').html(result[0]['StuID']);
         $('#inst_name').html(result[0]['InstName']);
         $('#course_id').html(result[0]['CourseID']);
-        $('#test_date').html(result[0]['TestDate']);
-        $('#test_time').html(result[0]['TestTime']);
+        $('#test_date').val(result[0]['TestDate']);
+        $('#test_time').timepicker({defaultTime: result[0]['TestTime']});
         $("#comments").html(result[0]['Comments'].replace(/\n/g, "<br>")).css({height: 'auto'});
         $('#inst_phone').html(result[0]['InstPhone']);
         
@@ -480,6 +482,13 @@ function getTransactionHistory() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+function updateProctorTestDateTime() {
+    var test_date = $('#test_date').val();
+    var test_time = $('#test_time').val();
+    db_updateProctorTestDT(proctor_id, test_date, test_time);
+}
+
+////////////////////////////////////////////////////////////////////////////////
 function capture() {    
     html2canvas($('body')).then(function(canvas) { str_img = canvas.toDataURL(); });
 }
@@ -509,8 +518,8 @@ function sendEmailToInstructorCompleted() {
     message += "Student ID: <b>" + $('#stu_id').html() + "</b><br>";
     message += "Ticket #: <b>" + section_num + "</b><br>";
     message += "Course: <b>" + $('#course_id').html() + "</b><br>";
-    message += "Test Date: <b>" + $('#test_date').html() + "</b><br>";
-    message += "Test Time: <b>" + $('#test_time').html() + "</b><br><br>";
+    message += "Test Date: <b>" + $('#test_date').val() + "</b><br>";
+    message += "Test Time: <b>" + $('#test_time').val() + "</b><br><br>";
     
     // demo setup
 //    proc_sendEmail("deantest@ivc.edu", inst_name, subject, message);
@@ -530,8 +539,8 @@ function sendEmailToInstructorNoShow() {
     message += "Student ID: <b>" + $('#stu_id').html() + "</b><br>";
     message += "Ticket #: <b>" + section_num + "</b><br>";
     message += "Course: <b>" + $('#course_id').html() + "</b><br>";
-    message += "Test Date: <b>" + $('#test_date').html() + "</b><br>";
-    message += "Test Time: <b>" + $('#test_time').html() + "</b><br><br>";
+    message += "Test Date: <b>" + $('#test_date').val() + "</b><br>";
+    message += "Test Time: <b>" + $('#test_time').val() + "</b><br><br>";
     
     // demo setup
 //    proc_sendEmail("deantest@ivc.edu", inst_name, subject, message);
@@ -551,8 +560,8 @@ function sendEmailToInstructorExamNotReceived() {
     message += "Student ID: <b>" + $('#stu_id').html() + "</b><br>";
     message += "Ticket #: <b>" + section_num + "</b><br>";
     message += "Course: <b>" + $('#course_id').html() + "</b><br>";
-    message += "Test Date: <b>" + $('#test_date').html() + "</b><br>";
-    message += "Test Time: <b>" + $('#test_time').html() + "</b><br><br>";
+    message += "Test Date: <b>" + $('#test_date').val() + "</b><br>";
+    message += "Test Time: <b>" + $('#test_time').val() + "</b><br><br>";
 
     message += "It has been rescheduled for (<b>" + new_date + " " + new_time + "</b>) please attach or drop off exam before this scheduled date/time.<br>";
     message += "Please click below to download the exam, drop the exam off at SSC 170, or contact DSPS at (949)451-5630 or at dspstesting@ivc.edu<br><br>";
@@ -579,8 +588,8 @@ function sendEmailToStudentExamNotReceived() {
     message += "Instructor Name: <b>" + inst_name + "</b><br>";
     message += "Ticket #: <b>" + section_num + "</b><br>";
     message += "Course: <b>" + $('#course_id').html() + "</b><br>";
-    message += "Test Date: <b>" + $('#test_date').html() + "</b><br>";
-    message += "Test Time: <b>" + $('#test_time').html() + "</b><br>";
+    message += "Test Date: <b>" + $('#test_date').val() + "</b><br>";
+    message += "Test Time: <b>" + $('#test_time').val() + "</b><br>";
     message += "Time allotted in class: <b>" + $('#allow_min').html() + "</b> minutes<br><br>";
     
     message += "Thank you!";

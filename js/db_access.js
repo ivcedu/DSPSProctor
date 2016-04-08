@@ -487,6 +487,20 @@ function db_insertAdmin(AdminName, AdminEmail) {
     return ResultID;
 }
 
+function db_insertProctorName(ProctorID, StuFName, StuLName, InstFName, InstLName) {
+    var ResultID = "";
+    $.ajax({
+        type:"POST",
+        url:"php/db_insertProctorName.php",
+        data:{ProctorID:ProctorID, StuFName:StuFName, StuLName:StuLName, InstFName:InstFName, InstLName:InstLName},
+        async: false,  
+        success:function(data) {
+            ResultID = JSON.parse(data);
+        }
+    });
+    return ResultID;
+}
+
 // update DB ///////////////////////////////////////////////////////////////////
 function db_updateProctorStatus(ProctorID, StatusID, Column) {
     var Result = false;

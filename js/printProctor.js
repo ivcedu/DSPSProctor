@@ -6,6 +6,7 @@ window.onload = function() {
         $('#mod_tech_support').modal('hide');
         defaultHideDisalbe();
         getURLParameters();
+        
         setProctorLog();
         setProctor();
         setAccom();
@@ -56,7 +57,7 @@ function getURLParameters() {
 
 ////////////////////////////////////////////////////////////////////////////////
 $(document).ready(function() { 
-    $('#nav_close').click(function() { 
+    $('#nav_home').click(function() { 
         var str_url = sessionStorage.getItem('ss_dsps_proctor_referrer');
         
         var result = new Array();
@@ -90,12 +91,52 @@ $(document).ready(function() {
         return false;
     });
     
-    $('#nav_capture').click(function() { 
-        capture();
-        $('#mod_tech_problems').val("");
-        $('#mod_tech_img_screen').prop('src', str_img);
-        $('#mod_tech_support').modal('show');
+    // complete button click ///////////////////////////////////////////////////
+    $('#btn_complete').click(function() { 
+        if ($('#dsps_comments').val().replace(/\s+/g, '') === "") {
+            alert("Please specify reasons for complete under Comments");
+            return false;
+        }
+        
+        $(this).prop("disabled", true);
+        db_updateProctorStatus(proctor_id, 4, "DateInstReview");
+        db_insertProctorLog(proctor_id, sessionStorage.getItem('ls_dsps_proctor_loginDisplayName'), 2, 4);
+        
+        var note = "Instructor Review stage has been change to Completed";
+        var dsps_comments = $.trim($('#dsps_comments').val());
+        note += "\nComments: " + textReplaceApostrophe(dsps_comments);
+        db_insertTransaction(proctor_id, sessionStorage.getItem('ls_dsps_proctor_loginDisplayName'), note);
+        
+        window.open("adminHome.html", '_self');
+        return false;
     });
+    
+    // cancel button click /////////////////////////////////////////////////////
+    $('#btn_cancel').click(function() { 
+        if ($('#dsps_comments').val().replace(/\s+/g, '') === "") {
+            alert("Please specify reasons for cancel under Comments");
+            return false;
+        }
+        
+        $(this).prop("disabled", true);
+        db_updateProctorStatus(proctor_id, 10, "DateInstReview");
+        db_insertProctorLog(proctor_id, sessionStorage.getItem('ls_dsps_proctor_loginDisplayName'), 2, 10);
+        
+        var note = "Instructor Review stage has been change to Canceled";
+        var dsps_comments = $.trim($('#dsps_comments').val());
+        note += "\nComments: " + textReplaceApostrophe(dsps_comments);
+        db_insertTransaction(proctor_id, sessionStorage.getItem('ls_dsps_proctor_loginDisplayName'), note);
+        
+        window.open("adminHome.html", '_self');
+        return false;
+    });
+    
+//    $('#nav_capture').click(function() { 
+//        capture();
+//        $('#mod_tech_problems').val("");
+//        $('#mod_tech_img_screen').prop('src', str_img);
+//        $('#mod_tech_support').modal('show');
+//    });
     
 //    $('#mod_tech_img_screen').click(function() {
 //        if (str_img !== "") {
@@ -104,31 +145,32 @@ $(document).ready(function() {
 //    });
     
     // modal submit button click ///////////////////////////////////////////////
-    $('#mod_tech_btn_submit').click(function() { 
-        if (sendEmailToTechSupport()) {
-            $('#mod_tech_support').modal('hide');
-            alert("Your request has been submitted successfully");
-        }
-        else {
-            $('#mod_tech_support').modal('hide');
-            alert("Sending email error!");
-        }
-    });
+//    $('#mod_tech_btn_submit').click(function() { 
+//        if (sendEmailToTechSupport()) {
+//            $('#mod_tech_support').modal('hide');
+//            alert("Your request has been submitted successfully");
+//        }
+//        else {
+//            $('#mod_tech_support').modal('hide');
+//            alert("Sending email error!");
+//        }
+//    });
     
     // get screen shot image ///////////////////////////////////////////////////
-    html2canvas($('body'), {
-        onrendered: function(canvas) { str_img = canvas.toDataURL("image/jpg"); }
-    });
+//    html2canvas($('body'), {
+//        onrendered: function(canvas) { str_img = canvas.toDataURL("image/jpg"); }
+//    });
     
     // popover
-    $('#nav_capture').popover({content:"Contact IVC Tech Support", placement:"bottom"});
+//    $('#nav_capture').popover({content:"Contact IVC Tech Support", placement:"bottom"});
     
     // auto size
-    $('#mod_dialog_comments').autosize();
+    $('#dsps_comments').autosize();
 });
 
 ////////////////////////////////////////////////////////////////////////////////
 function defaultHideDisalbe() {
+    $('#admin_section').hide();
     $('#se_option').hide();
     $('#cal_type').hide();
     $('#cal_type_other').hide();
@@ -165,6 +207,13 @@ function setProctor() {
         $('#test_time').html(result[0]['TestTime']);
         $('#comments').html(result[0]['Comments'].replace(/\n/g, "<br>")).css({height: 'auto'});
         $('#inst_phone').html(result[0]['InstPhone']);
+        
+        // set admin option for complete and cancel instructor review
+        var result2 = new Array();
+        result2 = db_getAdmin(sessionStorage.getItem('ls_dsps_proctor_loginEmail'));
+        if (result2.length === 1 && result[0]['StepID'] === "2" && result[0]['StatusID'] === "2") {
+            $('#admin_section').show();
+        }
     }
 }
 

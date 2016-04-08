@@ -102,19 +102,19 @@ function getInstructorProctorList() {
     var body_html = "";
     for(var i = 0; i < result.length; i++) { 
         body_html += setAdminProctorListHTML(result[i]['ProctorID'], result[i]['SectionNum'], result[i]['CourseID'], result[i]['StuName'], 
-                                            result[i]['Status'], result[i]['Step'], convertDBDateTimeToString(result[i]['DateSubmitted']));
+                                            result[i]['Status'], result[i]['Step'], convertDBDateTimeToString(result[i]['TestDT']));
     }
     $("#body_tr").append(body_html);
 }
 
-function setAdminProctorListHTML(proctor_id, section_num, course_id, stu_name, status, step, date_submitted) {
+function setAdminProctorListHTML(proctor_id, section_num, course_id, stu_name, status, step, test_dt) {
     var tbl_html = "<tr>";
     tbl_html += "<td class='span1'><a href=# id='proctor_id_" + proctor_id +  "'>" + section_num + "</a></td>";
     tbl_html += "<td class='span2'>" + course_id + "</td>";
     tbl_html += "<td class='span3'>" + stu_name + "</td>";
     tbl_html += "<td class='span2' id='status_" + proctor_id + "'>" + status + "</td>";
     tbl_html += "<td class='span2' id='step_" + proctor_id + "'>" + step + "</td>";
-    tbl_html += "<td class='span2'>" + date_submitted + "</td>";
+    tbl_html += "<td class='span2'>" + test_dt + "</td>";
     tbl_html += "</tr>";
     return tbl_html;
 }

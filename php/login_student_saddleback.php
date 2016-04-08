@@ -22,6 +22,12 @@
                 if (array_key_exists('displayname', $data[0])) {
                     $display_name = $data[0]["displayname"][0];
                 }
+                if (array_key_exists('givenname', $data[0])) {
+                    $first_name = $data[0]["givenname"][0];
+                }
+                if (array_key_exists('sn', $data[0])) {
+                    $last_name = $data[0]["sn"][0];
+                }
                 if (array_key_exists('mail', $data[0])) {
                     $email = $data[0]["mail"][0];
                 }
@@ -29,7 +35,7 @@
                     $studentid = $data[0]["studentid"][0];
                 }
 
-                $result = array($display_name, $email, $studentid, "Student");
+                $result = array($display_name, $first_name, $last_name, $email, $studentid, "Student");
             }
         }
         ldap_close($ldapconn);

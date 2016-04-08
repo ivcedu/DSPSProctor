@@ -1,10 +1,12 @@
 ////////////////////////////////////////////////////////////////////////////////
-function localData_login(loginDisplayName, loginEmail, loginID, loginType, username, password) {
+function localData_login(loginDisplayName, loginFName, loginLName, loginEmail, loginID, loginType, username, password) {
 //    var cur_date_time = new Date();
 //    cur_date_time.setHours(cur_date_time.getHours() + 2);
 //    localStorage.setItem('ls_dsps_proctor_expiration_date_time', cur_date_time);
     
     sessionStorage.setItem('ls_dsps_proctor_loginDisplayName', objToString(loginDisplayName));
+    sessionStorage.setItem('ls_dsps_proctor_loginFName', objToString(loginFName));
+    sessionStorage.setItem('ls_dsps_proctor_loginLName', objToString(loginLName));
     sessionStorage.setItem('ls_dsps_proctor_loginEmail', objToString(loginEmail));
 //    sessionStorage.setItem('ls_dsps_proctor_loginPhone', objToString(loginPhone));
     sessionStorage.setItem('ls_dsps_proctor_loginID', objToString(loginID));

@@ -74,6 +74,8 @@ $(document).ready(function() {
             this.blur();
         }
     });
+    
+    $.backstretch(["images/dsps_back_web_2.jpg"], {duration: 3000, fade: 750});
 });
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -106,19 +108,21 @@ function loginInfo() {
     }
     else {
         var display_name = result[0];
-        var email = result[1];
-        var loginID = result[2];
-        var login_type = result[3];
+        var fname = result[1];
+        var lname = result[2];
+        var email = result[3];
+        var loginID = result[4];
+        var login_type = result[5];
         
         // demo setup
 //        if (display_name === "deantest staffgen") {
-//            email = "dfretz@ivc.edu";
+//            email = "wgabriella@ivc.edu";   //Wendy Gabriella
 //            loginID = "9999995";
 //            login_type = "Staff";
 //        }
 //        else if (display_name === "Staff1") {
-//            email = "mperez100@ivc.edu";
-//            loginID = "388860";
+//            email = "anikitin0@ivc.edu";
+//            loginID = "888250";
 //            login_type = "Student";
 //        }
         
@@ -126,7 +130,7 @@ function loginInfo() {
             return "AD Login System Error";
         }
         else {
-            localData_login(display_name, email, loginID, login_type, username, password);
+            localData_login(display_name, fname, lname, email, loginID, login_type, username, password);
             if (location.href.indexOf("ireport.ivc.edu") >= 0) {
                 sessionStorage.setItem('m_parentSite', 'https://ireport.ivc.edu');
             }

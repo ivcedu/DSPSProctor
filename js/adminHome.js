@@ -213,20 +213,20 @@ function getAdminProctorList(search_option, search_value) {
     for(var i = 0; i < result.length; i++) { 
         switch(result[i]['Step']) {
             case "Review 1":
-                dsps_1_body_html += setAdminProctorListHTML(result[i]['ProctorID'], result[i]['SectionNum'], result[i]['CourseID'], result[i]['StuName'], 
-                                                            result[i]['Status'], result[i]['InstName'], convertDBDateTimeToString(result[i]['TestDT']), result[i]['Step']);
+                dsps_1_body_html += setAdminProctorListHTML(result[i]['ProctorID'], result[i]['SectionNum'], result[i]['CourseID'], result[i]['StuLName'], result[i]['StuFName'],
+                                        result[i]['InstLName'], result[i]['InstFName'], result[i]['Status'], convertDBDateTimeToString(result[i]['TestDT']), result[i]['Step']);
                 break;
             case "Review 2":
-                dsps_2_body_html += setAdminProctorListHTML(result[i]['ProctorID'], result[i]['SectionNum'], result[i]['CourseID'], result[i]['StuName'], 
-                                                            result[i]['Status'], result[i]['InstName'], convertDBDateTimeToString(result[i]['TestDT']), result[i]['Step']);
+                dsps_2_body_html += setAdminProctorListHTML(result[i]['ProctorID'], result[i]['SectionNum'], result[i]['CourseID'], result[i]['StuLName'], result[i]['StuFName'], 
+                                        result[i]['InstLName'], result[i]['InstFName'], result[i]['Status'], convertDBDateTimeToString(result[i]['TestDT']), result[i]['Step']);
                 break;
             case "Instructor Review":
-                inst_review_body_html += setAdminProctorListHTML(result[i]['ProctorID'], result[i]['SectionNum'], result[i]['CourseID'], result[i]['StuName'], 
-                                                                result[i]['Status'], result[i]['InstName'], convertDBDateTimeToString(result[i]['TestDT']), result[i]['Step']);
+                inst_review_body_html += setAdminProctorListHTML(result[i]['ProctorID'], result[i]['SectionNum'], result[i]['CourseID'], result[i]['StuLName'], result[i]['StuFName'], 
+                                            result[i]['InstLName'], result[i]['InstFName'], result[i]['Status'], convertDBDateTimeToString(result[i]['TestDT']), result[i]['Step']);
                 break;
             case "Complete":
-                dsps_complete_body_html += setAdminProctorListHTML(result[i]['ProctorID'], result[i]['SectionNum'], result[i]['CourseID'], result[i]['StuName'], 
-                                                                result[i]['Status'], result[i]['InstName'], convertDBDateTimeToString(result[i]['TestDT']), result[i]['Step']);
+                dsps_complete_body_html += setAdminProctorListHTML(result[i]['ProctorID'], result[i]['SectionNum'], result[i]['CourseID'], result[i]['StuLName'], result[i]['StuFName'],
+                                            result[i]['InstLName'], result[i]['InstFName'], result[i]['Status'], convertDBDateTimeToString(result[i]['TestDT']), result[i]['Step']);
                 break;
             default:
                 break;
@@ -239,14 +239,16 @@ function getAdminProctorList(search_option, search_value) {
     $("#dsps_complete_body_tr").append(dsps_complete_body_html);
 }
 
-function setAdminProctorListHTML(proctor_id, section_num, course_id, stu_name, status, instructor, date_submitted, step) {
+function setAdminProctorListHTML(proctor_id, section_num, course_id, stu_lname, stu_fname, inst_lname, inst_fname, status, test_dt, step) {
     var tbl_html = "<tr>";
     tbl_html += "<td class='span1'><a href=# id='proctor_id_" + proctor_id +  "'>" + section_num + "</a></td>";
     tbl_html += "<td class='span2'>" + course_id + "</td>";
-    tbl_html += "<td class='span3'>" + stu_name + "</td>";
-    tbl_html += "<td class='span2'>" + instructor + "</td>";
+    tbl_html += "<td class='span2'>" + stu_lname + "</td>";
+    tbl_html += "<td class='span1'>" + stu_fname + "</td>";
+    tbl_html += "<td class='span2'>" + inst_lname + "</td>";
+    tbl_html += "<td class='span1'>" + inst_fname + "</td>";
     tbl_html += "<td class='span2' id='status_" + proctor_id + "'>" + status + "</td>";
-    tbl_html += "<td class='span2'>" + date_submitted + "</td>";
+    tbl_html += "<td class='span2'>" + test_dt + "</td>";
     tbl_html += "<td class='span1' style='display: none;' id='step_" + proctor_id + "'>" + step + "</td>";
     tbl_html += "</tr>";
     return tbl_html;

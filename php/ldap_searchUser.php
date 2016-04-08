@@ -23,8 +23,14 @@
                 if (array_key_exists('mail', $data[0])) {
                     $email = $data[0]["mail"][0];
                 }
+                if (array_key_exists('givenname', $data[0])) {
+                    $first_name = $data[0]["givenname"][0];
+                }
+                if (array_key_exists('sn', $data[0])) {
+                    $last_name = $data[0]["sn"][0];
+                }
                 
-                $result = array($display_name, $email);
+                $result = array($display_name, $email, $first_name, $last_name);
             }  
         }
         

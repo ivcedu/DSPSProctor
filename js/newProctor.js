@@ -88,7 +88,7 @@ $(document).ready(function() {
         }
         
         $(this).prop("disabled", true);
-        proctor_id = insertProctor();
+        insertProctor();
         if (proctor_id === "0") {
             alert("DSPS Exam: AD system error, please contact IVC Tech Support at 949.451.5696");
             sessionStorage.clear();
@@ -299,6 +299,8 @@ function insertProctor() {
     var stu_name = textReplaceApostrophe(sessionStorage.getItem('ls_dsps_proctor_loginDisplayName'));
     var stu_email = textReplaceApostrophe(sessionStorage.getItem('ls_dsps_proctor_loginEmail'));
     var stu_ID = textReplaceApostrophe(sessionStorage.getItem('ls_dsps_proctor_loginID'));
+    var stu_fname = textReplaceApostrophe(sessionStorage.getItem('ls_dsps_proctor_loginFName'));
+    var stu_lname = textReplaceApostrophe(sessionStorage.getItem('ls_dsps_proctor_loginLName'));
     
     var sel_inst = $('#inst_list').val();
     var inst_id = getInstructorID(sel_inst);
@@ -313,8 +315,10 @@ function insertProctor() {
         return "0";
     }
     else {
-        var inst_name = ldap_result[0];
-        var inst_email = ldap_result[1];
+        var inst_name = textReplaceApostrophe(ldap_result[0]);
+        var inst_email = textReplaceApostrophe(ldap_result[1]);
+        var inst_fname = textReplaceApostrophe(ldap_result[2]);
+        var inst_lname = textReplaceApostrophe(ldap_result[3]);
 
         course_id = $('#course_list').val();
         section_num = getSectionNum(course_id);
@@ -323,7 +327,8 @@ function insertProctor() {
         var test_time = $('#test_time').val();
         var comments = textReplaceApostrophe($('#comments').val());
 
-        return db_insertProctor(stu_name, stu_email, stu_ID, inst_name, inst_email, course_id, section_num, test_date, test_time, comments);
+        proctor_id = db_insertProctor(stu_name, stu_email, stu_ID, inst_name, inst_email, course_id, section_num, test_date, test_time, comments);
+        db_insertProctorName(proctor_id, stu_fname, stu_lname, inst_fname, inst_lname);
     }
 }
 

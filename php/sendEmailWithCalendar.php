@@ -52,8 +52,8 @@
     $mail = new PHPMailer();
     $mail->IsSMTP();
     $mail->Host = "smtp1.socccd.edu";
-    $mail->From = "donotreply@ivc.edu";
-    $mail->FromName = "IVC Automatic System Generated";
+    $mail->From = "ivcdspsexams@ivc.edu";
+    $mail->FromName = "DSPS Exam";
     $mail->AddAddress($Email, $Name);
     $mail->IsHTML(true); // send as HTML
     $mail->addStringAttachment($ical, 'dsps exams schedule.ics');
