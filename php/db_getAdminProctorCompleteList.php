@@ -11,7 +11,7 @@
                 $sql_search_option = " AND pct.StuID LIKE '".$Value."%'";
                 break;
             case "Instructor Name":
-                $sql_search_option = " AND pct.InstName LIKE '".$Value."%'";
+                $sql_search_option = " AND pct.InstName LIKE '%".$Value."%'";
                 break;
             case "Course Name":
                 $sql_search_option = " AND pct.CourseID LIKE '".$Value."%'";
