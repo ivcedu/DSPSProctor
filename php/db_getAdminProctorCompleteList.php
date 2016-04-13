@@ -22,7 +22,7 @@
     $query = "SELECT pct.*, stu.[Status], stp.Step "
                 ."FROM [IVCDSPS].[dbo].[Proctor] AS pct LEFT JOIN [IVCDSPS].[dbo].[Status] AS stu ON pct.StatusID = stu.StatusID "
                 ."LEFT JOIN [IVCDSPS].[dbo].[Step] AS stp ON pct.StepID = stp.StepID "
-                ."WHERE (pct.StatusID <> 1 OR pct.StatusID <> 2)".$sql_search_option;
+                ."WHERE (pct.StatusID <> 1 AND pct.StatusID <> 2)".$sql_search_option;
     
     $cmd = $dbConn->prepare($query);
     $cmd->execute(); 
