@@ -117,7 +117,7 @@
 .login input[type=button]:focus,
 .login input[type=button]:active,
 .login input[type=button]:active:focus {
-    color: #00e600 !important;
+    color: #00e600;
     border: 1px solid #00e600;
     background-image: url(../images/account-login-sm.png);
     background-repeat: no-repeat;

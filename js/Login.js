@@ -116,7 +116,7 @@ function loginInfo() {
         
         // demo setup
 //        if (display_name === "deantest staffgen") {
-//            email = "wgabriella@ivc.edu";   //Wendy Gabriella
+//            email = "sbreckenrid@ivc.edu";   //Wendy Gabriella
 //            loginID = "9999995";
 //            login_type = "Staff";
 //        }
