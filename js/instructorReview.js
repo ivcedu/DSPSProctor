@@ -426,6 +426,18 @@ function formValidation() {
     if (typeof $('input[name="rdo_return_exam"]:checked').val() === 'undefined') {
         err += "Return Exam To options are required field\n";
     }
+    else {
+        if ($('input[name="rdo_return_exam"]:checked').val() === 'mailbox') {
+            if ($('#cbo_mail_bld').val() === "0") {
+                err += "Mailbox bldg is a required field\n";
+            }
+        }
+        if ($('input[name="rdo_return_exam"]:checked').val() === 'faculty') {
+            if ($('#cbo_faculty_bld').val() === "0") {
+                err += "faculty office is a required field\n";
+            }
+        }
+    }
     if (typeof $('input[name="rdo_notes"]:checked').val() === 'undefined'
         || typeof $('input[name="rdo_book"]:checked').val() === 'undefined'
         || typeof $('input[name="rdo_calculator"]:checked').val() === 'undefined'
@@ -495,7 +507,7 @@ function getIVCBLDList() {
     var result = new Array();
     result = db_getIVCBLDList();
     
-    var html = "";
+    var html = "<option value='0'>Select...</option>";
     for (var i = 0; i < result.length; i++) {
         html += "<option value='" + result[i]['IVCBLDID'] + "'>" + result[i]['BLDCode'] + "</option>";
     }
