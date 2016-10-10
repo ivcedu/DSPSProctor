@@ -34,44 +34,60 @@ $(document).ready(function() {
         }
     });
     
-    $('#btn_login').click(function() { 
-        var url_param = sessionStorage.getItem('ls_dsps_url_param');
-        var login_error = loginInfo();
-        
-        if(login_error === "") {
-            var login_type = sessionStorage.getItem('ls_dsps_proctor_loginType');
-            if (login_type === "Staff") {
-                var result = new Array();
-                result = db_getAdmin(sessionStorage.getItem('ls_dsps_proctor_loginEmail'));
-                if (result.length === 1 || sessionStorage.getItem('ls_dsps_proctor_loginEmail') === "ykim160@ivc.edu") {
-                    if (url_param === null) {
-                        window.open('adminHome.html', '_self');
+    $('#btn_login').click(function() {
+        // ireport.ivc.edu validation //////////////////////////////////////////
+        if(location.href.indexOf("ireport.ivc.edu") >= 0 && !ireportValidation()) {
+            swal({  title: "Access Denied",
+                    text: "This is a Development site. It will redirect to IVC Application site",
+                    type: "error",
+                    confirmButtonText: "OK" },
+                    function() {
+                        sessionStorage.clear();
+                        window.open('https://services.ivc.edu/', '_self');
                         return false;
                     }
-                    else {
-                        window.open(url_param, '_self');
-                        return false;
-                    }
-                }
-                else {                    
-                    if (url_param === null) {
-                        window.open('instructorHome.html', '_self');
-                        return false;
-                    }
-                    else {
-                        window.open(url_param, '_self');
-                        return false;
-                    }
-                }
-            }
-            else {                
-                window.open('newProctor.html', '_self');
-                return false;
-            }
+            );
         }
+        ////////////////////////////////////////////////////////////////////////
         else {
-            $('#login_error').html(login_error);
-            this.blur();
+            var url_param = sessionStorage.getItem('ls_dsps_url_param');
+            var login_error = loginInfo();
+
+            if(login_error === "") {
+                var login_type = sessionStorage.getItem('ls_dsps_proctor_loginType');
+                if (login_type === "Staff") {
+                    var result = new Array();
+                    result = db_getAdmin(sessionStorage.getItem('ls_dsps_proctor_loginEmail'));
+                    if (result.length === 1 || sessionStorage.getItem('ls_dsps_proctor_loginEmail') === "ykim160@ivc.edu") {
+                        if (url_param === null) {
+                            window.open('adminHome.html', '_self');
+                            return false;
+                        }
+                        else {
+                            window.open(url_param, '_self');
+                            return false;
+                        }
+                    }
+                    else {                    
+                        if (url_param === null) {
+                            window.open('instructorHome.html', '_self');
+                            return false;
+                        }
+                        else {
+                            window.open(url_param, '_self');
+                            return false;
+                        }
+                    }
+                }
+                else {                
+                    window.open('newProctor.html', '_self');
+                    return false;
+                }
+            }
+            else {
+                $('#login_error').html(login_error);
+                this.blur();
+            }
         }
     });
     
@@ -116,7 +132,7 @@ function loginInfo() {
         
         // demo setup
 //        if (display_name === "deantest staffgen") {
-//            email = "sbreckenrid@ivc.edu";   //Wendy Gabriella
+//            email = "dhurlbut@ivc.edu";   //Wendy Gabriella
 //            loginID = "9999995";
 //            login_type = "Staff";
 //        }
@@ -149,5 +165,16 @@ function loginEmailValidation(login_email) {
     }
     else {
         return "Invalid Email";
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+function ireportValidation() {
+    var username = $('#username').val().toLowerCase().replace("@ivc.edu", "").replace("@saddleback.edu", "");
+    if (ireportDBgetUserAccess(username) !== null) {
+        return true;
+    }
+    else {
+        return false;
     }
 }
