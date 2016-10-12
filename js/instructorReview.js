@@ -188,7 +188,7 @@ $(document).ready(function() {
         }
         else {
             $('#sel_cal_type').hide();
-            $('#cal_type').val("1");
+            $('#cal_type').val("0");
             $('#cal_type').selectpicker('refresh');
             $('#sel_cal_other').hide();
             $('#cal_type_other').val("");
@@ -447,6 +447,13 @@ function formValidation() {
         || typeof $('input[name="rdo_computer"]:checked').val() === 'undefined') {
         err += "All Exam Guidelines options are required field\n";
     }
+    else {
+        if ($('input[name="rdo_calculator"]:checked').val() === "1") {
+            if ($('#cal_type').val() === "0") {
+                err += "calculator type is a required field\n";
+            }
+        }
+    }
 
     return err;
 }
@@ -481,7 +488,7 @@ function getCalType() {
     var result = new Array();
     result = db_getCalType();
     
-    var html = "";
+    var html = "<option value='0'>Select...</option>";
     for (var i = 0; i < result.length; i++) {
         html += "<option value='" + result[i]['CalTypeID'] + "'>" + result[i]['CalType'] + "</option>";
     }
