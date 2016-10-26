@@ -1,5 +1,5 @@
 <?php
-    $server = "dc1.saddleback.edu dc2.saddleback.edu dc3.saddleback.edu dc4.saddleback.edu";
+    $server = "saddleback.edu";
     $baseDN = "dc=saddleback,dc=edu";
     
     $userID = filter_input(INPUT_POST, 'userID');
