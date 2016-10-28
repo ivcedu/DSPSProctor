@@ -88,24 +88,24 @@ $(document).ready(function() {
         }
         
         $(this).prop("disabled", true);
-        insertProctor();
-        if (proctor_id === "0") {
+        if (insertProctor() === "0") {
             alert("DSPS Exam: AD system error, please contact IVC Tech Support at 949.451.5696");
             sessionStorage.clear();
             window.open("Login.html", '_self');
             return false;
         }
-        
-        insertAccom(proctor_id);
-        db_insertTransaction(proctor_id, sessionStorage.getItem('ls_dsps_proctor_loginDisplayName'), "Proctor request submitted");
-        db_insertProctorLog(proctor_id, sessionStorage.getItem('ls_dsps_proctor_loginDisplayName'), 6, 1);
-        
-        sendEmailToDSPS_1();
-        sendEmailToStudent();
-        
-        $('#mod_dialog_box_header').html("Complete");
-        $('#mod_dialog_box_body').html("Your request has been submitted successfully.<br><br>Thank you");
-        $('#mod_dialog_box').modal('show');
+        else {
+            insertAccom(proctor_id);
+            db_insertTransaction(proctor_id, sessionStorage.getItem('ls_dsps_proctor_loginDisplayName'), "Proctor request submitted");
+            db_insertProctorLog(proctor_id, sessionStorage.getItem('ls_dsps_proctor_loginDisplayName'), 6, 1);
+
+            sendEmailToDSPS_1();
+            sendEmailToStudent();
+
+            $('#mod_dialog_box_header').html("Complete");
+            $('#mod_dialog_box_body').html("Your request has been submitted successfully.<br><br>Thank you");
+            $('#mod_dialog_box').modal('show');
+        }
     });
     
     // dialog ok click /////////////////////////////////////////////////////////
