@@ -328,7 +328,13 @@ function insertProctor() {
         var comments = textReplaceApostrophe($('#comments').val());
 
         proctor_id = db_insertProctor(stu_name, stu_email, stu_ID, inst_name, inst_email, course_id, section_num, test_date, test_time, comments);
-        db_insertProctorName(proctor_id, stu_fname, stu_lname, inst_fname, inst_lname);
+        if (proctor_id === null) {
+            return "0";
+        }
+        else {
+            db_insertProctorName(proctor_id, stu_fname, stu_lname, inst_fname, inst_lname);
+            return proctor_id;
+        }
     }
 }
 
