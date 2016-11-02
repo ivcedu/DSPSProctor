@@ -10,7 +10,7 @@
         ldap_set_option($ldapconn, LDAP_OPT_PROTOCOL_VERSION, 3);
         ldap_set_option($ldapconn, LDAP_OPT_REFERRALS, 0);
         
-        $ldapbind = ldap_bind($ldapconn, "IVCSTAFF\\stafftest", "staff");
+        $ldapbind = ldap_bind($ldapconn, "IVCSTAFF\\wifilookup", "lookitup");
         if($ldapbind) {
             $filter = "(&(objectClass=user)(objectCategory=person)(cn=".$userID."))";
             $ladp_result = ldap_search($ldapconn, $baseDN, $filter);
