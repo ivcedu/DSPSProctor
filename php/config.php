@@ -1,4 +1,6 @@
 <?php
+    // testing DB Server
+//    $dbHost = "IVIEWDB";
     $dbHost = "ivcintdb1";
     $dbDatabase = "IVCDSPS";
     $dbUser = "ivcdsps";

@@ -19,11 +19,6 @@
             <!-- navigation bar -->
             <div class="navbar navbar-inverse">
                 <div class="navbar-inner" id="navigation">
-                    <!--
-                    <ul class="nav">
-                        <li><a href=# id="nav_capture"><i class="icon-envelope icon-white"></i></a></li>
-                    </ul>
-                    -->
                     <ul class="nav">
                         <li><a href=# id="nav_home"><i class="iconic iconic-home"></i> Home</a></li>
                     </ul>
@@ -32,10 +27,19 @@
                     </ul>
                 </div>
             </div>
-            
             <!-- filter options -->
             <div class="row-fluid">
-                <div class="span1 offset6" style="padding-top: 5px;"><b>Search:</b></div>
+                <div class="span2 offset3" style="padding-top: 5px;"><b>Start Date:</b></div>
+                <div class="span2" id="dev_test_date"><input type="text" class="span12" readonly id="start_date"></div>
+                <div class="span2" style="padding-top: 5px;"><b>End Date:</b></div>
+                <div class="span2" id="dev_test_date"><input type="text" class="span12" readonly id="end_date"></div>
+                <div class="span1">
+                    <button class="btn btn-primary span12" id="btn_filter"><i class="iconic iconic-loop-circular"></i></button>
+                </div>
+            </div>
+            <!-- search options -->
+            <div class="row-fluid">
+                <div class="span2 offset3" style="padding-top: 5px;"><b>Search:</b></div>
                 <div class="span2">
                     <select class="selectpicker span12" id="search_option">
                         <option value="All" selected>All</option>
@@ -44,7 +48,7 @@
                         <option value="Course Name">Course Name</option>
                     </select>
                 </div>
-                <div class="span2"><input type="text" class="span12" readonly id="search_field"></div>
+                <div class="span4"><input type="text" class="span12" readonly id="search_field"></div>
                 <div class="span1">
                     <button class="btn btn-success span12" id="btn_refresh"><i class="iconic iconic-magnifying-glass"></i></button>
                 </div>

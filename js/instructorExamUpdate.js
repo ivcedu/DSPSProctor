@@ -365,8 +365,8 @@ function getExamPDFList() {
         var file_name = result[i]['FileName'];
         
         html += "<div class='row-fluid' id='row_exampdf_id" + exampdf_id + "'>";
-        html += "<div class='span9' style='padding-top: 5px'><a href=# id='exampdf_id_" + exampdf_id + "'>" + file_name + "</a></div>";
-        html += "<button class='btn btn-danger span2' id='btn_delete_exampdf_id" + exampdf_id + "'>Remove File</button>";
+        html += "<div class='span1 text-center'><button class='btn btn-mini btn-warning' id='btn_delete_exampdf_id" + exampdf_id + "'><i class='icon-trash icon-white'></i></button></div>";
+        html += "<div class='span11'><a href=# id='exampdf_id_" + exampdf_id + "'>" + file_name + "</a></div>";
         html += "</div>";
     }
     $('#exam_list').append(html);
@@ -460,8 +460,8 @@ function getPDFAttachmentInfo() {
             return false;
         } 
         else {   
-            if (file.size >= 5000000) {
-                alert("Attached file size is too big, max. file size allow is 5Mb or less");
+            if (file.size >= 2000000) {
+                alert("Attached file size is too big, max. file size allow is 2Mb or less");
                 $('#attachment_file').filestyle('clear');
                 return false;
             }

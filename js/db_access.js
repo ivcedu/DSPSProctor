@@ -189,12 +189,12 @@ function db_getAdminProctorList(SearchOption, SearchValue) {
     return result;
 }
 
-function db_getAdminProctorCompleteList(SearchField, Value) {
+function db_getAdminProctorCompleteList(SearchField, Value, StartDate, EndDate) {
     var result = new Array();
     $.ajax({
         type:"POST",
         url:"php/db_getAdminProctorCompleteList.php",
-        data:{SearchField:SearchField, Value:Value},
+        data:{SearchField:SearchField, Value:Value, StartDate:StartDate, EndDate:EndDate},
         async: false,  
         success:function(data) {
             result = JSON.parse(data);
@@ -217,12 +217,12 @@ function db_getInstProctorList(InstEmail) {
     return result;
 }
 
-function db_getInstProctorCompleteList(InstEmail) {
+function db_getInstProctorCompleteList(InstEmail, StartDate, EndDate) {
     var result = new Array();
     $.ajax({
         type:"POST",
         url:"php/db_getInstructorProctorCompleteList.php",
-        data:{InstEmail:InstEmail},
+        data:{InstEmail:InstEmail, StartDate:StartDate, EndDate:EndDate},
         async: false,  
         success:function(data) {
             result = JSON.parse(data);
@@ -665,6 +665,20 @@ function db_deleteAdmin(AdminID) {
         url: "php/db_deleteAdmin.php",  
         type: "POST",  
         data:{AdminID:AdminID},
+        async: false,
+        success:function(data) {
+            Result = JSON.parse(data);
+        }  
+    });
+    return Result;
+}
+
+function db_deleteProctor(ProctorID) {
+    var Result = false;
+    $.ajax({  
+        url: "php/db_deleteProctor.php",  
+        type: "POST",  
+        data:{ProctorID:ProctorID},
         async: false,
         success:function(data) {
             Result = JSON.parse(data);

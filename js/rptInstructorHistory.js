@@ -3,7 +3,8 @@ var str_img = "";
 window.onload = function() {   
     if (sessionStorage.key(0) !== null) {
         $('#mod_tech_support').modal('hide');
-        getAdminProctorCompleteList();
+        getDefaultStartEndDate();
+        getInstProctorCompleteList($('#start_date').val(), $('#end_date').val());
         initializeTable();
     }
     else {
@@ -35,6 +36,11 @@ $(document).ready(function() {
         $('#mod_tech_problems').val("");
         $('#mod_tech_img_screen').prop('src', str_img);
         $('#mod_tech_support').modal('show');
+    });
+    
+    //filter button click //////////////////////////////////////////////////////
+    $('#btn_filter').click(function() {
+        getInstProctorCompleteList($('#start_date').val(), $('#end_date').val());
     });
     
     // table row open resource form click //////////////////////////////////////
@@ -69,12 +75,22 @@ $(document).ready(function() {
     
     // selectpicker
     $('.selectpicker').selectpicker();
+    
+    // datepicker
+    $('#start_date').datepicker();
+    $('#end_date').datepicker();
 });
 
 ////////////////////////////////////////////////////////////////////////////////
-function getAdminProctorCompleteList() {
+function getDefaultStartEndDate() {
+    $('#start_date').datepicker( "setDate", getCurrentFirstDayOfMonth() );
+    $('#end_date').datepicker( "setDate", getCurrentLastDayOfMonth() );
+}
+
+////////////////////////////////////////////////////////////////////////////////
+function getInstProctorCompleteList(start_date, end_date) {
     var result = new Array(); 
-    result = db_getInstProctorCompleteList(sessionStorage.getItem('ls_dsps_proctor_loginEmail'));
+    result = db_getInstProctorCompleteList(sessionStorage.getItem('ls_dsps_proctor_loginEmail'), start_date, end_date);
     
     $('#body_tr').empty();
     if (result.length !== 0) {

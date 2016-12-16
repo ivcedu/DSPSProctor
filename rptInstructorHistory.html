@@ -19,11 +19,6 @@
             <!-- navigation bar -->
             <div class="navbar navbar-inverse">
                 <div class="navbar-inner" id="navigation">
-                    <!--
-                    <ul class="nav">
-                        <li><a href=# id="nav_capture"><i class="icon-envelope icon-white"></i></a></li>
-                    </ul>
-                    -->
                     <ul class="nav">
                         <li><a href=# id="nav_home"><i class="iconic iconic-home"></i> Home</a></li>
                     </ul>
@@ -32,7 +27,16 @@
                     </ul>
                 </div>
             </div>
-            
+            <!-- filter options -->
+            <div class="row-fluid">
+                <div class="span2 offset3" style="padding-top: 5px;"><b>Start Date:</b></div>
+                <div class="span2" id="dev_test_date"><input type="text" class="span12" readonly id="start_date"></div>
+                <div class="span2" style="padding-top: 5px;"><b>End Date:</b></div>
+                <div class="span2" id="dev_test_date"><input type="text" class="span12" readonly id="end_date"></div>
+                <div class="span1">
+                    <button class="btn btn-primary span12" id="btn_filter"><i class="iconic iconic-loop-circular"></i></button>
+                </div>
+            </div>
             <!-- RF List section  -->
             <table class="table table-condensed table-bordered" style="font-size: 90%;" id="proctor_list">
                 <thead style="background-color: grey;">

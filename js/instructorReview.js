@@ -237,7 +237,14 @@ $(document).ready(function() {
             else {
                 startSpin();        
                 setTimeout(function() {      
-                    addExamPDF();
+                    if (!addExamPDF()) {
+                        var str_msg = "DSPS Instructor Review: " + proctor_id + " DB system error INSERT EXAM PDF FILE";
+                        sendEmailToDeveloper(str_msg);
+                        alert(str_msg + ", please contact IVC Tech Support at 949.451.5696");
+                        sessionStorage.clear();
+                        window.open("Login.html", '_self');
+                        return false;
+                    }
                     stopSpin();
                 }, 1000);
             }
@@ -283,21 +290,63 @@ $(document).ready(function() {
         }
         
         $(this).prop("disabled", true);
-        updateProctorInstructorPhone();
-        
-        insertInstForm();
-        updateInstFormExamReceived();
-        insertExamGuide();
-        
-        db_updateProctorStep(proctor_id, 3, "DateInstReview");
-        db_insertProctorLog(proctor_id, sessionStorage.getItem('ls_dsps_proctor_loginDisplayName'), 2, 7);
+        if(!updateProctorInstructorPhone()) {
+            var str_msg = "DSPS Instructor Review: " + proctor_id + " DB system error UPDATE INSTRUCTUR PHONE";
+            sendEmailToDeveloper(str_msg);
+            alert(str_msg + ", please contact IVC Tech Support at 949.451.5696");
+            sessionStorage.clear();
+            window.open("Login.html", '_self');
+            return false;
+        }
+        if (insertInstForm() === "") {
+            var str_msg = "DSPS Instructor Review: " + proctor_id + " DB system error INSERT INSTRUCTOR FORM";
+            sendEmailToDeveloper(str_msg);
+            alert(str_msg + ", please contact IVC Tech Support at 949.451.5696");
+            sessionStorage.clear();
+            window.open("Login.html", '_self');
+        }
+        if (!updateInstFormExamReceived()) {
+            var str_msg = "DSPS Instructor Review: " + proctor_id + " DB system error UPDATE INSTRUCTUR FORM EXAM RECEIVED";
+            sendEmailToDeveloper(str_msg);
+            alert(str_msg + ", please contact IVC Tech Support at 949.451.5696");
+            sessionStorage.clear();
+            window.open("Login.html", '_self');
+            return false;
+        }
+        if (insertExamGuide() === "") {
+            var str_msg = "DSPS Instructor Review: " + proctor_id + " DB system error INSERT EXAM GUIDE";
+            sendEmailToDeveloper(str_msg);
+            alert(str_msg + ", please contact IVC Tech Support at 949.451.5696");
+            sessionStorage.clear();
+            window.open("Login.html", '_self');
+        }
+        if (!db_updateProctorStep(proctor_id, 3, "DateInstReview")) {
+            var str_msg = "DSPS Instructor Review: " + proctor_id + " DB system error UPDATE PROCTOR STEP";
+            sendEmailToDeveloper(str_msg);
+            alert(str_msg + ", please contact IVC Tech Support at 949.451.5696");
+            sessionStorage.clear();
+            window.open("Login.html", '_self');
+        }
+        if (!db_insertProctorLog(proctor_id, sessionStorage.getItem('ls_dsps_proctor_loginDisplayName'), 2, 7)) {
+            var str_msg = "DSPS Instructor Review: " + proctor_id + " DB system error INSERT PROCTOR LOG - ACCEPT";
+            sendEmailToDeveloper(str_msg);
+            alert(str_msg + ", please contact IVC Tech Support at 949.451.5696");
+            sessionStorage.clear();
+            window.open("Login.html", '_self');
+        }
         
         var note = "Instructor Review Accepted";
         var dsps_comments = $('#dsps_comments').val();
         if (dsps_comments !== "") {
             note += "\nComments: " + textReplaceApostrophe(dsps_comments);
         } 
-        db_insertTransaction(proctor_id, sessionStorage.getItem('ls_dsps_proctor_loginDisplayName'), note);
+        if (db_insertTransaction(proctor_id, sessionStorage.getItem('ls_dsps_proctor_loginDisplayName'), note) === "") {
+            var str_msg = "DSPS Instructor Review: " + proctor_id + " DB system error INSERT TRANSACTION - ACCEPT";
+            sendEmailToDeveloper(str_msg);
+            alert(str_msg + ", please contact IVC Tech Support at 949.451.5696");
+            sessionStorage.clear();
+            window.open("Login.html", '_self');
+        }
         sendEmailToDSPS_2();
         
         $('#mod_dialog_box_header').html("Complete");
@@ -319,13 +368,31 @@ $(document).ready(function() {
         }
         
         $(this).prop("disabled", true);
-        db_updateProctorStatus(proctor_id, 3, "DateInstReview");
-        db_insertProctorLog(proctor_id, sessionStorage.getItem('ls_dsps_proctor_loginDisplayName'), 2, 3);
+        if (!db_updateProctorStatus(proctor_id, 3, "DateInstReview")) {
+            var str_msg = "DSPS Instructor Review: " + proctor_id + " DB system error UPDATE PROCTOR STATUS - DENY";
+            sendEmailToDeveloper(str_msg);
+            alert(str_msg + ", please contact IVC Tech Support at 949.451.5696");
+            sessionStorage.clear();
+            window.open("Login.html", '_self');
+        }
+        if (db_insertProctorLog(proctor_id, sessionStorage.getItem('ls_dsps_proctor_loginDisplayName'), 2, 3) === "") {
+            var str_msg = "DSPS Instructor Review: " + proctor_id + " DB system error INSERT PROCTOR LOG - DENY";
+            sendEmailToDeveloper(str_msg);
+            alert(str_msg + ", please contact IVC Tech Support at 949.451.5696");
+            sessionStorage.clear();
+            window.open("Login.html", '_self');
+        }
         
         var note = "Instructor Review Denied";
         var dsps_comments = $('#dsps_comments').val();
         note += "\nComments: " + textReplaceApostrophe(dsps_comments);
-        db_insertTransaction(proctor_id, sessionStorage.getItem('ls_dsps_proctor_loginDisplayName'), note);
+        if (db_insertTransaction(proctor_id, sessionStorage.getItem('ls_dsps_proctor_loginDisplayName'), note) === "") {
+            var str_msg = "DSPS Instructor Review: " + proctor_id + " DB system error INSERT TRANSACTION - DENY";
+            sendEmailToDeveloper(str_msg);
+            alert(str_msg + ", please contact IVC Tech Support at 949.451.5696");
+            sessionStorage.clear();
+            window.open("Login.html", '_self');
+        }
         sendEmailToStudentDeny();
         sendEmailToDSPSDeny();
         
@@ -651,8 +718,8 @@ function getExamPDFList() {
         var file_name = result[i]['FileName'];
         
         html += "<div class='row-fluid' id='row_exampdf_id" + exampdf_id + "'>";
-        html += "<div class='span9' style='padding-top: 5px'><a href=# id='exampdf_id_" + exampdf_id + "'>" + file_name + "</a></div>";
-        html += "<button class='btn btn-danger span2' id='btn_delete_exampdf_id" + exampdf_id + "'>Remove File</button>";
+        html += "<div class='span1 text-center'><button class='btn btn-mini btn-warning' id='btn_delete_exampdf_id" + exampdf_id + "'><i class='icon-trash icon-white'></i></button></div>";
+        html += "<div class='span11'><a href=# id='exampdf_id_" + exampdf_id + "'>" + file_name + "</a></div>";
         html += "</div>";
     }
     $('#exam_list').append(html);
@@ -690,7 +757,10 @@ function updateInstFormExamReceived() {
     var result = new Array();
     result = db_getExamPDFList(proctor_id);
     if (result.length >= 1 ) {
-        db_updateInstFormExamReceived(proctor_id, "1");
+        return db_updateInstFormExamReceived(proctor_id, "1");
+    }
+    else {
+        return true;
     }
 }
 
@@ -727,8 +797,8 @@ function getPDFAttachmentInfo() {
             return false;
         } 
         else {   
-            if (file.size >= 5000000) {
-                alert("Attached file size is too big, max. file size allow is 5Mb or less");
+            if (file.size >= 2000000) {
+                alert("Attached file size is too big, max. file size allow is 2Mb or less");
                 $('#attachment_file').filestyle('clear');
                 return false;
             }
@@ -759,8 +829,14 @@ function convertPDFtoBase64() {
 
 function addExamPDF() {    
     var exampdf_id = db_insertExamPDF(proctor_id, m_file_name, m_base64_data);
-    addPDFFileToExamList(exampdf_id);
     $('#attachment_file').filestyle('clear');
+    if (exampdf_id === "") {
+        return false;
+    }
+    else {
+        addPDFFileToExamList(exampdf_id);
+        return true;
+    }
 }
 
 function addPDFFileToExamList(id) {  
@@ -812,6 +888,12 @@ function sendEmailToTechSupport() {
 //    message += "<img src='cid:screen_shot'/>";    
     var img_base64 = str_img.replace("data:image/png;base64,", "");
     return proc_sendEmailToTechSupport("presidenttest@ivc.edu", "Do Not Reply", "", "", subject, message, img_base64);
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+function sendEmailToDeveloper(str_msg) {
+    proc_sendEmail("ykim160@ivc.edu", "Rich Kim", "DSPS Instructor Review: DB System Error", str_msg);
 }
 
 ////////////////////////////////////////////////////////////////////////////////

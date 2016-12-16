@@ -88,17 +88,52 @@ $(document).ready(function() {
     // accept button click /////////////////////////////////////////////////////
     $('#btn_accept').click(function() { 
         $(this).prop("disabled", true);
-        updateProctorTestDateTime();
-        db_updateProctorStatus(proctor_id, 2, "DateDSPSReview1");
-        db_updateProctorStep(proctor_id, 2, "DateDSPSReview1");
-        db_insertProctorLog(proctor_id, sessionStorage.getItem('ls_dsps_proctor_loginDisplayName'), 1, 7);
+        if (!updateProctorTestDateTime()) {
+            var str_msg = "DSPS Review 1: " + proctor_id + " DB system error UPDATE TEST DATETIME";
+            sendEmailToDeveloper(str_msg);
+            alert(str_msg + ", please contact IVC Tech Support at 949.451.5696");
+            sessionStorage.clear();
+            window.open("Login.html", '_self');
+            return false;
+        }
+        if (!db_updateProctorStatus(proctor_id, 2, "DateDSPSReview1")) {
+            var str_msg = "DSPS Review 1: " + proctor_id + " DB system error UPDATE PROCTOR STATUS - ACCEPT";
+            sendEmailToDeveloper(str_msg);
+            alert(str_msg + ", please contact IVC Tech Support at 949.451.5696");
+            sessionStorage.clear();
+            window.open("Login.html", '_self');
+            return false;
+        }
+        if (!db_updateProctorStep(proctor_id, 2, "DateDSPSReview1")) {
+            var str_msg = "DSPS Review 1: " + proctor_id + " DB system error UPDATE PROCTOR STEP";
+            sendEmailToDeveloper(str_msg);
+            alert(str_msg + ", please contact IVC Tech Support at 949.451.5696");
+            sessionStorage.clear();
+            window.open("Login.html", '_self');
+            return false;
+        }
+        if (db_insertProctorLog(proctor_id, sessionStorage.getItem('ls_dsps_proctor_loginDisplayName'), 1, 7) === "") {
+            var str_msg = "DSPS Review 1: " + proctor_id + " DB system error INSERT PROCTOR LOG - ACCEPT";
+            sendEmailToDeveloper(str_msg);
+            alert(str_msg + ", please contact IVC Tech Support at 949.451.5696");
+            sessionStorage.clear();
+            window.open("Login.html", '_self');
+            return false;
+        }
         
         var note = "DSPS Review 1 Accepted";
         var dsps_comments = $('#dsps_comments').val();
         if (dsps_comments !== "") {
             note += "\nComments: " + textReplaceApostrophe(dsps_comments);
         } 
-        db_insertTransaction(proctor_id, sessionStorage.getItem('ls_dsps_proctor_loginDisplayName'), note);
+        if (db_insertTransaction(proctor_id, sessionStorage.getItem('ls_dsps_proctor_loginDisplayName'), note) === "") {
+            var str_msg = "DSPS Review 1: " + proctor_id + " DB system error INSERT TRANSACTION - ACCEPT";
+            sendEmailToDeveloper(str_msg);
+            alert(str_msg + ", please contact IVC Tech Support at 949.451.5696");
+            sessionStorage.clear();
+            window.open("Login.html", '_self');
+            return false;
+        }
         sendEmailToInstructor();
         
         $('#mod_dialog_box_header').html("Complete");
@@ -120,13 +155,34 @@ $(document).ready(function() {
         }
         
         $(this).prop("disabled", true);
-        db_updateProctorStatus(proctor_id, 3, "DateDSPSReview1");
-        db_insertProctorLog(proctor_id, sessionStorage.getItem('ls_dsps_proctor_loginDisplayName'), 1, 3);
+        if (!db_updateProctorStatus(proctor_id, 3, "DateDSPSReview1")) {
+            var str_msg = "DSPS Review 1: " + proctor_id + " DB system error UPDATE PROCTOR STATUS - DENY";
+            sendEmailToDeveloper(str_msg);
+            alert(str_msg + ", please contact IVC Tech Support at 949.451.5696");
+            sessionStorage.clear();
+            window.open("Login.html", '_self');
+            return false;
+        }
+        if (db_insertProctorLog(proctor_id, sessionStorage.getItem('ls_dsps_proctor_loginDisplayName'), 1, 3) === "") {
+            var str_msg = "DSPS Review 1: " + proctor_id + " DB system error INSERT PROCTOR LOG - DENY";
+            sendEmailToDeveloper(str_msg);
+            alert(str_msg + ", please contact IVC Tech Support at 949.451.5696");
+            sessionStorage.clear();
+            window.open("Login.html", '_self');
+            return false;
+        }
         
         var note = "DSPS Review 1 Denied";
         var dsps_comments = $('#dsps_comments').val();
         note += "\nComments: " + textReplaceApostrophe(dsps_comments);
-        db_insertTransaction(proctor_id, sessionStorage.getItem('ls_dsps_proctor_loginDisplayName'), note);
+        if (db_insertTransaction(proctor_id, sessionStorage.getItem('ls_dsps_proctor_loginDisplayName'), note) === "") {
+            var str_msg = "DSPS Review 1: " + proctor_id + " DB system error INSERT TRANSACTION - DENY";
+            sendEmailToDeveloper(str_msg);
+            alert(str_msg + ", please contact IVC Tech Support at 949.451.5696");
+            sessionStorage.clear();
+            window.open("Login.html", '_self');
+            return false;
+        }
         sendEmailToStudentDeny();
         
         $('#mod_dialog_box_header').html("Complete");
@@ -144,13 +200,34 @@ $(document).ready(function() {
         }
         
         $(this).prop("disabled", true);
-        db_updateProctorStatus(proctor_id, 10, "DateDSPSReview1");
-        db_insertProctorLog(proctor_id, sessionStorage.getItem('ls_dsps_proctor_loginDisplayName'), 1, 10);
+        if (!db_updateProctorStatus(proctor_id, 10, "DateDSPSReview1")) {
+            var str_msg = "DSPS Review 1: " + proctor_id + " DB system error UPDATE PROCTOR STATUS - CANCEL";
+            sendEmailToDeveloper(str_msg);
+            alert(str_msg + ", please contact IVC Tech Support at 949.451.5696");
+            sessionStorage.clear();
+            window.open("Login.html", '_self');
+            return false;
+        }
+        if (db_insertProctorLog(proctor_id, sessionStorage.getItem('ls_dsps_proctor_loginDisplayName'), 1, 10) === "") {
+            var str_msg = "DSPS Review 1: " + proctor_id + " DB system error INSERT PROCTOR LOG - CANCEL";
+            sendEmailToDeveloper(str_msg);
+            alert(str_msg + ", please contact IVC Tech Support at 949.451.5696");
+            sessionStorage.clear();
+            window.open("Login.html", '_self');
+            return false;
+        }
         
         var note = "DSPS Review 1 Canceled";
         var dsps_comments = $('#dsps_comments').val();
         note += "\nComments: " + textReplaceApostrophe(dsps_comments);
-        db_insertTransaction(proctor_id, sessionStorage.getItem('ls_dsps_proctor_loginDisplayName'), note);
+        if (db_insertTransaction(proctor_id, sessionStorage.getItem('ls_dsps_proctor_loginDisplayName'), note) === "") {
+            var str_msg = "DSPS Review 1: " + proctor_id + " DB system error INSERT TRANSACTION - CANCEL";
+            sendEmailToDeveloper(str_msg);
+            alert(str_msg + ", please contact IVC Tech Support at 949.451.5696");
+            sessionStorage.clear();
+            window.open("Login.html", '_self');
+            return false;
+        }
         sendEmailToStudentCanceled();
         
         $('#mod_dialog_box_header').html("Complete");
@@ -308,7 +385,7 @@ function getTransactionHistory() {
 function updateProctorTestDateTime() {
     var test_date = $('#test_date').val();
     var test_time = $('#test_time').val();
-    db_updateProctorTestDT(proctor_id, test_date, test_time);
+    return db_updateProctorTestDT(proctor_id, test_date, test_time);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -325,6 +402,12 @@ function sendEmailToTechSupport() {
 //    message += "<img src='cid:screen_shot'/>";    
     var img_base64 = str_img.replace("data:image/png;base64,", "");
     return proc_sendEmailToTechSupport("presidenttest@ivc.edu", "Do Not Reply", "", "", subject, message, img_base64);
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+function sendEmailToDeveloper(str_msg) {
+    proc_sendEmail("ykim160@ivc.edu", "Rich Kim", "DSPS Review 1: DB System Error", str_msg);
 }
 
 ////////////////////////////////////////////////////////////////////////////////

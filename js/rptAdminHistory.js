@@ -3,7 +3,8 @@ var str_img = "";
 window.onload = function() {   
     if (sessionStorage.key(0) !== null) {  
         $('#mod_tech_support').modal('hide');
-        getAdminProctorCompleteList("All", "");
+        getDefaultStartEndDate();
+        getAdminProctorCompleteList("All", "", $('#start_date').val(), $('#end_date').val());
         initializeTable();
     }
     else {
@@ -48,11 +49,20 @@ $(document).ready(function() {
         }
     });
     
+    //filter button click //////////////////////////////////////////////////////
+    $('#btn_filter').click(function() {
+        $('#search_option').val("All");
+        $('#search_option').selectpicker('refresh');
+        $('#search_field').val("");
+        $('#search_field').prop('readonly', true);
+        getAdminProctorCompleteList("All", "", $('#start_date').val(), $('#end_date').val());
+    });
+    
     //refresh button click /////////////////////////////////////////////////////
     $('#btn_refresh').click(function() { 
         var search_field = $('#search_option').val();
         var value = $('#search_field').val();
-        getAdminProctorCompleteList(search_field, value);
+        getAdminProctorCompleteList(search_field, value, $('#start_date').val(), $('#end_date').val());
     });
     
     // table row open resource form click //////////////////////////////////////
@@ -97,26 +107,33 @@ $(document).ready(function() {
     $('.selectpicker').selectpicker();
     
     // datepicker
-    $('#mod_test_date').datepicker();
+    $('#start_date').datepicker();
+    $('#end_date').datepicker();
 });
 
 ////////////////////////////////////////////////////////////////////////////////
-function getAdminProctorCompleteList(search_field, value) {
+function getDefaultStartEndDate() {
+    $('#start_date').datepicker( "setDate", getCurrentFirstDayOfMonth() );
+    $('#end_date').datepicker( "setDate", getCurrentLastDayOfMonth() );
+}
+
+////////////////////////////////////////////////////////////////////////////////
+function getAdminProctorCompleteList(search_field, value, start_date, end_date) {
     var result = new Array(); 
-    result = db_getAdminProctorCompleteList(search_field, value);
+    result = db_getAdminProctorCompleteList(search_field, value, start_date, end_date);
     
     $('#body_tr').empty();
     if (result.length !== 0) {
         var body_html = "";
         for(var i = 0; i < result.length; i++) { 
             body_html += setAdminProctorCompleteListHTML(result[i]['ProctorID'], result[i]['SectionNum'], result[i]['CourseID'], result[i]['InstName'], result[i]['StuID'], result[i]['StuName'], 
-                                                         result[i]['Step'], result[i]['Status'], result[i]['StatusID']/*, convertDBDateTimeToString(result[i]['DateSubmitted'])*/);
+                                                         result[i]['Step'], result[i]['Status'], result[i]['StatusID']);
         }
         $("#body_tr").append(body_html);
     }
 }
 
-function setAdminProctorCompleteListHTML(proctor_id, section_num, course_id, int_name, stu_ID, stu_name, step, status, status_id/*, date_submitted*/) {
+function setAdminProctorCompleteListHTML(proctor_id, section_num, course_id, int_name, stu_ID, stu_name, step, status, status_id) {
     var tbl_html = "<tr class='form-horizontal'>";
     tbl_html += "<td class='span1'><a href=# id='proctor_id_" + proctor_id +  "'>" + section_num + "</a></td>";
     tbl_html += "<td class='span2'>" + course_id + "</td>";
