@@ -244,16 +244,16 @@ function getCurrentSemester(term_code) {
     var semester = "";
     
     if (seme_code === "1") {
-        semester = "Spring Semester";
+        semester = "Spring";
     }
     else if (seme_code === "2") {
-        semester = "Summer Semester";
+        semester = "Summer";
     }
     else {
-        semester = "Fall Semester";
+        semester = "Fall";
     }
     
-    return year + " " + semester;
+    return semester + " " + year;
 }
 
 ////////////////////////////////////////////////////////////////////////////////

@@ -263,7 +263,7 @@ function getStudentInfo() {
 function getStudentCourseInfo() {
     var stu_id = sessionStorage.getItem('ls_dsps_proctor_loginID');
     var cur_term = tardis_getCurrentTerm();
-    $('#new_protor_title').html("New Test Proctoring (" + getCurrentSemester(cur_term) + ")");
+    $('#new_protor_title').html("Test Proctoring Request (" + getCurrentSemester(cur_term) + ")");
     
     var html = "";
     var result = new Array(); 
