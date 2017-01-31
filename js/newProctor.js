@@ -115,7 +115,7 @@ $(document).ready(function() {
                     return false;
                 }
                 else {
-                    if (db_insertTransaction(proctor_id, sessionStorage.getItem('ls_dsps_proctor_loginDisplayName'), "Proctor request submitted") === "") {
+                    if (db_insertTransaction(proctor_id, textReplaceApostrophe(sessionStorage.getItem('ls_dsps_proctor_loginDisplayName')), "Proctor request submitted") === "") {
                         var str_msg = "DSPS Exam Request: " + proctor_id + " DB system error INSERT TRANSACTION";
                         sendEmailToDeveloper(str_msg);
                         alert(str_msg + ", please contact IVC Tech Support at 949.451.5696");
@@ -123,7 +123,7 @@ $(document).ready(function() {
                         window.open("Login.html", '_self');
                         return false;
                     }
-                    if (db_insertProctorLog(proctor_id, sessionStorage.getItem('ls_dsps_proctor_loginDisplayName'), 6, 1) === "") {
+                    if (db_insertProctorLog(proctor_id, textReplaceApostrophe(sessionStorage.getItem('ls_dsps_proctor_loginDisplayName')), 6, 1) === "") {
                         var str_msg = "DSPS Exam Request: " + proctor_id + " DB system error INSERT PROCTOR LOG";
                         sendEmailToDeveloper(str_msg);
                         alert(str_msg + ", please contact IVC Tech Support at 949.451.5696");
