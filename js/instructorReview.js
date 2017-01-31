@@ -327,7 +327,7 @@ $(document).ready(function() {
             sessionStorage.clear();
             window.open("Login.html", '_self');
         }
-        if (!db_insertProctorLog(proctor_id, sessionStorage.getItem('ls_dsps_proctor_loginDisplayName'), 2, 7)) {
+        if (!db_insertProctorLog(proctor_id, textReplaceApostrophe(sessionStorage.getItem('ls_dsps_proctor_loginDisplayName')), 2, 7)) {
             var str_msg = "DSPS Instructor Review: " + proctor_id + " DB system error INSERT PROCTOR LOG - ACCEPT";
             sendEmailToDeveloper(str_msg);
             alert(str_msg + ", please contact IVC Tech Support at 949.451.5696");
@@ -340,7 +340,7 @@ $(document).ready(function() {
         if (dsps_comments !== "") {
             note += "\nComments: " + textReplaceApostrophe(dsps_comments);
         } 
-        if (db_insertTransaction(proctor_id, sessionStorage.getItem('ls_dsps_proctor_loginDisplayName'), note) === "") {
+        if (db_insertTransaction(proctor_id, textReplaceApostrophe(sessionStorage.getItem('ls_dsps_proctor_loginDisplayName')), note) === "") {
             var str_msg = "DSPS Instructor Review: " + proctor_id + " DB system error INSERT TRANSACTION - ACCEPT";
             sendEmailToDeveloper(str_msg);
             alert(str_msg + ", please contact IVC Tech Support at 949.451.5696");
@@ -375,7 +375,7 @@ $(document).ready(function() {
             sessionStorage.clear();
             window.open("Login.html", '_self');
         }
-        if (db_insertProctorLog(proctor_id, sessionStorage.getItem('ls_dsps_proctor_loginDisplayName'), 2, 3) === "") {
+        if (db_insertProctorLog(proctor_id, textReplaceApostrophe(sessionStorage.getItem('ls_dsps_proctor_loginDisplayName'), 2, 3)) === "") {
             var str_msg = "DSPS Instructor Review: " + proctor_id + " DB system error INSERT PROCTOR LOG - DENY";
             sendEmailToDeveloper(str_msg);
             alert(str_msg + ", please contact IVC Tech Support at 949.451.5696");
@@ -386,7 +386,7 @@ $(document).ready(function() {
         var note = "Instructor Review Denied";
         var dsps_comments = $('#dsps_comments').val();
         note += "\nComments: " + textReplaceApostrophe(dsps_comments);
-        if (db_insertTransaction(proctor_id, sessionStorage.getItem('ls_dsps_proctor_loginDisplayName'), note) === "") {
+        if (db_insertTransaction(proctor_id, textReplaceApostrophe(sessionStorage.getItem('ls_dsps_proctor_loginDisplayName')), note) === "") {
             var str_msg = "DSPS Instructor Review: " + proctor_id + " DB system error INSERT TRANSACTION - DENY";
             sendEmailToDeveloper(str_msg);
             alert(str_msg + ", please contact IVC Tech Support at 949.451.5696");
