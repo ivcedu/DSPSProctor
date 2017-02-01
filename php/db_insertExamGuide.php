@@ -12,6 +12,8 @@
     $Scantron = filter_input(INPUT_POST, 'Scantron');
     $Computer = filter_input(INPUT_POST, 'Computer');
     $InternetID = filter_input(INPUT_POST, 'InternetID');
+    
+    $CalTypeOther = str_replace("'", "''", $CalTypeOther);
 
     $query = "INSERT INTO [IVCDSPS].[dbo].[ExamGuide] (ProctorID, Notes, Book, Calculator, CalTypeID, CalTypeOther, Dictionary, ScratchPaper, Scantron, Computer, InternetID) "
                 ."VALUES ('$ProctorID', '$Notes', '$Book', '$Calculator', '$CalTypeID', '$CalTypeOther', '$Dictionary', '$ScratchPaper', '$Scantron', '$Computer', '$InternetID')";  

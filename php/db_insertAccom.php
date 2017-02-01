@@ -14,6 +14,8 @@
     $Scantron = filter_input(INPUT_POST, 'Scantron');
     $WrittenExam = filter_input(INPUT_POST, 'WrittenExam');
     $Distraction = filter_input(INPUT_POST, 'Distraction');
+    
+    $txtOther = str_replace("'", "''", $txtOther);
 
     $query = "INSERT INTO [IVCDSPS].[dbo].[Accom] (ProctorID, TimeOneHalf, DoubleTime, AltMedia, Reader, EnlargeExam, UseOfComp, Other, txtOther, Scribe, Scantron, WrittenExam, Distraction) "
                 ."VALUES ('$ProctorID', '$TimeOneHalf', '$DoubleTime', '$AltMedia', '$Reader', '$EnlargeExam', '$UseOfComp', '$Other', '$txtOther', '$Scribe', '$Scantron', '$WrittenExam', '$Distraction')";  

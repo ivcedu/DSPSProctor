@@ -5,6 +5,8 @@
     $LoginUser = filter_input(INPUT_POST, 'LoginUser');
     $StepID = filter_input(INPUT_POST, 'StepID');
     $StatusID = filter_input(INPUT_POST, 'StatusID');
+    
+    $LoginUser = str_replace("'", "''", $LoginUser);
 
     $query = "INSERT INTO [IVCDSPS].[dbo].[ProctorLog] (ProctorID, LoginUser, StepID, StatusID) "
                 ."VALUES ('$ProctorID', '$LoginUser', '$StepID', '$StatusID')";  

@@ -4,6 +4,9 @@
     $ProctorID = filter_input(INPUT_POST, 'ProctorID');
     $TestDate = filter_input(INPUT_POST, 'TestDate');
     $TestTime = filter_input(INPUT_POST, 'TestTime');
+    
+    $TestDate = str_replace("'", "", $TestDate);
+    $TestTime = str_replace("'", "", $TestTime);
 
     $query = "UPDATE [IVCDSPS].[dbo].[Proctor] "
                 ."SET TestDate = '".$TestDate."', TestTime = '".$TestTime."' "

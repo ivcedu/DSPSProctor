@@ -12,6 +12,8 @@
     $Scantron = filter_input(INPUT_POST, 'Scantron');
     $Computer = filter_input(INPUT_POST, 'Computer');
     $InternetID = filter_input(INPUT_POST, 'InternetID');
+    
+    $CalTypeOther = str_replace("'", "''", $CalTypeOther);
 
     $query = "UPDATE [IVCDSPS].[dbo].[ExamGuide] "
             . "SET Notes = '".$Notes."', Book = '".$Book."', Calculator = '".$Calculator."', CalTypeID = '".$CalTypeID."', CalTypeOther = '".$CalTypeOther."', "

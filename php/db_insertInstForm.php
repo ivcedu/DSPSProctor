@@ -14,6 +14,10 @@
     $ScanEmail = filter_input(INPUT_POST, 'ScanEmail');
     $SEOptionID = filter_input(INPUT_POST, 'SEOptionID');
     $ExamAttach = filter_input(INPUT_POST, 'ExamAttach');
+    
+    $TAllotMin = str_replace("'", "", $TAllotMin);
+    $Bldg = str_replace("'", "''", $Bldg);
+    $Office = str_replace("'", "''", $Office);
 
     $query = "INSERT INTO [IVCDSPS].[dbo].[InstForm] (ProctorID, TAllotMin, Mailbox, MailboxBldID, Bldg, ProfessorPU, Faculty, FacultyBldID, Office, StuDelivery, ScanEmail, SEOptionID, ExamAttach) "
                 ."VALUES ('$ProctorID', '$TAllotMin', '$Mailbox', '$MailboxBldID', '$Bldg', '$ProfessorPU', '$Faculty', '$FacultyBldID', '$Office', '$StuDelivery', '$ScanEmail', '$SEOptionID', '$ExamAttach')";  

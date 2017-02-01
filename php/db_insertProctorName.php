@@ -6,6 +6,11 @@
     $StuLName = filter_input(INPUT_POST, 'StuLName');
     $InstFName = filter_input(INPUT_POST, 'InstFName');
     $InstLName = filter_input(INPUT_POST, 'InstLName');
+    
+    $StuFName = str_replace("'", "''", $StuFName);
+    $StuLName = str_replace("'", "''", $StuLName);
+    $InstFName = str_replace("'", "''", $InstFName);
+    $InstLName = str_replace("'", "''", $InstLName);
 
     $query = "INSERT INTO [IVCDSPS].[dbo].[ProctorName] (ProctorID, StuFName, StuLName, InstFName, InstLName) "
                 ."VALUES ('$ProctorID', '$StuFName', '$StuLName', '$InstFName', '$InstLName')";  

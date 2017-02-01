@@ -14,6 +14,10 @@
     $ScanEmail = filter_input(INPUT_POST, 'ScanEmail');
     $SEOptionID = filter_input(INPUT_POST, 'SEOptionID');
     $ExamAttach = filter_input(INPUT_POST, 'ExamAttach');
+    
+    $TAllotMin = str_replace("'", "", $TAllotMin);
+    $Bldg = str_replace("'", "''", $Bldg);
+    $Office = str_replace("'", "''", $Office);
 
     $query = "UPDATE [IVCDSPS].[dbo].[InstForm] "
             . "SET TAllotMin = '".$TAllotMin."', Mailbox = '".$Mailbox."', MailboxBldID = '".$MailboxBldID."', Bldg = '".$Bldg."', ProfessorPU = '".$ProfessorPU."', "

@@ -56,8 +56,8 @@ $(document).ready(function() {
 
     // modal save button click /////////////////////////////////////////////////
     $('#mod_btn_save').click(function() { 
-        var admin_name = textReplaceApostrophe($.trim($('#mod_admin_name').val()));
-        var admin_email = textReplaceApostrophe($.trim($('#mod_admin_email').val()));
+        var admin_name = $.trim(textReplaceApostrophe($('#mod_admin_name').val()));
+        var admin_email = $.trim(textReplaceApostrophe$($('#mod_admin_email').val()));
         if (admin_id === "") {
             db_insertAdmin(admin_name, admin_email);
         }

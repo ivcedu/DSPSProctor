@@ -3,7 +3,10 @@
     
     $ProctorID = filter_input(INPUT_POST, 'ProctorID');
     $LoginName = filter_input(INPUT_POST, 'LoginName');
-    $Note = filter_input(INPUT_POST, 'Note');  
+    $Note = filter_input(INPUT_POST, 'Note');
+    
+    $LoginName = str_replace("'", "''", $LoginName);
+    $Note = str_replace("'", "''", $Note);
     
     $query = "INSERT INTO [IVCDSPS].[dbo].[Transaction] (ProctorID, LoginName, Note) "
                 ."VALUES ('$ProctorID', '$LoginName', '$Note')";  
