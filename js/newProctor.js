@@ -247,7 +247,7 @@ function setDatePickerMinDate() {
     cur_date.setDate(cur_date.getDate()+7);
     
     var max_date = new Date(cur_date);
-    max_date.setMonth(max_date.getMonth()+1);
+    max_date.setMonth(max_date.getMonth()+5);
     
     $('#test_date').datepicker( "option", "minDate", cur_date);
     $('#test_date').datepicker( "option", "maxDate", max_date);
