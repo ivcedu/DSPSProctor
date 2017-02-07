@@ -112,7 +112,7 @@ $(document).ready(function() {
             window.open("Login.html", '_self');
             return false;
         }
-        if (db_insertProctorLog(proctor_id, textReplaceApostrophe(sessionStorage.getItem('ls_dsps_proctor_loginDisplayName')), 1, 7) === "") {
+        if (db_insertProctorLog(proctor_id, sessionStorage.getItem('ls_dsps_proctor_loginDisplayName'), 1, 7) === "") {
             var str_msg = "DSPS Review 1: " + proctor_id + " DB system error INSERT PROCTOR LOG - ACCEPT";
             sendEmailToDeveloper(str_msg);
             alert(str_msg + ", please contact IVC Tech Support at 949.451.5696");
@@ -124,9 +124,9 @@ $(document).ready(function() {
         var note = "DSPS Review 1 Accepted";
         var dsps_comments = $('#dsps_comments').val();
         if (dsps_comments !== "") {
-            note += "\nComments: " + textReplaceApostrophe(dsps_comments);
+            note += "\nComments: " + dsps_comments;
         } 
-        if (db_insertTransaction(proctor_id, textReplaceApostrophe(sessionStorage.getItem('ls_dsps_proctor_loginDisplayName')), note) === "") {
+        if (db_insertTransaction(proctor_id, sessionStorage.getItem('ls_dsps_proctor_loginDisplayName'), note) === "") {
             var str_msg = "DSPS Review 1: " + proctor_id + " DB system error INSERT TRANSACTION - ACCEPT";
             sendEmailToDeveloper(str_msg);
             alert(str_msg + ", please contact IVC Tech Support at 949.451.5696");
@@ -163,7 +163,7 @@ $(document).ready(function() {
             window.open("Login.html", '_self');
             return false;
         }
-        if (db_insertProctorLog(proctor_id, textReplaceApostrophe(sessionStorage.getItem('ls_dsps_proctor_loginDisplayName')), 1, 3) === "") {
+        if (db_insertProctorLog(proctor_id, sessionStorage.getItem('ls_dsps_proctor_loginDisplayName'), 1, 3) === "") {
             var str_msg = "DSPS Review 1: " + proctor_id + " DB system error INSERT PROCTOR LOG - DENY";
             sendEmailToDeveloper(str_msg);
             alert(str_msg + ", please contact IVC Tech Support at 949.451.5696");
@@ -174,8 +174,8 @@ $(document).ready(function() {
         
         var note = "DSPS Review 1 Denied";
         var dsps_comments = $('#dsps_comments').val();
-        note += "\nComments: " + textReplaceApostrophe(dsps_comments);
-        if (db_insertTransaction(proctor_id, textReplaceApostrophe(sessionStorage.getItem('ls_dsps_proctor_loginDisplayName')), note) === "") {
+        note += "\nComments: " + dsps_comments;
+        if (db_insertTransaction(proctor_id, sessionStorage.getItem('ls_dsps_proctor_loginDisplayName'), note) === "") {
             var str_msg = "DSPS Review 1: " + proctor_id + " DB system error INSERT TRANSACTION - DENY";
             sendEmailToDeveloper(str_msg);
             alert(str_msg + ", please contact IVC Tech Support at 949.451.5696");
@@ -208,7 +208,7 @@ $(document).ready(function() {
             window.open("Login.html", '_self');
             return false;
         }
-        if (db_insertProctorLog(proctor_id, textReplaceApostrophe(sessionStorage.getItem('ls_dsps_proctor_loginDisplayName')), 1, 10) === "") {
+        if (db_insertProctorLog(proctor_id, sessionStorage.getItem('ls_dsps_proctor_loginDisplayName'), 1, 10) === "") {
             var str_msg = "DSPS Review 1: " + proctor_id + " DB system error INSERT PROCTOR LOG - CANCEL";
             sendEmailToDeveloper(str_msg);
             alert(str_msg + ", please contact IVC Tech Support at 949.451.5696");
@@ -219,8 +219,8 @@ $(document).ready(function() {
         
         var note = "DSPS Review 1 Canceled";
         var dsps_comments = $('#dsps_comments').val();
-        note += "\nComments: " + textReplaceApostrophe(dsps_comments);
-        if (db_insertTransaction(proctor_id, textReplaceApostrophe(sessionStorage.getItem('ls_dsps_proctor_loginDisplayName')), note) === "") {
+        note += "\nComments: " + dsps_comments;
+        if (db_insertTransaction(proctor_id, sessionStorage.getItem('ls_dsps_proctor_loginDisplayName'), note) === "") {
             var str_msg = "DSPS Review 1: " + proctor_id + " DB system error INSERT TRANSACTION - CANCEL";
             sendEmailToDeveloper(str_msg);
             alert(str_msg + ", please contact IVC Tech Support at 949.451.5696");
@@ -447,7 +447,7 @@ function sendEmailToStudentDeny() {
     }
     
     message += "Please contact the DSPS office as soon as possible regarding your request at 949.451.5630 or ivcdspsexams@ivc.edu<br>";
-    message += "DSPS office hours are Monday through Thursday 8 AM - 5 PM, and Friday 8 AM - 3 PM<br><br>";
+    message += "DSPS office hours are Monday through Thursday 8 AM - 7 PM, and Friday 8 AM - 5 PM<br><br>";
     
     message += "Instructor Name: <b>" + inst_name + "</b><br>";
     message += "Ticket #: <b>" + section_num + "</b><br>";

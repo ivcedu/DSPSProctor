@@ -152,7 +152,7 @@ $(document).ready(function() {
         
         removeExamPDF(exampdf_id);
         var note = "Test exam: " + file_name + " has been deleted";
-        db_insertTransaction(proctor_id, textReplaceApostrophe(sessionStorage.getItem('ls_dsps_proctor_loginDisplayName')), note);
+        db_insertTransaction(proctor_id, sessionStorage.getItem('ls_dsps_proctor_loginDisplayName'), note);
     });
     
     // save button click ///////////////////////////////////////////////////////
@@ -171,9 +171,9 @@ $(document).ready(function() {
         
         var inst_comments = $('#inst_comments').val();
         if (inst_comments !== "") {
-            note += "\nComments: " + textReplaceApostrophe(inst_comments);
+            note += "\nComments: " + inst_comments;
         } 
-        db_insertTransaction(proctor_id, textReplaceApostrophe(sessionStorage.getItem('ls_dsps_proctor_loginDisplayName')), note);
+        db_insertTransaction(proctor_id, sessionStorage.getItem('ls_dsps_proctor_loginDisplayName'), note);
         sendEmailToDSPSTestExamChange();
         
         $('#mod_dialog_box_header').html("Exam Option");
@@ -480,7 +480,7 @@ function addExamPDF() {
     var exampdf_id = db_insertExamPDF(proctor_id, m_file_name, m_base64_data);
     addPDFFileToExamList(exampdf_id);
     var note = "Test exam: " + m_file_name + " has been attached";
-    db_insertTransaction(proctor_id, textReplaceApostrophe(sessionStorage.getItem('ls_dsps_proctor_loginDisplayName')), note);
+    db_insertTransaction(proctor_id, sessionStorage.getItem('ls_dsps_proctor_loginDisplayName'), note);
     $('#attachment_file').filestyle('clear');
 }
 

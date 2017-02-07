@@ -104,7 +104,7 @@ $(document).ready(function() {
         
         var note = "Instructor Review stage has been change to Completed";
         var dsps_comments = $.trim($('#dsps_comments').val());
-        note += "\nComments: " + textReplaceApostrophe(dsps_comments);
+        note += "\nComments: " + dsps_comments;
         db_insertTransaction(proctor_id, sessionStorage.getItem('ls_dsps_proctor_loginDisplayName'), note);
         
         window.open("adminHome.html", '_self');
@@ -124,7 +124,7 @@ $(document).ready(function() {
         
         var note = "Instructor Review stage has been change to Canceled";
         var dsps_comments = $.trim($('#dsps_comments').val());
-        note += "\nComments: " + textReplaceApostrophe(dsps_comments);
+        note += "\nComments: " + dsps_comments;
         db_insertTransaction(proctor_id, sessionStorage.getItem('ls_dsps_proctor_loginDisplayName'), note);
         
         window.open("adminHome.html", '_self');

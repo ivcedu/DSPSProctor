@@ -327,7 +327,7 @@ $(document).ready(function() {
             sessionStorage.clear();
             window.open("Login.html", '_self');
         }
-        if (!db_insertProctorLog(proctor_id, textReplaceApostrophe(sessionStorage.getItem('ls_dsps_proctor_loginDisplayName')), 2, 7)) {
+        if (!db_insertProctorLog(proctor_id, sessionStorage.getItem('ls_dsps_proctor_loginDisplayName'), 2, 7)) {
             var str_msg = "DSPS Instructor Review: " + proctor_id + " DB system error INSERT PROCTOR LOG - ACCEPT";
             sendEmailToDeveloper(str_msg);
             alert(str_msg + ", please contact IVC Tech Support at 949.451.5696");
@@ -338,9 +338,9 @@ $(document).ready(function() {
         var note = "Instructor Review Accepted";
         var dsps_comments = $('#dsps_comments').val();
         if (dsps_comments !== "") {
-            note += "\nComments: " + textReplaceApostrophe(dsps_comments);
+            note += "\nComments: " + dsps_comments;
         } 
-        if (db_insertTransaction(proctor_id, textReplaceApostrophe(sessionStorage.getItem('ls_dsps_proctor_loginDisplayName')), note) === "") {
+        if (db_insertTransaction(proctor_id, sessionStorage.getItem('ls_dsps_proctor_loginDisplayName'), note) === "") {
             var str_msg = "DSPS Instructor Review: " + proctor_id + " DB system error INSERT TRANSACTION - ACCEPT";
             sendEmailToDeveloper(str_msg);
             alert(str_msg + ", please contact IVC Tech Support at 949.451.5696");
@@ -375,7 +375,7 @@ $(document).ready(function() {
             sessionStorage.clear();
             window.open("Login.html", '_self');
         }
-        if (db_insertProctorLog(proctor_id, textReplaceApostrophe(sessionStorage.getItem('ls_dsps_proctor_loginDisplayName'), 2, 3)) === "") {
+        if (db_insertProctorLog(proctor_id, sessionStorage.getItem('ls_dsps_proctor_loginDisplayName'), 2, 3) === "") {
             var str_msg = "DSPS Instructor Review: " + proctor_id + " DB system error INSERT PROCTOR LOG - DENY";
             sendEmailToDeveloper(str_msg);
             alert(str_msg + ", please contact IVC Tech Support at 949.451.5696");
@@ -385,8 +385,8 @@ $(document).ready(function() {
         
         var note = "Instructor Review Denied";
         var dsps_comments = $('#dsps_comments').val();
-        note += "\nComments: " + textReplaceApostrophe(dsps_comments);
-        if (db_insertTransaction(proctor_id, textReplaceApostrophe(sessionStorage.getItem('ls_dsps_proctor_loginDisplayName')), note) === "") {
+        note += "\nComments: " + dsps_comments;
+        if (db_insertTransaction(proctor_id, sessionStorage.getItem('ls_dsps_proctor_loginDisplayName'), note) === "") {
             var str_msg = "DSPS Instructor Review: " + proctor_id + " DB system error INSERT TRANSACTION - DENY";
             sendEmailToDeveloper(str_msg);
             alert(str_msg + ", please contact IVC Tech Support at 949.451.5696");
@@ -727,19 +727,19 @@ function getExamPDFList() {
 
 ////////////////////////////////////////////////////////////////////////////////
 function updateProctorInstructorPhone() {
-    var inst_phone = textReplaceApostrophe($.trim($('#inst_phone').val()));
+    var inst_phone = $.trim($('#inst_phone').val());
     return db_updateProctorInstPhone(proctor_id, inst_phone);
 }
 
 function insertInstForm() {
-    var allow_min = textReplaceApostrophe($.trim($('#allow_min').val()));
+    var allow_min = $.trim($('#allow_min').val());
     var mailbox = $('#ckb_mailbox').is(':checked');
     var mail_bld_id = $('#cbo_mail_bld').val();
-    var bldg = textReplaceApostrophe($('#bldg').val());
+    var bldg = $('#bldg').val();
     var prof_pu = $('#ckb_prof_pu').is(':checked');
     var faculty = $('#ckb_faculty').is(':checked');
     var faculty_bld_id = $('#cbo_faculty_bld').val();
-    var office = textReplaceApostrophe($('#office').val());
+    var office = $('#office').val();
     var stu_delivery = $('#ckb_stu_delivery').is(':checked');
     var scan_email = $('#ckb_scan_email').is(':checked');
     var se_option_id = $('#se_option').val();
@@ -769,7 +769,7 @@ function insertExamGuide() {
     var book = $('input[name="rdo_book"]:checked').val();
     var calculator = $('input[name="rdo_calculator"]:checked').val();
     var cal_type_id = $('#cal_type').val();
-    var cal_type_other = textReplaceApostrophe($('#cal_type_other').val());
+    var cal_type_other = $('#cal_type_other').val();
     var dictionary = $('input[name="rdo_dictionary"]:checked').val();
     var scratch_paper = $('input[name="rdo_scratch_paper"]:checked').val();
     var scantron = $('input[name="rdo_scantron"]:checked').val();

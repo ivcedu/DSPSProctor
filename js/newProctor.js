@@ -115,7 +115,7 @@ $(document).ready(function() {
                     return false;
                 }
                 else {
-                    if (db_insertTransaction(proctor_id, textReplaceApostrophe(sessionStorage.getItem('ls_dsps_proctor_loginDisplayName')), "Proctor request submitted") === "") {
+                    if (db_insertTransaction(proctor_id, sessionStorage.getItem('ls_dsps_proctor_loginDisplayName'), "Proctor request submitted") === "") {
                         var str_msg = "DSPS Exam Request: " + proctor_id + " DB system error INSERT TRANSACTION";
                         sendEmailToDeveloper(str_msg);
                         alert(str_msg + ", please contact IVC Tech Support at 949.451.5696");
@@ -123,7 +123,7 @@ $(document).ready(function() {
                         window.open("Login.html", '_self');
                         return false;
                     }
-                    if (db_insertProctorLog(proctor_id, textReplaceApostrophe(sessionStorage.getItem('ls_dsps_proctor_loginDisplayName')), 6, 1) === "") {
+                    if (db_insertProctorLog(proctor_id, sessionStorage.getItem('ls_dsps_proctor_loginDisplayName'), 6, 1) === "") {
                         var str_msg = "DSPS Exam Request: " + proctor_id + " DB system error INSERT PROCTOR LOG";
                         sendEmailToDeveloper(str_msg);
                         alert(str_msg + ", please contact IVC Tech Support at 949.451.5696");
@@ -331,11 +331,11 @@ function getSectionNum(course_id) {
 
 ////////////////////////////////////////////////////////////////////////////////
 function insertProctor() {    
-    var stu_name = textReplaceApostrophe(sessionStorage.getItem('ls_dsps_proctor_loginDisplayName'));
-    var stu_email = textReplaceApostrophe(sessionStorage.getItem('ls_dsps_proctor_loginEmail'));
-    var stu_ID = textReplaceApostrophe(sessionStorage.getItem('ls_dsps_proctor_loginID'));
-    var stu_fname = textReplaceApostrophe(sessionStorage.getItem('ls_dsps_proctor_loginFName'));
-    var stu_lname = textReplaceApostrophe(sessionStorage.getItem('ls_dsps_proctor_loginLName'));
+    var stu_name = sessionStorage.getItem('ls_dsps_proctor_loginDisplayName');
+    var stu_email = sessionStorage.getItem('ls_dsps_proctor_loginEmail');
+    var stu_ID = sessionStorage.getItem('ls_dsps_proctor_loginID');
+    var stu_fname = sessionStorage.getItem('ls_dsps_proctor_loginFName');
+    var stu_lname = sessionStorage.getItem('ls_dsps_proctor_loginLName');
     
     var sel_inst = $('#inst_list').val();
     var inst_id = getInstructorID(sel_inst);
@@ -350,17 +350,17 @@ function insertProctor() {
         return -1;
     }
     else {
-        var inst_name = textReplaceApostrophe(ldap_result[0]);
-        var inst_email = textReplaceApostrophe(ldap_result[1]);
-        var inst_fname = textReplaceApostrophe(ldap_result[2]);
-        var inst_lname = textReplaceApostrophe(ldap_result[3]);
+        var inst_name = ldap_result[0];
+        var inst_email = ldap_result[1];
+        var inst_fname = ldap_result[2];
+        var inst_lname = ldap_result[3];
 
         course_id = $('#course_list').val();
         section_num = getSectionNum(course_id);
 
         var test_date = $('#test_date').val();
         var test_time = $('#test_time').val();
-        var comments = textReplaceApostrophe($('#comments').val());
+        var comments = $('#comments').val();
 
         proctor_id = db_insertProctor(stu_name, stu_email, stu_ID, inst_name, inst_email, course_id, section_num, test_date, test_time, comments);
         if (proctor_id === "") {
@@ -403,7 +403,7 @@ function insertAccom(proctor_id) {
     }
 
     var other = $('#ckb_other').is(':checked');
-    var txt_other = textReplaceApostrophe($('#txt_other').val());
+    var txt_other = $('#txt_other').val();
     var distraction = $('#ckb_distraction').is(':checked');
     
     var accom_id = db_insertAccom(proctor_id, time_one_half, double_time, alt_media, reader, enlarge_exam, user_of_comp, other, txt_other, scribe, scantron, written_exam, distraction);
