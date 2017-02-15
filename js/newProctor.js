@@ -34,6 +34,17 @@ $(document).ready(function() {
         setCourseInfo(inst_name);
     });
     
+    // test date change event //////////////////////////////////////////////////
+    $('#test_date').change(function() {
+        var dt_test_date = $(this).datepicker('getDate');
+        var dayName = $.datepicker.formatDate('DD', dt_test_date);
+        if (dayName === "Saturday" || dayName === "Sunday") {
+            swal({title: "Error", text: "IVC closed on " + dayName, type: "error"});
+            $(this).val("");
+        }
+        return false;
+    });
+    
     // time and one half check event ///////////////////////////////////////////
     $('#ckb_time_one_half').change(function() {
         if ($(this).is(':checked')) {
