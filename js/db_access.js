@@ -78,6 +78,19 @@ function tardis_getStudentCourseList(StudentID, TermCode) {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 // get DB //////////////////////////////////////////////////////////////////////
+function db_getIVCHoliday() {
+    var result = new Array();
+    $.ajax({
+        type:"POST",
+        url:"php/db_getIVCHoliday.php",
+        async: false,  
+        success:function(data) {
+            result = JSON.parse(data);
+        }
+    });
+    return result;
+}
+
 function db_getAdmin(AdminEmail) {
     var result = new Array();
     $.ajax({

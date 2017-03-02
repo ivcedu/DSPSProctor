@@ -5,11 +5,14 @@ var course_id = "";
 var section_num = "";
 
 var str_img = "";
+
+var ivc_holidays = [];
 ////////////////////////////////////////////////////////////////////////////////
 window.onload = function() {   
     if (sessionStorage.key(0) !== null) {        
         $('#mod_dialog_box').modal('hide');
         $('#mod_tech_support').modal('hide');
+        getIVCHoliday();
         setDatePickerMinDate();
         getStudentInfo();
         getStudentCourseInfo();
@@ -32,6 +35,48 @@ $(document).ready(function() {
     $('#inst_list').change(function() {
         var inst_name = $(this).val();
         setCourseInfo(inst_name);
+    });
+    
+    // test date change event //////////////////////////////////////////////////
+    $('#test_date').change(function() {
+        var dt_test_date = new Date($(this).val());
+        var week_day = dt_test_date.getDay();
+        
+        var cur_time = new Date($.now());
+        var h = cur_time.getHours();
+        var m = cur_time.getMinutes();
+        var mer = h >= 12 ? 'PM' : 'AM';
+
+        h = h % 12;
+        h = h ? h : 12; // the hour '0' should be '12'
+        //convert hours into minutes
+        m += h * 60;
+        if(mer === 'AM' && m < 480) {
+            $('#test_time').timepicker('setTime', '8:00 AM');
+        }
+        
+        if (week_day >= 1 && week_day <= 4) {
+            if(mer === 'AM' && m < 480) {
+                $('#test_time').timepicker('setTime', '8:00 AM');
+            }
+            else if (mer === 'PM' && m > 360 && m < 720) {
+                $('#test_time').timepicker('setTime', '6:00 PM');
+            }
+            else {
+                $('#test_time').timepicker('setTime', h+':00'+' '+mer);
+            }
+        }
+        else {
+            if(mer === 'AM' && m < 480) {
+                $('#test_time').timepicker('setTime', '8:00 AM');
+            }
+            else if (mer === 'PM' && m > 120 && m < 720) {
+                $('#test_time').timepicker('setTime', '2:00 PM');
+            }
+            else {
+                $('#test_time').timepicker('setTime', h+':00'+' '+mer);
+            }
+        }
     });
     
     // time and one half check event ///////////////////////////////////////////
@@ -184,23 +229,53 @@ $(document).ready(function() {
     $('.selectpicker').selectpicker();
     
     // datepicker
-    $('#test_date').datepicker({ beforeShowDay: $.datepicker.noWeekends });
+//    $('#test_date').datepicker({ beforeShowDay: $.datepicker.noWeekends });
+    $('#test_date').datepicker({ beforeShowDay: function(date) {
+                                                    var noWeekend = $.datepicker.noWeekends(date);
+                                                    if (noWeekend[0]) { 
+                                                        var datestring = jQuery.datepicker.formatDate('mm/dd/yy', date); 
+                                                        return [ ivc_holidays.indexOf(datestring) === -1 ];
+                                                    } 
+                                                    else { 
+                                                        return noWeekend; 
+                                                    } 
+                                                } 
+                                });
     
     // timepicker
-//    $('#test_time').timepicker();
-    
+    $('#test_time').timepicker({ defaultTime: false });
     $('#test_time').timepicker().on('changeTime.timepicker', function(e) {    
-        var h= e.time.hours;
-        var m= e.time.minutes;
-        var mer= e.time.meridian;
+        var dt_test_date = new Date($('#test_date').val());
+        var week_day = dt_test_date.getDay();
+        
+        var h = e.time.hours;
+        var m = e.time.minutes;
+        var mer = e.time.meridian;
         //convert hours into minutes
-        m+=h*60;
+        m += h * 60;
         //10:15 = 10h*60m + 15m = 615 min
-        if(mer === 'AM' && m < 480) {
-            $('#test_time').timepicker('setTime', '8:00 AM');
+//        if(mer === 'AM' && m < 480) {
+//            $('#test_time').timepicker('setTime', '8:00 AM');
+//        }
+//        else if (mer === 'PM' && m > 360 && m < 720) {
+//            $('#test_time').timepicker('setTime', '6:00 PM');
+//        }
+        
+        if (week_day >= 1 && week_day <= 4) {
+            if(mer === 'AM' && m < 480) {
+                $('#test_time').timepicker('setTime', '8:00 AM');
+            }
+            else if (mer === 'PM' && m > 360 && m < 720) {
+                $('#test_time').timepicker('setTime', '6:00 PM');
+            }
         }
-        else if (mer === 'PM' && m > 360 && m < 720) {
-            $('#test_time').timepicker('setTime', '6:00 PM');
+        else {
+            if(mer === 'AM' && m < 480) {
+                $('#test_time').timepicker('setTime', '8:00 AM');
+            }
+            else if (mer === 'PM' && m > 120 && m < 720) {
+                $('#test_time').timepicker('setTime', '2:00 PM');
+            }
         }
     });
     
@@ -223,6 +298,16 @@ $(document).ready(function() {
     $('#dev_text_other').popover({content:"other text input field", placement:"bottom"});
     $('#dev_comments').popover({content:"comments text input field", placement:"bottom"});
 });
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+function getIVCHoliday() {
+    var result = new Array();
+    result = db_getIVCHoliday();
+    
+    for (var i = 0; i < result.length; i++) {
+        ivc_holidays.push(result[i]['IVCHoliday']);
+    }
+}
 
 ////////////////////////////////////////////////////////////////////////////////
 function formValidation() {
