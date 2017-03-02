@@ -78,19 +78,6 @@ function tardis_getStudentCourseList(StudentID, TermCode) {
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 // get DB //////////////////////////////////////////////////////////////////////
-function db_getIVCHoliday() {
-    var result = new Array();
-    $.ajax({
-        type:"POST",
-        url:"php/db_getIVCHoliday.php",
-        async: false,  
-        success:function(data) {
-            result = JSON.parse(data);
-        }
-    });
-    return result;
-}
-
 function db_getAdmin(AdminEmail) {
     var result = new Array();
     $.ajax({
@@ -380,6 +367,33 @@ function db_getIVCBLDList() {
     return result;
 }
 
+function db_getIVCHoliday() {
+    var result = new Array();
+    $.ajax({
+        type:"POST",
+        url:"php/db_getIVCHoliday.php",
+        async: false,  
+        success:function(data) {
+            result = JSON.parse(data);
+        }
+    });
+    return result;
+}
+
+function db_getIVCHolidayByDate(IVCHoliday) {
+    var result = new Array();
+    $.ajax({
+        type:"POST",
+        url:"php/db_getIVCHolidayByDate.php",
+        data:{IVCHoliday:IVCHoliday},
+        async: false,  
+        success:function(data) {
+            result = JSON.parse(data);
+        }
+    });
+    return result;
+}
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -506,6 +520,20 @@ function db_insertProctorName(ProctorID, StuFName, StuLName, InstFName, InstLNam
         type:"POST",
         url:"php/db_insertProctorName.php",
         data:{ProctorID:ProctorID, StuFName:StuFName, StuLName:StuLName, InstFName:InstFName, InstLName:InstLName},
+        async: false,  
+        success:function(data) {
+            ResultID = JSON.parse(data);
+        }
+    });
+    return ResultID;
+}
+
+function db_insertIVCHoliday(IVCHoliday) {
+    var ResultID = "";
+    $.ajax({
+        type:"POST",
+        url:"php/db_insertIVCHoliday.php",
+        data:{IVCHoliday:IVCHoliday},
         async: false,  
         success:function(data) {
             ResultID = JSON.parse(data);
@@ -692,6 +720,33 @@ function db_deleteProctor(ProctorID) {
         url: "php/db_deleteProctor.php",  
         type: "POST",  
         data:{ProctorID:ProctorID},
+        async: false,
+        success:function(data) {
+            Result = JSON.parse(data);
+        }  
+    });
+    return Result;
+}
+
+function db_deleteIVCHolidayByID(IVCHolidayID) {
+    var Result = false;
+    $.ajax({  
+        url: "php/db_deleteIVCHolidayByID.php",  
+        type: "POST",  
+        data:{IVCHolidayID:IVCHolidayID},
+        async: false,
+        success:function(data) {
+            Result = JSON.parse(data);
+        }  
+    });
+    return Result;
+}
+
+function db_deleteIVCHolidayAll() {
+    var Result = false;
+    $.ajax({  
+        url: "php/db_deleteIVCHolidayAll.php",  
+        type: "POST",  
         async: false,
         success:function(data) {
             Result = JSON.parse(data);

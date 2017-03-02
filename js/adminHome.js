@@ -50,6 +50,12 @@ $(document).ready(function() {
         return false;
     });
     
+    // ivc holiday click ///////////////////////////////////////////////////////
+    $('#nav_ivc_holiday').click(function() { 
+        window.open('adminIVCHoliday.html', '_self');
+        return false;
+    });
+    
     // filter option change event //////////////////////////////////////////////
     $('#filter_option').change(function() {
         switch ($(this).val()) {

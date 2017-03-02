@@ -1,0 +1,67 @@
+<!DOCTYPE HTML>
+<html lang="en">
+    <head>
+        <meta charset="utf-8"/>
+        <meta http-equiv="X-UA-Compatible" content="IE=Edge"/>
+        <meta http-equiv="Cache-Control" content="no-cache"/>
+        <title>DSPS IVC Holiday Setting</title>
+        <!-- include css -->
+        <link rel="stylesheet" href="../include/bootstrap/css/bootstrap.2.3.2.min.css"/>
+        <link rel="stylesheet" href="../include/jquery-ui/css/jquery.ui.all.css"/>
+        <link rel="stylesheet" href="../include/iconic-1.9.0/font/css/iconic-bootstrap.css"/>
+        <link rel="stylesheet" href="../include/sweetalert/css/sweetalert.css"/>
+        <!-- application css -->
+    </head>
+    <body id="body">
+        <div class="well container">
+            <!-- navigation bar -->
+            <div class="navbar navbar-inverse">
+                <div class="navbar-inner" id="navigation">
+                    <ul class="nav">
+                        <li><a href=# id="nav_home"><i class="iconic iconic-home"></i> Home</a></li>
+                    </ul>
+                    <ul class="nav pull-right">
+                        <li><a href=# id="nav_logout"><i class="iconic iconic-account-logout iconic-flip-horizontal"></i> Logout</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="row-fluid text-center">
+                <h4>DSPS IVC Holiday Setting</h4>
+            </div>
+            <br/>
+            <div class="row-fluid">
+                <div class="span4"><input type="text" class="span12" readonly placeholder="click here to select date" id="ivc_holiday"></div>
+                <div class="span2">
+                    <button class="btn btn-primary span12" id="btn_add"><i class="iconic iconic-plus"></i> Add</button>
+                </div>
+                <div class="span2 offset4">
+                    <button class="btn btn-danger span12" id="btn_delete_all"><i class="iconic iconic-trash"></i> Delete All</button>
+                </div>
+            </div>
+            <!-- RF List section  -->
+            <table class="table table-condensed table-bordered" style="font-size: 90%;" id="tbl_ivc_holiday_list">
+                <thead style="background-color: grey;">
+                    <th class="span2" style="text-align: left;"><a href="#" style="color: white;">Date</a></th>
+                    <th class="span1" style="text-align: left;"><a href="#" style="color: white;">Edit</a></th>
+                </thead>
+                <tbody id="body_tr">
+                </tbody>
+            </table>
+        </div>
+        
+        <!-- include javascript -->
+        <script src="../include/jquery/jquery-2.0.3.min.js"></script>
+        <script src="../include/jquery-ui/js/jquery-ui-1.10.4.min.js"></script>
+        <script src="../include/jquery-ui/js/jquery.ui.core.js"></script>
+        <script src="../include/jquery-ui/js/jquery.ui.widget.js"></script>
+        <script src="../include/jquery-ui/js/jquery.ui.datepicker.js"></script>
+        <script src="../include/jquery-tablesorter/js/jquery.tablesorter.min.js"></script>
+        <script src="../include/jquery-tablesorter/js/jquery.tablesorter.widgets.min.js"></script>
+        <script src="../include/bootstrap/js/bootstrap.2.3.2.min.js"></script>
+        <script src="../include/sweetalert/js/sweetalert.min.js"></script>
+        <!-- application javascript -->
+        <script src="js/adminIVCHoliday.js"></script>
+        <script src="js/session_data.js"></script>
+        <script src="js/db_access.js"></script>
+    </body>
+</html>
