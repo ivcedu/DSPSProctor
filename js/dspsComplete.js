@@ -161,6 +161,7 @@ $(document).ready(function() {
             return false;
         }
         sendEmailToInstructorCompleted();
+        db_deleteExamPDFAll(proctor_id);
         
         $('#mod_dialog_box_header').html("Complete");
         $('#mod_dialog_box_body').html("DSPS Complete");
