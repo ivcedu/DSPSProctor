@@ -1,4 +1,5 @@
 var str_img = "";
+var master = false;
 ////////////////////////////////////////////////////////////////////////////////
 window.onload = function() {   
     if (sessionStorage.key(0) !== null) {   
@@ -6,6 +7,7 @@ window.onload = function() {
         $('#mod_tech_support').modal('hide');
         $('#mod_tech_processing').hide();
         $('#login_name').html(sessionStorage.getItem('ls_dsps_proctor_loginDisplayName'));
+        setAdminOption();
         getAdminProctorList("All", "");
         initializeTable();
     }
@@ -125,13 +127,53 @@ $(document).ready(function() {
             case "Instructor Review":
                 var str_url = location.href;
                 sessionStorage.setItem('ss_dsps_proctor_referrer', str_url);
-                window.open('printProctor.html?proctor_id=' + proctor_id, '_self');
+                if (master) {
+                    swal({ title: "Instructor Review", 
+                           type: "info",
+                           showCancelButton: true,
+                           confirmButtonText: "Instructor View",
+                           cancelButtonText: "Admin View",
+                           closeOnConfirm: false,
+                           closeOnCancel: false }, 
+                           function(isConfirm) {   
+                               if (isConfirm) { 
+                                   window.open('instructorReview.html?proctor_id=' + proctor_id, '_self');   
+                               } 
+                               else {     
+                                   window.open('printProctor.html?proctor_id=' + proctor_id, '_self');
+                               } 
+                            }
+                        );
+                }
+                else {
+                    window.open('printProctor.html?proctor_id=' + proctor_id, '_self');
+                }
                 break;
             case "Review 2":
                 window.open('dspsReview_2.html?proctor_id=' + proctor_id, '_self');
                 break;
             case "Complete":
-                window.open('dspsComplete.html?proctor_id=' + proctor_id, '_self');
+                if (master) {
+                    swal({ title: "DSPS Complete", 
+                           type: "info",
+                           showCancelButton: true,
+                           confirmButtonText: "Instructor View",
+                           cancelButtonText: "Admin View",
+                           closeOnConfirm: false,
+                           closeOnCancel: false }, 
+                           function(isConfirm) {   
+                               if (isConfirm) { 
+                                   window.open('instructorExamUpdate.html?proctor_id=' + proctor_id, '_self');   
+                               } 
+                               else {     
+                                   window.open('dspsComplete.html?proctor_id=' + proctor_id, '_self');
+                               } 
+                            }
+                        );
+                }
+                else {
+                    window.open('dspsComplete.html?proctor_id=' + proctor_id, '_self');
+                }
                 break;
             default:
                 var str_url = location.href;
@@ -201,6 +243,13 @@ $(document).ready(function() {
     // selectpicker
     $('.selectpicker').selectpicker();
 });
+
+////////////////////////////////////////////////////////////////////////////////
+function setAdminOption() {   
+    if (sessionStorage.getItem('ls_dsps_proctor_loginEmail') === "ykim160@ivc.edu") {
+        master = true;
+    }
+}
 
 ////////////////////////////////////////////////////////////////////////////////
 function getAdminProctorList(search_option, search_value) {

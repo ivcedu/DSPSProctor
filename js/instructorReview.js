@@ -17,6 +17,7 @@ var target;
 var spinner;
 
 var str_img = "";
+var master = false;
 ////////////////////////////////////////////////////////////////////////////////
 window.onload = function() {   
     if (sessionStorage.key(0) !== null) {
@@ -30,6 +31,7 @@ window.onload = function() {
         
         target = $('#spinner')[0];
         spinner = new Spinner();
+        setAdminOption();
         defaultHideDisalbe();
         getSEOption();
         getCalType();
@@ -83,8 +85,13 @@ function getURLParameters() {
 
 ////////////////////////////////////////////////////////////////////////////////
 $(document).ready(function() { 
-    $('#nav_home').click(function() { 
-        window.open('instructorHome.html', '_self');
+    $('#nav_home').click(function() {
+        if (master) {
+            window.open('adminHome.html', '_self');
+        }
+        else {
+            window.open('instructorHome.html', '_self');
+        }
         return false;
     });
     
@@ -436,6 +443,13 @@ $(document).ready(function() {
     $('#comments').autosize();
     $('#dsps_comments').autosize();
 });
+
+////////////////////////////////////////////////////////////////////////////////
+function setAdminOption() {   
+    if (sessionStorage.getItem('ls_dsps_proctor_loginEmail') === "ykim160@ivc.edu") {
+        master = true;
+    }
+}
 
 ////////////////////////////////////////////////////////////////////////////////
 function emailLinkValidation() {
