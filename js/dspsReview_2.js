@@ -201,6 +201,7 @@ $(document).ready(function() {
         }
         sendEmailToInstructorReview2Denied();
         sendEmailToStudentCancel();
+        db_deleteExamPDFAll(proctor_id);
         
         $('#mod_dialog_box_header').html("Complete");
         $('#mod_dialog_box_body').html("DSPS Review 2 has been Denied");
@@ -247,6 +248,7 @@ $(document).ready(function() {
         }
         sendEmailToStudentCanceled();
         sendEmailToInstructorCanceled();
+        db_deleteExamPDFAll(proctor_id);
         
         $('#mod_dialog_box_header').html("Complete");
         $('#mod_dialog_box_body').html("DSPS Review 2 has been Canceled");
