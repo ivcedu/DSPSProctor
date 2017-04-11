@@ -106,6 +106,7 @@ $(document).ready(function() {
         var dsps_comments = $.trim($('#dsps_comments').val());
         note += "\nComments: " + dsps_comments;
         db_insertTransaction(proctor_id, sessionStorage.getItem('ls_dsps_proctor_loginDisplayName'), note);
+        db_deleteExamPDFAll(proctor_id);
         
         window.open("adminHome.html", '_self');
         return false;
@@ -126,6 +127,7 @@ $(document).ready(function() {
         var dsps_comments = $.trim($('#dsps_comments').val());
         note += "\nComments: " + dsps_comments;
         db_insertTransaction(proctor_id, sessionStorage.getItem('ls_dsps_proctor_loginDisplayName'), note);
+        db_deleteExamPDFAll(proctor_id); 
         
         window.open("adminHome.html", '_self');
         return false;

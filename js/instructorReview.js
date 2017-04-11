@@ -402,6 +402,7 @@ $(document).ready(function() {
         }
         sendEmailToStudentDeny();
         sendEmailToDSPSDeny();
+        db_deleteExamPDFAll(proctor_id);
         
         $('#mod_dialog_box_header').html("Complete");
         $('#mod_dialog_box_body').html("Instructor Review has been Denied");
