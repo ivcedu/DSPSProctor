@@ -123,7 +123,7 @@ $(document).ready(function() {
                 setTimeout(function() {      
                     addExamPDF();
                     stopSpin();
-                }, 1000);
+                }, 2000);
             }
         }
         else {
@@ -474,8 +474,8 @@ function getPDFAttachmentInfo() {
             return false;
         } 
         else {   
-            if (file.size >= 2000000) {
-                alert("Attached file size is too big, max. file size allow is 2Mb or less");
+            if (file.size >= 3000000) {
+                alert("Attached file size is too big, max. file size allow is 3Mb or less");
                 $('#attachment_file').filestyle('clear');
                 return false;
             }
