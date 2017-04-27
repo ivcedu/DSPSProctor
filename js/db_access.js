@@ -789,32 +789,32 @@ function ireportDBgetUserAccess(Username) {
 }
 
 // upload attach file //////////////////////////////////////////////////////////
-//function uploadAttachFile(file_data) {
-//    var Result = "";
-//    $.ajax({  
-//        url: "php/upload_attach_file.php",  
-//        type: "POST",  
-//        data: file_data,
-//        processData: false,  
-//        contentType: false,  
-//        async: false,
-//        success:function(data) {
-//            Result = JSON.parse(data);
-//        }  
-//    });
-//    return Result;
-//}
+function uploadAttachFile(file_data) {
+    var Result = "";
+    $.ajax({  
+        url: "php/upload_attach_file.php",  
+        type: "POST",  
+        data: file_data,
+        processData: false,  
+        contentType: false,  
+        async: false,
+        success:function(data) {
+            Result = JSON.parse(data);
+        }  
+    });
+    return Result;
+}
 
-//function deleteAttachFile(FileLinkName) {
-//    var Result = "";
-//    $.ajax({  
-//        url: "php/delete_attach_file.php",  
-//        type: "POST",  
-//        data:{FileLinkName:FileLinkName},
-//        async: false,
-//        success:function(data) {
-//            Result = JSON.parse(data);
-//        }  
-//    });
-//    return Result;
-//}
+function deleteAttachFile(FileLinkName) {
+    var Result = "";
+    $.ajax({  
+        url: "php/delete_attach_file.php",  
+        type: "POST",  
+        data:{FileLinkName:FileLinkName},
+        async: false,
+        success:function(data) {
+            Result = JSON.parse(data);
+        }  
+    });
+    return Result;
+}

@@ -9,7 +9,7 @@ var inst_email = "";
 var inst_phone = "";
 var section_num = "";
 
-var m_file_name = "";
+//var m_file_name = "";
 var m_base64_data = "";
 var m_total_page = 0;
 
@@ -231,11 +231,11 @@ $(document).ready(function() {
     $('#attachment_file').change(function() {
         if (getPDFAttachmentInfo()) {
             var file = $('#attachment_file').get(0).files[0];
-            var f_name = file.name.replace(/#/g, "");            
+            var f_name = file.name.replace(/#/g, "").replace(/'/g, "''"); 
+            
             var file_data = new FormData();
             file_data.append("files[]", file, f_name); 
             m_total_page = pdfGetTotalPages(file_data);
-
             if (m_total_page === 0) {
                 alert("Your PDF file are not correctly formatted. please verify your pdf file again");
                 $('#attachment_file').filestyle('clear');
@@ -244,7 +244,7 @@ $(document).ready(function() {
             else {
                 startSpin();        
                 setTimeout(function() {      
-                    if (!addExamPDF()) {
+                    if (!addExamPDF(f_name)) {
                         var str_msg = "DSPS Instructor Review: " + proctor_id + " DB system error INSERT EXAM PDF FILE";
                         sendEmailToDeveloper(str_msg);
                         alert(str_msg + ", please contact IVC Tech Support at 949.451.5696");
@@ -253,7 +253,7 @@ $(document).ready(function() {
                         return false;
                     }
                     stopSpin();
-                }, 2000);
+                }, 1500);
             }
         }
         else {
@@ -264,28 +264,39 @@ $(document).ready(function() {
     // exam pdf click event ////////////////////////////////////////////////////
     $(document).on('click', 'a[id^="exampdf_id_"]', function() {
         var exampdf_id = $(this).attr('id').replace("exampdf_id_", "");
-        
         var result = new Array();
         result = db_getExamPDF(exampdf_id);
-        var file_name = result[0]['FileName'];
-        var exam_pdf = result[0]['ExamPDF'];
-
-        var curBrowser = bowser.name;
-        if (curBrowser === "Internet Explorer") {
-            var blob = b64toBlob(exam_pdf, 'application/pdf');
-            window.saveAs(blob, file_name);
+        
+        if (result[0]['FileLinkName'] !== null) {
+            var url_pdf = "attach_files/" + result[0]['FileLinkName'];
+            window.open(url_pdf, '_blank');
             return false;
         }
         else {
-            window.open(exam_pdf, '_blank');
-            return false;
+            var file_name = result[0]['FileName'];
+            var exam_pdf = result[0]['ExamPDF'];
+
+            var curBrowser = bowser.name;
+            if (curBrowser === "Internet Explorer") {
+                var blob = b64toBlob(exam_pdf, 'application/pdf');
+                window.saveAs(blob, file_name);
+                return false;
+            }
+            else {
+                window.open(exam_pdf, '_blank');
+                return false;
+            }
         }
     });
     
     // remove file button click ////////////////////////////////////////////////    
     $(document).on('click', 'button[id^="btn_delete_exampdf_id"]', function() {
         var exampdf_id = $(this).attr('id').replace("btn_delete_exampdf_id", "");
-        removeExamPDF(exampdf_id);
+        var result = new Array();
+        result = db_getExamPDF(exampdf_id);
+
+        removeExamPDF(exampdf_id, result[0]['FileLinkName']);
+        return false;
     });
     
     // accept button click /////////////////////////////////////////////////////
@@ -402,6 +413,7 @@ $(document).ready(function() {
         }
         sendEmailToStudentDeny();
         sendEmailToDSPSDeny();
+        removeAttacheFiles();
         db_deleteExamPDFAll(proctor_id);
         
         $('#mod_dialog_box_header').html("Complete");
@@ -818,7 +830,7 @@ function getPDFAttachmentInfo() {
                 return false;
             }
             else {
-                convertPDFtoBase64();
+//                convertPDFtoBase64();
                 return true;
             }
         }
@@ -828,43 +840,56 @@ function getPDFAttachmentInfo() {
     }
 }
 
-function convertPDFtoBase64() {
-    var file = $('#attachment_file').get(0).files[0];
-    m_file_name = file.name.replace(/#/g, "");
-    var reader = new FileReader();
-    
-    reader.onloadend = function () {
-        m_base64_data = reader.result;
-    };
+//function convertPDFtoBase64() {
+//    var file = $('#attachment_file').get(0).files[0];
+//    m_file_name = file.name.replace(/#/g, "");
+//    var reader = new FileReader();
+//    
+//    reader.onloadend = function () {
+//        m_base64_data = reader.result;
+//    };
+//
+//    if (file) {
+//        reader.readAsDataURL(file);
+//    } 
+//}
 
-    if (file) {
-        reader.readAsDataURL(file);
-    } 
-}
-
-function addExamPDF() {    
-    var exampdf_id = db_insertExamPDF(proctor_id, m_file_name, m_base64_data);
-    $('#attachment_file').filestyle('clear');
+function addExamPDF(file_name) {    
+//    var exampdf_id = db_insertExamPDF(proctor_id, m_file_name, m_base64_data);
+    var exampdf_id = db_insertExamPDF(proctor_id, file_name, "");
     if (exampdf_id === "") {
         return false;
     }
+    var php_flname = exampdf_id + "_fileIndex_" + file_name;
+    
+    var file = $('#attachment_file').get(0).files[0];
+    var file_data = new FormData();
+    file_data.append("files[]", file, php_flname);
+    if (!uploadAttachFile(file_data)) {
+        return false;
+    }
     else {
-        addPDFFileToExamList(exampdf_id);
+        $('#attachment_file').filestyle('clear');
+        addPDFFileToExamList(exampdf_id, file_name);
         return true;
     }
 }
 
-function addPDFFileToExamList(id) {  
+function addPDFFileToExamList(id, file_name) {  
     var html = "<div class='row-fluid' id='row_exampdf_id" + id + "'>";
     html += "<div class='span1 text-center'><button class='btn btn-mini btn-warning' id='btn_delete_exampdf_id" + id + "'><i class='icon-trash icon-white'></i></button></div>";
-    html += "<div class='span11'><a href=# id='exampdf_id_" + id + "'>" + m_file_name + "</a></div>";
+    html += "<div class='span11'><a href=# id='exampdf_id_" + id + "'>" + file_name + "</a></div>";
     html += "</div>";
     
     $('#exam_list').append(html);
 }
 
-function removeExamPDF(id) {
+function removeExamPDF(id, file_link_name) {
     db_deleteExamPDF(id);
+    if (file_link_name !== null) {
+        deleteAttachFile(file_link_name);
+    }
+    
     $('#row_exampdf_id' + id).remove();
 }
 
@@ -873,7 +898,18 @@ function removeAllExamPDF() {
     $('#exam_list').empty();
 }
 
-////////////////////////////////////////////////////////////////////////////////
+function removeAttacheFiles() {
+    var result = new Array();
+    result = db_getExamPDFList(proctor_id);
+    for (var i = 0; i < result.length; i++) {
+        var file_link_name = result[i]["FileLinkName"];
+        if (file_link_name !== null) {
+            deleteAttachFile(file_link_name);
+        }
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 function getTransactionHistory() {
     var result = new Array();
     result = db_getTransaction(proctor_id);
@@ -889,12 +925,12 @@ function getTransactionHistory() {
     $("#transaction_history").append(html);
 }
 
-////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 function capture() {    
     html2canvas($('body')).then(function(canvas) { str_img = canvas.toDataURL(); });
 }
 
-////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 function sendEmailToTechSupport() {
     var subject = "Request for New Ticket";
     var message = "New tickert has been requested from <b>" + sessionStorage.getItem('ls_dsps_proctor_loginDisplayName') + "</b> (" + sessionStorage.getItem('ls_dsps_proctor_loginEmail') + ")<br><br>";

@@ -1,6 +1,7 @@
 var proctor_id = "";
-var m_file_name = "";
-var m_base64_data = "";
+var m_exam_attach = "";
+//var m_file_name = "";
+//var m_base64_data = "";
 var m_total_page = 0;
 
 var inst_name = "";
@@ -108,11 +109,11 @@ $(document).ready(function() {
     $('#attachment_file').change(function() {
         if (getPDFAttachmentInfo()) {
             var file = $('#attachment_file').get(0).files[0];
-            var f_name = file.name.replace(/#/g, "");
+            var f_name = file.name.replace(/#/g, "").replace(/'/g, "''");
+            
             var file_data = new FormData();
             file_data.append("files[]", file, f_name); 
             m_total_page = pdfGetTotalPages(file_data);
-
             if (m_total_page === 0) {
                 alert("Your PDF file are not correctly formatted. please verify your pdf file again");
                 $('#attachment_file').filestyle('clear');
@@ -120,10 +121,17 @@ $(document).ready(function() {
             }
             else {
                 startSpin();        
-                setTimeout(function() {      
-                    addExamPDF();
+                setTimeout(function() {
+                    if (!addExamPDF(f_name)) {
+                        var str_msg = "DSPS Instructor Review: " + proctor_id + " DB system error INSERT EXAM PDF FILE";
+                        sendEmailToDeveloper(str_msg);
+                        alert(str_msg + ", please contact IVC Tech Support at 949.451.5696");
+                        sessionStorage.clear();
+                        window.open("Login.html", '_self');
+                        return false;
+                    }
                     stopSpin();
-                }, 2000);
+                }, 1500);
             }
         }
         else {
@@ -134,21 +142,28 @@ $(document).ready(function() {
     // exam pdf click event ////////////////////////////////////////////////////
     $(document).on('click', 'a[id^="exampdf_id_"]', function() {
         var exampdf_id = $(this).attr('id').replace("exampdf_id_", "");
-        
         var result = new Array();
         result = db_getExamPDF(exampdf_id);
-        var file_name = result[0]['FileName'];
-        var exam_pdf = result[0]['ExamPDF'];
-
-        var curBrowser = bowser.name;
-        if (curBrowser === "Internet Explorer") {
-            var blob = b64toBlob(exam_pdf, 'application/pdf');
-            window.saveAs(blob, file_name);
+        
+        if (result[0]['FileLinkName'] !== null) {
+            var url_pdf = "attach_files/" + result[0]['FileLinkName'];
+            window.open(url_pdf, '_blank');
             return false;
         }
         else {
-            window.open(exam_pdf, '_blank');
-            return false;
+            var file_name = result[0]['FileName'];
+            var exam_pdf = result[0]['ExamPDF'];
+
+            var curBrowser = bowser.name;
+            if (curBrowser === "Internet Explorer") {
+                var blob = b64toBlob(exam_pdf, 'application/pdf');
+                window.saveAs(blob, file_name);
+                return false;
+            }
+            else {
+                window.open(exam_pdf, '_blank');
+                return false;
+            }
         }
     });
     
@@ -157,7 +172,10 @@ $(document).ready(function() {
         var exampdf_id = $(this).attr('id').replace("btn_delete_exampdf_id", "");
         var file_name = $('#exampdf_id_' + exampdf_id).html();
         
-        removeExamPDF(exampdf_id);
+        var result = new Array();
+        result = db_getExamPDF(exampdf_id);
+        
+        removeExamPDF(exampdf_id, result[0]['FileLinkName']);
         var note = "Test exam: " + file_name + " has been deleted";
         db_insertTransaction(proctor_id, sessionStorage.getItem('ls_dsps_proctor_loginDisplayName'), note);
     });
@@ -168,19 +186,24 @@ $(document).ready(function() {
         db_updateInstFormExamAttach(proctor_id, exam_attach);
         updateInstFormExamReceived();
         
-        var note = "Instructor update test exam option to ";
-        if (exam_attach === "1") {
-            note += "Exam Attachment";
+        var note = "";
+        if (m_exam_attach !== exam_attach) {
+            if (exam_attach === "1") {
+                note = "Instructor update test exam option to Exam Attachment";
+            }
+            else {
+                note = "Instructor update test exam option to Exam Drop Off";
+            }
         }
-        else {
-            note += "Exam Drop Off";
-        }
-        
         var inst_comments = $('#inst_comments').val();
         if (inst_comments !== "") {
             note += "\nComments: " + inst_comments;
         } 
-        db_insertTransaction(proctor_id, sessionStorage.getItem('ls_dsps_proctor_loginDisplayName'), note);
+        
+        if (note !== "") {
+            db_insertTransaction(proctor_id, sessionStorage.getItem('ls_dsps_proctor_loginDisplayName'), note);
+        }
+        
         sendEmailToDSPSTestExamChange();
         
         $('#mod_dialog_box_header').html("Exam Option");
@@ -357,6 +380,7 @@ function setInstForm() {
             $('#se_option').show();
             $('#se_option').html(result[0]['SEOption']);
         }
+        m_exam_attach = result[0]['ExamAttach'];
         if (result[0]['ExamAttach'] === "1") {
             $('input[name=rdo_exam][value=1]').prop('checked', true);
             getExamPDFList();
@@ -480,7 +504,7 @@ function getPDFAttachmentInfo() {
                 return false;
             }
             else {
-                convertPDFtoBase64();
+//                convertPDFtoBase64();
                 return true;
             }
         }
@@ -490,39 +514,57 @@ function getPDFAttachmentInfo() {
     }
 }
 
-function addExamPDF() {
-    var exampdf_id = db_insertExamPDF(proctor_id, m_file_name, m_base64_data);
-    addPDFFileToExamList(exampdf_id);
-    var note = "Test exam: " + m_file_name + " has been attached";
-    db_insertTransaction(proctor_id, sessionStorage.getItem('ls_dsps_proctor_loginDisplayName'), note);
-    $('#attachment_file').filestyle('clear');
-}
-
-function convertPDFtoBase64() {
-    var file = $('#attachment_file').get(0).files[0];
-    m_file_name = file.name.replace(/#/g, "");
-    var reader = new FileReader();
+function addExamPDF(file_name) {
+    var exampdf_id = db_insertExamPDF(proctor_id, file_name, "");
+    if (exampdf_id === "") {
+        return false;
+    }
+    var php_flname = exampdf_id + "_fileIndex_" + file_name;
     
-    reader.onloadend = function () {
-        m_base64_data = reader.result;
-    };
-
-    if (file) {
-        reader.readAsDataURL(file);
-    } 
+    var file = $('#attachment_file').get(0).files[0];
+    var file_data = new FormData();
+    file_data.append("files[]", file, php_flname);
+    if (!uploadAttachFile(file_data)) {
+        return false;
+    }
+    else {
+        var note = "Test exam: " + file_name + " has been attached";
+        db_insertTransaction(proctor_id, sessionStorage.getItem('ls_dsps_proctor_loginDisplayName'), note);
+        $('#attachment_file').filestyle('clear');
+        addPDFFileToExamList(exampdf_id, file_name);
+        return true;
+    }
 }
 
-function addPDFFileToExamList(id) {  
+//function convertPDFtoBase64() {
+//    var file = $('#attachment_file').get(0).files[0];
+//    m_file_name = file.name.replace(/#/g, "");
+//    var reader = new FileReader();
+//    
+//    reader.onloadend = function () {
+//        m_base64_data = reader.result;
+//    };
+//
+//    if (file) {
+//        reader.readAsDataURL(file);
+//    } 
+//}
+
+function addPDFFileToExamList(id, file_name) {  
     var html = "<div class='row-fluid' id='row_exampdf_id" + id + "'>";
     html += "<div class='span1 text-center'><button class='btn btn-mini btn-warning' id='btn_delete_exampdf_id" + id + "'><i class='icon-trash icon-white'></i></button></div>";
-    html += "<div class='span11'><a href=# id='exampdf_id_" + id + "'>" + m_file_name + "</a></div>";
+    html += "<div class='span11'><a href=# id='exampdf_id_" + id + "'>" + file_name + "</a></div>";
     html += "</div>";
     
     $('#exam_list').append(html);
 }
 
-function removeExamPDF(id) {
+function removeExamPDF(id, file_link_name) {
     db_deleteExamPDF(id);
+    if (file_link_name !== null) {
+        deleteAttachFile(file_link_name);
+    }
+    
     $('#row_exampdf_id' + id).remove();
 }
 

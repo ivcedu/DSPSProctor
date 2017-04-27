@@ -4,10 +4,6 @@
      
     $FileLinkName = filter_input(INPUT_POST, 'FileLinkName');
 
-    $query = "DELETE FROM [IVCDSPS].[dbo].[Attachment] WHERE FileLinkName = '".$FileLinkName."'";
-    $cmd = $dbConn->prepare($query);
-    $result = $cmd->execute();
-
     $result = unlink($output_dir.$FileLinkName);
 
     echo json_encode($result);

@@ -132,7 +132,7 @@ function loginInfo() {
         
         // demo setup
 //        if (display_name === "deantest staffgen") {
-//            email = "hnguyen250@ivc.edu";
+//            email = "tcheng@ivc.edu";
 //            loginID = "9999995";
 //            login_type = "Staff";
 //        }

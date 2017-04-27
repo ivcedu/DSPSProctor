@@ -93,21 +93,28 @@ $(document).ready(function() {
     // exam pdf click event ////////////////////////////////////////////////////
     $(document).on('click', 'a[id^="exampdf_id_"]', function() {
         var exampdf_id = $(this).attr('id').replace("exampdf_id_", "");
-        
         var result = new Array();
         result = db_getExamPDF(exampdf_id);
-        var file_name = result[0]['FileName'];
-        var exam_pdf = result[0]['ExamPDF'];
-
-        var curBrowser = bowser.name;
-        if (curBrowser === "Internet Explorer") {
-            var blob = b64toBlob(exam_pdf, 'application/pdf');
-            window.saveAs(blob, file_name);
+        
+        if (result[0]['FileLinkName'] !== null) {
+            var url_pdf = "attach_files/" + result[0]['FileLinkName'];
+            window.open(url_pdf, '_blank');
             return false;
         }
         else {
-            window.open(exam_pdf, '_blank');
-            return false;
+            var file_name = result[0]['FileName'];
+            var exam_pdf = result[0]['ExamPDF'];
+
+            var curBrowser = bowser.name;
+            if (curBrowser === "Internet Explorer") {
+                var blob = b64toBlob(exam_pdf, 'application/pdf');
+                window.saveAs(blob, file_name);
+                return false;
+            }
+            else {
+                window.open(exam_pdf, '_blank');
+                return false;
+            }
         }
     });
     
@@ -161,6 +168,7 @@ $(document).ready(function() {
             return false;
         }
         sendEmailToInstructorCompleted();
+        removeAttacheFiles();
         db_deleteExamPDFAll(proctor_id);
         
         $('#mod_dialog_box_header').html("Complete");
@@ -587,12 +595,24 @@ function updateProctorTestDateTime() {
     return db_updateProctorTestDT(proctor_id, test_date, test_time);
 }
 
-////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+function removeAttacheFiles() {
+    var result = new Array();
+    result = db_getExamPDFList(proctor_id);
+    for (var i = 0; i < result.length; i++) {
+        var file_link_name = result[i]["FileLinkName"];
+        if (file_link_name !== null) {
+            deleteAttachFile(file_link_name);
+        }
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 function capture() {    
     html2canvas($('body')).then(function(canvas) { str_img = canvas.toDataURL(); });
 }
 
-////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 function sendEmailToTechSupport() {
     var subject = "Request for New Ticket";
     var message = "New tickert has been requested from <b>" + sessionStorage.getItem('ls_dsps_proctor_loginDisplayName') + "</b> (" + sessionStorage.getItem('ls_dsps_proctor_loginEmail') + ")<br><br>";
