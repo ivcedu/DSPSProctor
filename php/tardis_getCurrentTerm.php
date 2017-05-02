@@ -1,7 +1,7 @@
 <?php
     require("config.php");
     
-    $query = "SELECT TermCode FROM [TOPSPIN.SOCCCD.EDU\TOPSPIN].[Tardis].[dbo].[CurrentTerm]";
+    $query = "SELECT TermCode FROM [SKYBLAST.SOCCCD.EDU].[Tardis].[dbo].[CurrentTerm]";
 
     $cmd = $dbConn->prepare($query);
     $cmd->execute(); 
