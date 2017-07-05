@@ -11,6 +11,9 @@
         
         $file_name = substr($fileString, $pos_1 + 11);
         $file_link_name = $exampdf_id . "_" . $file_name;
+        
+        $file_name = str_replace("'", "", $file_name);
+        $file_link_name = str_replace("'", "", $file_link_name);
 
         $result = move_uploaded_file($_FILES["files"]["tmp_name"][0], $output_dir.$file_link_name);
         $result = updateExamPDFLinkFileNmae($dbConn, $exampdf_id, $file_link_name);
