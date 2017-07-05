@@ -231,7 +231,7 @@ $(document).ready(function() {
     $('#attachment_file').change(function() {
         if (getPDFAttachmentInfo()) {
             var file = $('#attachment_file').get(0).files[0];
-            var f_name = file.name.replace(/#/g, "").replace(/'/g, "''"); 
+            var f_name = file.name.replace(/#/g, "").replace(/'/g, ""); 
             
             var file_data = new FormData();
             file_data.append("files[]", file, f_name); 
