@@ -17,7 +17,7 @@
             </div>
             <div class="login">
                 <input type="text" placeholder="college email address" name="user" id="username"><br>
-                <input type="password" placeholder="password" name="password" id="password"><br>
+                <input type="password" placeholder="password" name="password" autocomplete="off" id="password"><br>
                 <input type="button" value="Login" id="btn_login">
             </div>
             <div class="footer">
