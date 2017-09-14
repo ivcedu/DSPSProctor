@@ -4,25 +4,71 @@
         <meta charset="utf-8"/>
         <meta http-equiv="X-UA-Compatible" content="IE=Edge"/>
         <meta http-equiv="Cache-Control" content="no-cache"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
         <title>Browser Not Support</title>
+        <!-- homer-1.9 Vendor css -->
+        <link rel="stylesheet" href="../homer-1.9/vendor/bootstrap/dist/css/bootstrap.css"/>
+        <!-- homer-1.9 App css -->
+        <link rel="stylesheet" href="../homer-1.9/fonts/pe-icon-7-stroke/css/pe-icon-7-stroke.css"/>
+        <link rel="stylesheet" href="../homer-1.9/fonts/pe-icon-7-stroke/css/helper.css"/>
+        <link rel="stylesheet" href="../homer-1.9/styles/style.css"/>
         <!-- include css -->
-        <link rel="stylesheet" href="../include/bootstrap/css/bootstrap.2.3.2.min.css"/>
         <link rel="stylesheet" href="../include/iconic-1.9.0/font/css/iconic-bootstrap.css"/>
         <!-- application css -->
     </head>
-    <body id="body">
-        <div class="well container">
-            <h4 style="text-align: center">Your current browser is not supported for accessing the DSPS Exams Test Request</h4>
-            <h4 style="text-align: center">Please try one of the following versions</h4>
-            <div>&nbsp;</div>
-            <h5 style="text-align: center">Internet Explorer 11+, FireFox 22+, Chrome 7+, Safari 5+</h5>
+    <body class="blank">
+        <div class="error-container">
+            <i class="pe-7s-way text-success big-icon"></i>
+            <h3 style="text-align: center">Your current browser is not supported for accessing the DSPS Exams Test Request</h3>
+            <h3 style="text-align: center">Please try one of the following versions</h3>
+            <br/>
+            <h4 style="text-align: center">Internet Explorer 11, FireFox 22+, Chrome 7+, Safari 6+</h4>
             <div class="row" style="text-align: center">
-                <span class="iconic iconic-md iconic-browser-type-internetexplorer" aria-hidden="true"></span>
-                <span class="iconic iconic-md iconic-browser-type-firefox" aria-hidden="true"></span>
-                <span class="iconic iconic-md iconic-browser-type-chrome" aria-hidden="true"></span>
-                <span class="iconic iconic-md iconic-browser-type-safari" aria-hidden="true"></span>
+                <div class="col-md-1  col-md-offset-4"><span class="iconic iconic-md iconic-browser-type-internetexplorer" aria-hidden="true"></span></div>
+                <div class="col-md-1"><span class="iconic iconic-md iconic-browser-type-firefox" aria-hidden="true"></span></div>
+                <div class="col-md-1"><span class="iconic iconic-md iconic-browser-type-chrome" aria-hidden="true"></span></div>
+                <div class="col-md-1"><span class="iconic iconic-md iconic-browser-type-safari" aria-hidden="true"></span></div>
             </div>
-            <h5 style="text-align: center">If browser issue persists, please send an email to <a href="mailto:ivctech@ivc.edu">ivctech@ivc.edu</a> to open a support request</h5>
+            <h4 style="text-align: center">If browser issue persists, please click below button to contact our Technical Support</h4>
+            <br/>
+            <!-- ivc live chat box -->
+            <div class="infobox">
+                <div style="text-align: center; white-space: nowrap;">
+                    <script type="text/javascript">
+                        var bccbId = Math.random(); 
+                        document.write(unescape('%3Cdiv id=' + bccbId + '%3E%3C/div%3E'));
+                        window._bcvma = window._bcvma || [];
+                        _bcvma.push(["setAccountID", "120471959640666284"]);
+                        _bcvma.push(["setParameter", "WebsiteID", "2673357782720146050"]);
+                        _bcvma.push(["setParameter", "CustomUrl", ""]);
+                        _bcvma.push(["setParameter", "WindowParameters", "vr=&vi=&ve=&vp=&vn=&lc="]);
+                        _bcvma.push(["addStatic", {type: "chat", bdid: "2922583469132169702", id: bccbId}]);
+                        var bcLoad = function() {
+                            if(window.bcLoaded) 
+                                return; 
+                            window.bcLoaded = true;
+                            var vms = document.createElement("script"); 
+                            vms.type = "text/javascript"; 
+                            vms.async = true;
+                            vms.src = ('https:'=== document.location.protocol?'https://':'http://') + "vmss.boldchat.com/aid/120471959640666284/bc.vms4/vms.js";
+                            var s = document.getElementsByTagName('script')[0]; 
+                            s.parentNode.insertBefore(vms, s);
+                        };
+                        if(window.pageViewer && pageViewer.load) 
+                            pageViewer.load();
+                        else if(document.readyState==="complete") 
+                            bcLoad();
+                        else if(window.addEventListener) 
+                            window.addEventListener('load', bcLoad, false);
+                        else 
+                            window.attachEvent('onload', bcLoad);
+                    </script>
+                </div>
+            </div>
         </div>
+        <!-- homer-1.9 Vendor javascript -->
+        <script src="../homer-1.9/vendor/jquery/dist/jquery.min.js"></script>
+        <script src="../homer-1.9/vendor/jquery-ui/jquery-ui.min.js"></script>
+        <script src="../homer-1.9/vendor/bootstrap/dist/js/bootstrap.min.js"></script>
     </body>
 </html>
