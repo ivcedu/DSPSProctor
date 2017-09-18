@@ -2,9 +2,8 @@ var str_img = "";
 ////////////////////////////////////////////////////////////////////////////////
 window.onload = function() {   
     if (sessionStorage.key(0) !== null) {
-        sessionStorage.setItem('ls_dsps_report_referrer', "rptInstructorHistory.html");
-        getDefaultStartEndDate();
-        getInstProctorCompleteList($('#start_date').val(), $('#end_date').val());
+        sessionStorage.setItem('ls_dsps_report_referrer', "rptNoExamList.html");
+        getAdminProctorNoExamList();
         initializeTable();
     }
     else {
@@ -15,7 +14,7 @@ window.onload = function() {
 
 ////////////////////////////////////////////////////////////////////////////////
 function initializeTable() {
-    $("#proctor_list").tablesorter({ });
+    $("#tbl_no_exam_list").tablesorter({ });
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -34,11 +33,6 @@ $(document).ready(function() {
         $('#mod_tech_support').modal('show');
     });
     
-    //filter button click //////////////////////////////////////////////////////
-    $('#btn_filter').click(function() {
-        getInstProctorCompleteList($('#start_date').val(), $('#end_date').val());
-    });
-    
     // table row open resource form click //////////////////////////////////////
     $('table').on('click', 'a[id^="proctor_id_"]', function(e) {
         e.preventDefault();
@@ -51,10 +45,10 @@ $(document).ready(function() {
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // ivc tech support click //////////////////////////////////////////////////
     $('#mod_tech_btn_submit').click(function() { 
-        if (!appSystemTechSupport("Application Web Site: DSPS Exams - Instructor History<br/><br/>", $('#mod_tech_problems').val(), str_img)) {
+        if (!appSystemTechSupport("Application Web Site: DSPS Exams - No Exam History<br/><br/>", $('#mod_tech_problems').val(), str_img)) {
             $('#mod_tech_support').modal('hide');
             var str_subject = "DSPS Exam: IVC Tech Support Request Error";
-            var str_msg = "Instructor History: IVC tech support request error";
+            var str_msg = "Admin History: IVC tech support request error";
             sendEmailToDeveloper(str_subject, str_msg);
             swal("Error!", str_msg + "\nplease contact IVC Tech Support at 949.451.5696", "error");
             return false;
@@ -75,46 +69,33 @@ $(document).ready(function() {
         onrendered: function(canvas) { str_img = canvas.toDataURL("image/jpg"); }
     });
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    
-    // selectpicker
-    $('.selectpicker').selectpicker();
-    
-    // datepicker
-    $('#start_date').datepicker();
-    $('#end_date').datepicker();
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////   
     
     // auto size
     $('#mod_tech_problems').autosize();
 });
 
 ////////////////////////////////////////////////////////////////////////////////
-function getDefaultStartEndDate() {
-    $('#start_date').datepicker( "setDate", getCurrentFirstDayOfMonth() );
-    $('#end_date').datepicker( "setDate", getCurrentLastDayOfMonth() );
-}
-
-////////////////////////////////////////////////////////////////////////////////
-function getInstProctorCompleteList(start_date, end_date) {
+function getAdminProctorNoExamList() {
     var result = new Array(); 
-    result = db_getInstProctorCompleteList(sessionStorage.getItem('ls_dsps_proctor_loginEmail'), start_date, end_date);
+    result = db_getAdminProctorNoExamList();
     
     $('#body_tr').empty();
     var body_html = "";
     for(var i = 0; i < result.length; i++) { 
-        body_html += setAdminProctorCompleteListHTML(result[i]['ProctorID'], result[i]['SectionNum'], result[i]['CourseID'], result[i]['StuName'], 
-                                                     result[i]['Status'], result[i]['Step'], convertDBDateTimeToString(result[i]['TestDT']));
+        body_html += setAdminProctorNoExamListHTML(result[i]['ProctorID'], result[i]['SectionNum'], result[i]['CourseID'], result[i]['StuID'], 
+                                                    result[i]['StuName'], result[i]['InstName'], convertDBDateTimeToString(result[i]['TestDT']));
     }
     $("#body_tr").append(body_html);
 }
 
-function setAdminProctorCompleteListHTML(proctor_id, section_num, course_id, stu_name, status, step, test_dt) {
-    var tbl_html = "<tr>";    
+function setAdminProctorNoExamListHTML(proctor_id, section_num, course_id, stu_id, stu_name, inst_name, test_dt) {
+    var tbl_html = "<tr class='form-horizontal'>";
     tbl_html += "<td class='span1'><a href=# id='proctor_id_" + proctor_id +  "'>" + section_num + "</a></td>";
     tbl_html += "<td class='span2'>" + course_id + "</td>";
+    tbl_html += "<td class='span3'>" + inst_name + "</td>";
+    tbl_html += "<td class='span1'>" + stu_id + "</td>";
     tbl_html += "<td class='span3'>" + stu_name + "</td>";
-    tbl_html += "<td class='span2' id='status_" + proctor_id + "'>" + status + "</td>";
-    tbl_html += "<td class='span2' id='step_" + proctor_id + "'>" + step + "</td>";
     tbl_html += "<td class='span2'>" + test_dt + "</td>";
     tbl_html += "</tr>";
     return tbl_html;

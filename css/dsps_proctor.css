@@ -1,0 +1,13 @@
+.iconic-color-default:hover,
+.iconic-color-default:focus,
+.iconic-color-default:active,
+.iconic-color-default:active:focus,
+.iconic-color-default:hover *,
+.iconic-color-default:focus *,
+.iconic-color-default:active *,
+.iconic-color-default:active:focus * {
+    color: #f2be35 !important;
+    -webkit-transition: color 0.3s;
+    -o-transition: color 0.3s;
+    transition: color 0.3s;
+}

@@ -3,7 +3,6 @@ var str_img = "";
 ////////////////////////////////////////////////////////////////////////////////
 window.onload = function() {   
     if (sessionStorage.key(0) !== null) {        
-        $('#mod_tech_support').modal('hide');
         defaultHideDisalbe();
         getURLParameters();
         
@@ -58,28 +57,36 @@ function getURLParameters() {
 ////////////////////////////////////////////////////////////////////////////////
 $(document).ready(function() { 
     $('#nav_home').click(function() { 
-        var str_url = sessionStorage.getItem('ss_dsps_proctor_referrer');
-        
         var result = new Array();
         result = db_getAdmin(sessionStorage.getItem('ls_dsps_proctor_loginEmail'));
         
-        if (result.length === 1 || sessionStorage.getItem('ls_dsps_proctor_loginEmail') === "ykim160@ivc.edu") {
-            if (str_url === null) {
-                window.open('adminHome.html', '_self');
-                return false;
-            }
-            else {
-                window.open(str_url, '_self');
-                return false;
-            }            
+        if (result.length === 1) {
+            window.open('adminHome.html', '_self');
+            return false;
         }
         else {
-            if (str_url === null) {
-                window.open('instructorHome.html', '_self');
+            window.open('instructorHome.html', '_self');
+            return false;
+        }
+    });
+    
+    $('#nav_reports').click(function() { 
+        var result = new Array();
+        result = db_getAdmin(sessionStorage.getItem('ls_dsps_proctor_loginEmail'));
+        
+        if (result.length === 1) {            
+            if (sessionStorage.getItem('ls_dsps_report_referrer') === "rptNoExamList.html") {
+                window.open('rptNoExamList.html', '_self');
                 return false;
             }
-            else {
-                window.open(str_url, '_self');
+            else if (sessionStorage.getItem('ls_dsps_report_referrer') === "rptAdminHistory.html") {
+                window.open('rptAdminHistory.html', '_self');
+                return false;
+            }
+        }
+        else {
+            if (sessionStorage.getItem('ls_dsps_report_referrer') === "rptInstructorHistory.html") {
+                window.open('rptInstructorHistory.html', '_self');
                 return false;
             }
         }
@@ -87,14 +94,22 @@ $(document).ready(function() {
 
     $('#nav_logout').click(function() { 
         sessionStorage.clear();
-        window.open("Login.html", '_self');
+        window.open('Login.html', '_self');
         return false;
+    });
+    
+    // ivc tech click //////////////////////////////////////////////////////////
+    $('#nav_capture').click(function() { 
+        capture();
+        $('#mod_tech_problems').val("").trigger('autosize.resize');
+        $('#mod_tech_img_screen').prop('src', str_img);
+        $('#mod_tech_support').modal('show');
     });
     
     // complete button click ///////////////////////////////////////////////////
     $('#btn_complete').click(function() { 
         if ($('#dsps_comments').val().replace(/\s+/g, '') === "") {
-            alert("Please specify reasons for complete under Comments");
+            swal("Error!", "Please specify reasons for complete under Comments", "error");
             return false;
         }
         
@@ -108,14 +123,14 @@ $(document).ready(function() {
         db_insertTransaction(proctor_id, sessionStorage.getItem('ls_dsps_proctor_loginDisplayName'), note);
         db_deleteExamPDFAll(proctor_id);
         
-        window.open("adminHome.html", '_self');
+        window.open('adminHome.html', '_self');
         return false;
     });
     
     // cancel button click /////////////////////////////////////////////////////
     $('#btn_cancel').click(function() { 
         if ($('#dsps_comments').val().replace(/\s+/g, '') === "") {
-            alert("Please specify reasons for cancel under Comments");
+            swal("Error!", "Please specify reasons for cancel under Comments", "error");
             return false;
         }
         
@@ -129,50 +144,53 @@ $(document).ready(function() {
         db_insertTransaction(proctor_id, sessionStorage.getItem('ls_dsps_proctor_loginDisplayName'), note);
         db_deleteExamPDFAll(proctor_id); 
         
-        window.open("adminHome.html", '_self');
+        window.open('adminHome.html', '_self');
         return false;
     });
     
-//    $('#nav_capture').click(function() { 
-//        capture();
-//        $('#mod_tech_problems').val("");
-//        $('#mod_tech_img_screen').prop('src', str_img);
-//        $('#mod_tech_support').modal('show');
-//    });
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // ivc tech support click //////////////////////////////////////////////////
+    $('#mod_tech_btn_submit').click(function() { 
+        if (!appSystemTechSupport("Application Web Site: DSPS Exams - Print Proctor<br/><br/>", $('#mod_tech_problems').val(), str_img)) {
+            $('#mod_tech_support').modal('hide');
+            var str_subject = "DSPS Exam: IVC Tech Support Request Error";
+            var str_msg = "Print Proctor: IVC tech support request error";
+            sendEmailToDeveloper(str_subject, str_msg);
+            swal("Error!", str_msg + "\nplease contact IVC Tech Support at 949.451.5696", "error");
+            return false;
+        }
+        
+        swal("Success!", "Your request has been submitted successfully", "success");
+        $('#mod_tech_support').modal('hide');
+    });
     
-//    $('#mod_tech_img_screen').click(function() {
-//        if (str_img !== "") {
-//            $.fancybox.open({ href : str_img });
-//        }
-//    });
-    
-    // modal submit button click ///////////////////////////////////////////////
-//    $('#mod_tech_btn_submit').click(function() { 
-//        if (sendEmailToTechSupport()) {
-//            $('#mod_tech_support').modal('hide');
-//            alert("Your request has been submitted successfully");
-//        }
-//        else {
-//            $('#mod_tech_support').modal('hide');
-//            alert("Sending email error!");
-//        }
-//    });
+    $('#mod_tech_img_screen').click(function() {
+        if (str_img !== "") {
+            $.fancybox.open({ href : str_img });
+        }
+    });
     
     // get screen shot image ///////////////////////////////////////////////////
-//    html2canvas($('body'), {
-//        onrendered: function(canvas) { str_img = canvas.toDataURL("image/jpg"); }
-//    });
-    
-    // popover
-//    $('#nav_capture').popover({content:"Contact IVC Tech Support", placement:"bottom"});
+    html2canvas($('body'), {
+        onrendered: function(canvas) { str_img = canvas.toDataURL("image/jpg"); }
+    });
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     
     // auto size
     $('#dsps_comments').autosize();
+    $('#mod_tech_problems').autosize();
 });
 
 ////////////////////////////////////////////////////////////////////////////////
-function defaultHideDisalbe() {
-    $('#admin_section').hide();
+function defaultHideDisalbe() {    
+    if (sessionStorage.getItem('ls_dsps_report_referrer') === "rptAdminHistory.html" 
+            || sessionStorage.getItem('ls_dsps_report_referrer') === "rptInstructorHistory.html"
+            || sessionStorage.getItem('ls_dsps_report_referrer') === "rptNoExamList.html") {
+        $('#nav_icon_reports').show();
+    }
+    
     $('#se_option').hide();
     $('#cal_type').hide();
     $('#cal_type_other').hide();
@@ -207,7 +225,7 @@ function setProctor() {
         $('#course_id').html(result[0]['CourseID']);
         $('#test_date').html(result[0]['TestDate']);
         $('#test_time').html(result[0]['TestTime']);
-        $('#comments').html(result[0]['Comments'].replace(/\n/g, "<br>")).css({height: 'auto'});
+        $('#comments').html(result[0]['Comments'].replace(/\n/g, "<br/>")).css({height: 'auto'});
         $('#inst_phone').html(result[0]['InstPhone']);
         
         // set admin option for complete and cancel instructor review
@@ -225,25 +243,37 @@ function setAccom() {
     
     if (result.length === 1) {
         if (result[0]['TimeOneHalf'] === "1") {
-            $("#ckb_time_one_half").prop('checked', true);
+            $("#ckb_time_one_half").append("<i class='ion-android-checkbox' style='font-size: 20px;'></i>");
+        }
+        else {
+            $("#ckb_time_one_half").append("<i class='ion-android-checkbox-outline-blank' style='font-size: 20px;'></i>");
         }
         if (result[0]['DoubleTime'] === "1") {
-            $("#ckb_double_time").prop('checked', true);
+            $("#ckb_double_time").append("<i class='ion-android-checkbox' style='font-size: 20px;'></i>");
         }
-//        if (result[0]['AltMedia'] === "1") {
-//            $("#ckb_alt_media").prop('checked', true);
-//        }
+        else {
+            $("#ckb_double_time").append("<i class='ion-android-checkbox-outline-blank' style='font-size: 20px;'></i>");
+        }
         if (result[0]['Reader'] === "1") {
-            $("#ckb_reader").prop('checked', true);
+            $("#ckb_reader").append("<i class='ion-android-checkbox' style='font-size: 20px;'></i>");
+        }
+        else {
+            $("#ckb_reader").append("<i class='ion-android-checkbox-outline-blank' style='font-size: 20px;'></i>");
         }
         if (result[0]['EnlargeExam'] === "1") {
-            $("#ckb_enlarge_exam").prop('checked', true);
+            $("#ckb_enlarge_exam").append("<i class='ion-android-checkbox' style='font-size: 20px;'></i>");
+        }
+        else {
+            $("#ckb_enlarge_exam").append("<i class='ion-android-checkbox-outline-blank' style='font-size: 20px;'></i>");
         }
         if (result[0]['UseOfComp'] === "1") {
-            $("#ckb_user_of_comp").prop('checked', true);
+            $("#ckb_user_of_comp").append("<i class='ion-android-checkbox' style='font-size: 20px;'></i>");
+        }
+        else {
+            $("#ckb_user_of_comp").append("<i class='ion-android-checkbox-outline-blank' style='font-size: 20px;'></i>");
         }
         if (result[0]['Scribe'] === "1") {
-            $("#ckb_scribe").prop('checked', true);
+            $("#ckb_scribe").append("<i class='ion-android-checkbox' style='font-size: 20px;'></i>");
             var ckb_scantron = result[0]['Scantron'];
             var ckb_written_exam = result[0]['WrittenExam'];
             var scribe_html = "";
@@ -258,17 +288,20 @@ function setAccom() {
             }
             $('#cbo_scribe_list').html("<b><i>" + scribe_html + "</i></b>");
         }
-//        if (result[0]['Scantron'] === "1") {
-//            $("#ckb_scantron").prop('checked', true);
-//        }
-//        if (result[0]['WrittenExam'] === "1") {
-//            $("#ckb_written_exam").prop('checked', true);
-//        }
+        else {
+            $("#ckb_scribe").append("<i class='ion-android-checkbox-outline-blank' style='font-size: 20px;'></i>");
+        }
         if (result[0]['Distraction'] === "1") {
-            $("#ckb_distraction").prop('checked', true);
+            $("#ckb_distraction").append("<i class='ion-android-checkbox' style='font-size: 20px;'></i>");
+        }
+        else {
+            $("#ckb_distraction").append("<i class='ion-android-checkbox-outline-blank' style='font-size: 20px;'></i>");
         }
         if (result[0]['Other'] === "1") {
-            $("#ckb_other").prop('checked', true);
+            $("#ckb_other").append("<i class='ion-android-checkbox' style='font-size: 20px;'></i>");
+        }
+        else {
+            $("#ckb_other").append("<i class='ion-android-checkbox-outline-blank' style='font-size: 20px;'></i>");
         }
         $('#txt_other').html(result[0]['txtOther']);
     }
@@ -281,34 +314,60 @@ function setInstForm() {
     if (result.length === 1) {
         $('#allow_min').html(result[0]['TAllotMin']);      
         if (result[0]['Mailbox'] === "1") {
-            $("#ckb_mailbox").prop('checked', true);
+            $("#ckb_mailbox").append("<i class='ion-android-radio-button-on' style='font-size: 20px;'></i>");
+            
             $('#cbo_mail_bld').html(result[0]['MailBuilding']);
             $('#bldg').html(result[0]['Bldg']);
         }
+        else {
+            $("#ckb_mailbox").append("<i class='ion-android-radio-button-off' style='font-size: 20px;'></i>");
+        }
         if (result[0]['ProfessorPU'] === "1") {
-            $("#ckb_prof_pu").prop('checked', true);
+            $("#ckb_prof_pu").append("<i class='ion-android-radio-button-on' style='font-size: 20px;'></i>");
+        }
+        else {
+            $("#ckb_prof_pu").append("<i class='ion-android-radio-button-off' style='font-size: 20px;'></i>");
         }
         if (result[0]['Faculty'] === "1") {
-            $("#ckb_faculty").prop('checked', true);
+            $("#ckb_faculty").append("<i class='ion-android-radio-button-on' style='font-size: 20px;'></i>");
             $('#cbo_faculty_bld').html(result[0]['FacultyBuilding']);
             $('#office').html(result[0]['Office']);
         }
+        else {
+            $("#ckb_faculty").append("<i class='ion-android-radio-button-off' style='font-size: 20px;'></i>");
+        }
         if (result[0]['StuDelivery'] === "1") {
-            $("#ckb_stu_delivery").prop('checked', true);
+            $("#ckb_stu_delivery").append("<i class='ion-android-radio-button-on' style='font-size: 20px;'></i>");
+        }
+        else {
+            $("#ckb_stu_delivery").append("<i class='ion-android-radio-button-off' style='font-size: 20px;'></i>");
         }
         if (result[0]['ScanEmail'] === "1") {
-            $("#ckb_scan_email").prop('checked', true);
-            
+            $("#ckb_scan_email").append("<i class='ion-android-radio-button-on' style='font-size: 20px;'></i>");
             $('#se_option').show();
             $('#se_option').html("<b><i>" + result[0]['SEOption'] + "</i></b>");
         }
+        else {
+            $("#ckb_scan_email").append("<i class='ion-android-radio-button-off' style='font-size: 20px;'></i>");
+        }
         if (result[0]['ExamAttach'] === "1") {
-            $('input[name=rdo_exam][value=1]').prop('checked', true);
-            getExamPDFList();
+            $("#rdo_exam_attach").append("<i class='ion-android-radio-button-on' style='font-size: 20px;'></i>");
+            $("#rdo_exam_drop_off").append("<i class='ion-android-radio-button-off' style='font-size: 20px;'></i>");
         }
         else {
-            $('input[name=rdo_exam][value=0]').prop('checked', true);
+            $("#rdo_exam_attach").append("<i class='ion-android-radio-button-off' style='font-size: 20px;'></i>");
+            $("#rdo_exam_drop_off").append("<i class='ion-android-radio-button-on' style='font-size: 20px;'></i>");
         }
+    }
+    else {
+        $("#rdo_exam_attach").append("<i class='ion-android-radio-button-off' style='font-size: 20px;'></i>");
+        $("#rdo_exam_drop_off").append("<i class='ion-android-radio-button-off' style='font-size: 20px;'></i>");
+        
+        $("#ckb_mailbox").append("<i class='ion-android-radio-button-off' style='font-size: 20px;'></i>");
+        $("#ckb_prof_pu").append("<i class='ion-android-radio-button-off' style='font-size: 20px;'></i>");
+        $("#ckb_faculty").append("<i class='ion-android-radio-button-off' style='font-size: 20px;'></i>");
+        $("#ckb_stu_delivery").append("<i class='ion-android-radio-button-off' style='font-size: 20px;'></i>");
+        $("#ckb_scan_email").append("<i class='ion-android-radio-button-off' style='font-size: 20px;'></i>");
     }
 }
 
@@ -335,19 +394,24 @@ function setExamGuide() {
     
     if (result.length === 1) {
         if (result[0]['Notes'] === "1") {
-            $('input[name=rdo_notes][value=1]').prop('checked', true); 
+            $("#rdo_notes_yes").append("<i class='ion-android-radio-button-on' style='font-size: 20px;'></i>");
+            $("#rdo_notes_no").append("<i class='ion-android-radio-button-off' style='font-size: 20px;'></i>");
         }
         else {
-            $('input[name=rdo_notes][value=0]').prop('checked', true); 
+            $("#rdo_notes_yes").append("<i class='ion-android-radio-button-off' style='font-size: 20px;'></i>");
+            $("#rdo_notes_no").append("<i class='ion-android-radio-button-on' style='font-size: 20px;'></i>");
         }
         if (result[0]['Book'] === "1") {
-            $('input[name=rdo_book][value=1]').prop('checked', true); 
+            $("#rdo_book_yes").append("<i class='ion-android-radio-button-on' style='font-size: 20px;'></i>");
+            $("#rdo_book_no").append("<i class='ion-android-radio-button-off' style='font-size: 20px;'></i>");
         }
         else {
-            $('input[name=rdo_book][value=0]').prop('checked', true); 
+            $("#rdo_book_yes").append("<i class='ion-android-radio-button-off' style='font-size: 20px;'></i>");
+            $("#rdo_book_no").append("<i class='ion-android-radio-button-on' style='font-size: 20px;'></i>");
         }
         if (result[0]['Calculator'] === "1") {
-            $('input[name=rdo_calculator][value=1]').prop('checked', true); 
+            $("#rdo_calculator_yes").append("<i class='ion-android-radio-button-on' style='font-size: 20px;'></i>");
+            $("#rdo_calculator_no").append("<i class='ion-android-radio-button-off' style='font-size: 20px;'></i>");
             
             $('#cal_type').show();
             $('#cal_type').html("<b><i>" + result[0]['CalType'] + "</i></b>");
@@ -356,35 +420,66 @@ function setExamGuide() {
             $('#cal_type_other').html("<b><i>" + result[0]['CalTypeOther'] + "</i></b>");
         }
         else {
-            $('input[name=rdo_calculator][value=0]').prop('checked', true); 
+            $("#rdo_calculator_yes").append("<i class='ion-android-radio-button-off' style='font-size: 20px;'></i>");
+            $("#rdo_calculator_no").append("<i class='ion-android-radio-button-on' style='font-size: 20px;'></i>"); 
         }
         if (result[0]['Dictionary'] === "1") {
-            $('input[name=rdo_dictionary][value=1]').prop('checked', true); 
+            $("#rdo_dictionary_yes").append("<i class='ion-android-radio-button-on' style='font-size: 20px;'></i>");
+            $("#rdo_dictionary_no").append("<i class='ion-android-radio-button-off' style='font-size: 20px;'></i>");
         }
         else {
-            $('input[name=rdo_dictionary][value=0]').prop('checked', true);
+            $("#rdo_dictionary_yes").append("<i class='ion-android-radio-button-off' style='font-size: 20px;'></i>");
+            $("#rdo_dictionary_no").append("<i class='ion-android-radio-button-on' style='font-size: 20px;'></i>"); 
         }
         if (result[0]['ScratchPaper'] === "1") {
-            $('input[name=rdo_scratch_paper][value=1]').prop('checked', true); 
+            $("#rdo_scratch_paper_yes").append("<i class='ion-android-radio-button-on' style='font-size: 20px;'></i>");
+            $("#rdo_scratch_paper_no").append("<i class='ion-android-radio-button-off' style='font-size: 20px;'></i>");
         }
         else {
-            $('input[name=rdo_scratch_paper][value=0]').prop('checked', true);
+            $("#rdo_scratch_paper_yes").append("<i class='ion-android-radio-button-off' style='font-size: 20px;'></i>");
+            $("#rdo_scratch_paper_no").append("<i class='ion-android-radio-button-on' style='font-size: 20px;'></i>");
         }
         if (result[0]['Scantron'] === "1") {
-            $('input[name=rdo_scantron][value=1]').prop('checked', true);
+            $("#rdo_scantron_yes").append("<i class='ion-android-radio-button-on' style='font-size: 20px;'></i>");
+            $("#rdo_scantron_no").append("<i class='ion-android-radio-button-off' style='font-size: 20px;'></i>");
         }
         else {
-            $('input[name=rdo_scantron][value=0]').prop('checked', true);
+            $("#rdo_scantron_yes").append("<i class='ion-android-radio-button-off' style='font-size: 20px;'></i>");
+            $("#rdo_scantron_no").append("<i class='ion-android-radio-button-on' style='font-size: 20px;'></i>");
         }
         if (result[0]['Computer'] === "1") {
-            $('input[name=rdo_computer][value=1]').prop('checked', true);
+            $("#rdo_computer_yes").append("<i class='ion-android-radio-button-on' style='font-size: 20px;'></i>");
+            $("#rdo_computer_no").append("<i class='ion-android-radio-button-off' style='font-size: 20px;'></i>");
             
             $('#sel_internet').show();
             $('#internet_access').html("<b><i>" + result[0]['Internet'] + "</i></b>");
         }
         else {
-            $('input[name=rdo_computer][value=0]').prop('checked', true);
+            $("#rdo_computer_yes").append("<i class='ion-android-radio-button-off' style='font-size: 20px;'></i>");
+            $("#rdo_computer_no").append("<i class='ion-android-radio-button-on' style='font-size: 20px;'></i>");
         }
+    }
+    else {
+        $("#rdo_notes_yes").append("<i class='ion-android-radio-button-off' style='font-size: 20px;'></i>");
+        $("#rdo_notes_no").append("<i class='ion-android-radio-button-off' style='font-size: 20px;'></i>");
+        
+        $("#rdo_book_yes").append("<i class='ion-android-radio-button-off' style='font-size: 20px;'></i>");
+        $("#rdo_book_no").append("<i class='ion-android-radio-button-off' style='font-size: 20px;'></i>");
+        
+        $("#rdo_calculator_yes").append("<i class='ion-android-radio-button-off' style='font-size: 20px;'></i>");
+        $("#rdo_calculator_no").append("<i class='ion-android-radio-button-off' style='font-size: 20px;'></i>"); 
+        
+        $("#rdo_dictionary_yes").append("<i class='ion-android-radio-button-off' style='font-size: 20px;'></i>");
+        $("#rdo_dictionary_no").append("<i class='ion-android-radio-button-off' style='font-size: 20px;'></i>");
+        
+        $("#rdo_scratch_paper_yes").append("<i class='ion-android-radio-button-off' style='font-size: 20px;'></i>");
+        $("#rdo_scratch_paper_no").append("<i class='ion-android-radio-button-off' style='font-size: 20px;'></i>");
+        
+        $("#rdo_scantron_yes").append("<i class='ion-android-radio-button-off' style='font-size: 20px;'></i>");
+        $("#rdo_scantron_no").append("<i class='ion-android-radio-button-off' style='font-size: 20px;'></i>");
+        
+        $("#rdo_computer_yes").append("<i class='ion-android-radio-button-off' style='font-size: 20px;'></i>");
+        $("#rdo_computer_no").append("<i class='ion-android-radio-button-off' style='font-size: 20px;'></i>");
     }
 }
 
@@ -399,7 +494,7 @@ function getTransactionHistory() {
         var login_name = result[i]['LoginName'];
         var note = result[i]['Note'];
 
-        html += login_name + " : " + dt_stamp + "<br>" + note.replace(/\n/g, "<br>") + "<br><br>";
+        html += login_name + " : " + dt_stamp + "<br/>" + note.replace(/\n/g, "<br/>") + "<br/><br/>";
     }
     $("#transaction_history").append(html);
 }
@@ -407,15 +502,4 @@ function getTransactionHistory() {
 ////////////////////////////////////////////////////////////////////////////////
 function capture() {    
     html2canvas($('body')).then(function(canvas) { str_img = canvas.toDataURL(); });
-}
-
-////////////////////////////////////////////////////////////////////////////////
-function sendEmailToTechSupport() {
-    var subject = "Request for New Ticket";
-    var message = "New tickert has been requested from <b>" + sessionStorage.getItem('ls_dsps_proctor_loginDisplayName') + "</b> (" + sessionStorage.getItem('ls_dsps_proctor_loginEmail') + ")<br><br>";
-    message += "Application Web Site: <b>DSPS Exams View</b><br><br>";
-    message += "<b>Problems:</b><br>" + $('#mod_tech_problems').val().replace(/\n/g, "<br>");
-//    message += "<img src='cid:screen_shot'/>";    
-    var img_base64 = str_img.replace("data:image/png;base64,", "");
-    return proc_sendEmailToTechSupport("presidenttest@ivc.edu", "Do Not Reply", "", "", subject, message, img_base64);
 }

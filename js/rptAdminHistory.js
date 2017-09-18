@@ -1,8 +1,8 @@
 var str_img = "";
 ////////////////////////////////////////////////////////////////////////////////
 window.onload = function() {   
-    if (sessionStorage.key(0) !== null) {  
-        $('#mod_tech_support').modal('hide');
+    if (sessionStorage.key(0) !== null) {
+        sessionStorage.setItem('ls_dsps_report_referrer', "rptAdminHistory.html");
         getDefaultStartEndDate();
         getAdminProctorCompleteList("All", "", $('#start_date').val(), $('#end_date').val());
         initializeTable();
@@ -19,21 +19,17 @@ function initializeTable() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-$(document).ready(function() {  
-    $('#nav_home').click(function() { 
-        window.open('adminHome.html', '_self');
-        return false;
-    });
-    
+$(document).ready(function() {    
     $('#nav_logout').click(function() { 
         sessionStorage.clear();
-        window.open("Login.html", '_self');
+        window.open('Login.html', '_self');
         return false;
     });
     
+    // ivc tech click //////////////////////////////////////////////////////////
     $('#nav_capture').click(function() { 
         capture();
-        $('#mod_tech_problems').val("");
+        $('#mod_tech_problems').val("").trigger('autosize.resize');
         $('#mod_tech_img_screen').prop('src', str_img);
         $('#mod_tech_support').modal('show');
     });
@@ -69,29 +65,30 @@ $(document).ready(function() {
     $('table').on('click', 'a[id^="proctor_id_"]', function(e) {
         e.preventDefault();
         var proctor_id = $(this).attr('id').replace("proctor_id_", "");
-        var str_url = location.href;
-        sessionStorage.setItem('ss_dsps_proctor_referrer', str_url);
         window.open('printProctor.html?proctor_id=' + proctor_id, '_self');
         return false;
     });
     
-    // table row restart button click //////////////////////////////////////////
-//    $('table').on('click', 'button[id^="btn_restart_"]', function(e) {
-//        e.preventDefault();
-//        var proctor_id = $(this).attr('id').replace("btn_restart_", "");
-//        window.open('restartProctor.html?proctor_id=' + proctor_id, '_self');
-//        return false;
-//    });
-    
-    // modal submit button click ///////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // ivc tech support click //////////////////////////////////////////////////
     $('#mod_tech_btn_submit').click(function() { 
-        if (sendEmailToTechSupport()) {
+        if (!appSystemTechSupport("Application Web Site: DSPS Exams - Admin History<br/><br/>", $('#mod_tech_problems').val(), str_img)) {
             $('#mod_tech_support').modal('hide');
-            alert("Your request has been submitted successfully");
+            var str_subject = "DSPS Exam: IVC Tech Support Request Error";
+            var str_msg = "Admin History: IVC tech support request error";
+            sendEmailToDeveloper(str_subject, str_msg);
+            swal("Error!", str_msg + "\nplease contact IVC Tech Support at 949.451.5696", "error");
+            return false;
         }
-        else {
-            $('#mod_tech_support').modal('hide');
-            alert("Sending email error!");
+        
+        swal("Success!", "Your request has been submitted successfully", "success");
+        $('#mod_tech_support').modal('hide');
+    });
+    
+    $('#mod_tech_img_screen').click(function() {
+        if (str_img !== "") {
+            $.fancybox.open({ href : str_img });
         }
     });
     
@@ -99,9 +96,8 @@ $(document).ready(function() {
     html2canvas($('body'), {
         onrendered: function(canvas) { str_img = canvas.toDataURL("image/jpg"); }
     });
-    
-    // popover
-    $('#nav_capture').popover({content:"Contact IVC Tech Support", placement:"bottom"});
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     
     // selectpicker
     $('.selectpicker').selectpicker();
@@ -109,6 +105,9 @@ $(document).ready(function() {
     // datepicker
     $('#start_date').datepicker();
     $('#end_date').datepicker();
+    
+    // auto size
+    $('#mod_tech_problems').autosize();
 });
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -123,14 +122,12 @@ function getAdminProctorCompleteList(search_field, value, start_date, end_date) 
     result = db_getAdminProctorCompleteList(search_field, value, start_date, end_date);
     
     $('#body_tr').empty();
-    if (result.length !== 0) {
-        var body_html = "";
-        for(var i = 0; i < result.length; i++) { 
-            body_html += setAdminProctorCompleteListHTML(result[i]['ProctorID'], result[i]['SectionNum'], result[i]['CourseID'], result[i]['InstName'], result[i]['StuID'], result[i]['StuName'], 
-                                                         result[i]['Step'], result[i]['Status'], result[i]['StatusID']);
-        }
-        $("#body_tr").append(body_html);
+    var body_html = "";
+    for(var i = 0; i < result.length; i++) { 
+        body_html += setAdminProctorCompleteListHTML(result[i]['ProctorID'], result[i]['SectionNum'], result[i]['CourseID'], result[i]['InstName'], result[i]['StuID'], result[i]['StuName'], 
+                                                     result[i]['Step'], result[i]['Status'], result[i]['StatusID']);
     }
+    $("#body_tr").append(body_html);
 }
 
 function setAdminProctorCompleteListHTML(proctor_id, section_num, course_id, int_name, stu_ID, stu_name, step, status, status_id) {
@@ -149,14 +146,4 @@ function setAdminProctorCompleteListHTML(proctor_id, section_num, course_id, int
 ////////////////////////////////////////////////////////////////////////////////
 function capture() {    
     html2canvas($('body')).then(function(canvas) { str_img = canvas.toDataURL(); });
-}
-
-////////////////////////////////////////////////////////////////////////////////
-function sendEmailToTechSupport() {
-    var subject = "Request for New Ticket";
-    var message = "New tickert has been requested from <b>" + sessionStorage.getItem('ls_dsps_proctor_loginDisplayName') + "</b> (" + sessionStorage.getItem('ls_dsps_proctor_loginEmail') + ")<br><br>";
-    message += "Application Web Site: <b>DSPS Complete History</b><br><br>";
-    message += "<b>Problems:</b><br>" + $('#mod_tech_problems').val().replace(/\n/g, "<br>");
-    var img_base64 = str_img.replace("data:image/png;base64,", "");
-    return proc_sendEmailToTechSupport("presidenttest@ivc.edu", "Do Not Reply", "", "", subject, message, img_base64);
 }

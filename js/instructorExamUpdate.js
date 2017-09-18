@@ -1,7 +1,4 @@
 var proctor_id = "";
-var m_exam_attach = "";
-//var m_file_name = "";
-//var m_base64_data = "";
 var m_total_page = 0;
 
 var inst_name = "";
@@ -12,6 +9,8 @@ var spinner;
 
 var str_img = "";
 var master = false;
+
+var inst_exam_file_id = "";
 ////////////////////////////////////////////////////////////////////////////////
 window.onload = function() {   
     if (sessionStorage.key(0) !== null) { 
@@ -20,12 +19,14 @@ window.onload = function() {
         setAdminOption();
         defaultHideDisalbe();
         getURLParameters();
-        setProctorLog();
+//        setProctorLog();
         setProctor();
         setAccom();
         setInstForm();
         setExamGuide();
         getTransactionHistory();
+        getInstructorExamList();
+        initializeTable();
     }
     else {
         sessionStorage.setItem('ls_dsps_url_param', location.href);
@@ -33,6 +34,11 @@ window.onload = function() {
         return false;
     }
 };
+
+////////////////////////////////////////////////////////////////////////////////
+function initializeTable() {
+    $("#tbl_exam_list").tablesorter({ });
+}
 
 ////////////////////////////////////////////////////////////////////////////////
 function getURLParameters() {
@@ -73,22 +79,24 @@ $(document).ready(function() {
     $('#nav_home').click(function() {         
         if (master) {
             window.open('adminHome.html', '_self');
+            return false;
         }
         else {
             window.open('instructorHome.html', '_self');
+            return false;
         }
-        return false;
     });
     
     $('#nav_logout').click(function() { 
         sessionStorage.clear();
-        window.open("Login.html", '_self');
+        window.open('Login.html', '_self');
         return false;
     });
     
+    // ivc tech click //////////////////////////////////////////////////////////
     $('#nav_capture').click(function() { 
         capture();
-        $('#mod_tech_problems').val("");
+        $('#mod_tech_problems').val("").trigger('autosize.resize');
         $('#mod_tech_img_screen').prop('src', str_img);
         $('#mod_tech_support').modal('show');
     });
@@ -97,9 +105,11 @@ $(document).ready(function() {
     $('input[name=rdo_exam]').change(function() {
         var select = $(this).val();
         if (select === "1") {
+            getExamPDFList();
             $('#exam_attachment').show();
         }
         else {
+            $('#exam_list').empty();
             $('#exam_attachment').hide();
             $('#attachment_file').filestyle('clear');
         }
@@ -110,12 +120,13 @@ $(document).ready(function() {
         if (getPDFAttachmentInfo()) {
             var file = $('#attachment_file').get(0).files[0];
             var f_name = file.name.replace(/#/g, "").replace(/'/g, "");
+            f_name = removeDiacritics (f_name);
             
             var file_data = new FormData();
             file_data.append("files[]", file, f_name); 
             m_total_page = pdfGetTotalPages(file_data);
             if (m_total_page === 0) {
-                alert("Your PDF file are not correctly formatted. please verify your pdf file again");
+                swal("Error!", "Your PDF file are not correctly formatted. please verify your pdf file again", "error");
                 $('#attachment_file').filestyle('clear');
                 return false;
             }
@@ -124,18 +135,11 @@ $(document).ready(function() {
                 setTimeout(function() {
                     if (!addExamPDF(f_name)) {
                         var str_msg = "DSPS Instructor Review: " + proctor_id + " DB system error INSERT EXAM PDF FILE";
-                        sendEmailToDeveloper(str_msg);
-                        alert(str_msg + ", please contact IVC Tech Support at 949.451.5696");
-                        sessionStorage.clear();
-                        window.open("Login.html", '_self');
-                        return false;
+                        return dbSystemErrorHandling("DSPS Exam: DB System Error", str_msg);
                     }
                     stopSpin();
                 }, 1500);
             }
-        }
-        else {
-            return false;
         }
     });
     
@@ -149,21 +153,6 @@ $(document).ready(function() {
             var url_pdf = "attach_files/" + result[0]['FileLinkName'];
             window.open(url_pdf, '_blank');
             return false;
-        }
-        else {
-            var file_name = result[0]['FileName'];
-            var exam_pdf = result[0]['ExamPDF'];
-
-            var curBrowser = bowser.name;
-            if (curBrowser === "Internet Explorer") {
-                var blob = b64toBlob(exam_pdf, 'application/pdf');
-                window.saveAs(blob, file_name);
-                return false;
-            }
-            else {
-                window.open(exam_pdf, '_blank');
-                return false;
-            }
         }
     });
     
@@ -184,51 +173,97 @@ $(document).ready(function() {
     $('#btn_save').click(function() { 
         var exam_attach = $('input[name="rdo_exam"]:checked').val();
         db_updateInstFormExamAttach(proctor_id, exam_attach);
-        updateInstFormExamReceived();
         
         var note = "";
-        if (m_exam_attach !== exam_attach) {
-            if (exam_attach === "1") {
-                note = "Instructor update test exam option to Exam Attachment";
-            }
-            else {
-                note = "Instructor update test exam option to Exam Drop Off";
-            }
+        if (exam_attach === "1") {
+            updateInstFormExamReceived();
+            note = "Instructor update test exam option to Exam Attachment";
         }
+        else {
+            db_updateInstFormExamReceived(proctor_id, "0");
+            note = "Instructor update test exam option to Exam Drop Off";
+        }
+        
         var inst_comments = $('#inst_comments').val();
         if (inst_comments !== "") {
-            note += "\nComments: " + inst_comments;
+            note += "\nComments:\n" + inst_comments;
         } 
-        
         if (note !== "") {
             db_insertTransaction(proctor_id, sessionStorage.getItem('ls_dsps_proctor_loginDisplayName'), note);
         }
         
-        sendEmailToDSPSTestExamChange();
-        
-        $('#mod_dialog_box_header').html("Exam Option");
-        $('#mod_dialog_box_body').html("Test exam option has been saved");
-        $('#mod_dialog_box').modal('show');
-        
-        window.open('instructorHome.html', '_self');
-        return false;
+        sendEmailToDSPSTestExamChange();        
+        swal({  title: "Saved!",
+                text: "Test exam option has been saved",
+                type: "success",
+                showCancelButton: false,
+                confirmButtonText: "OK",
+                closeOnConfirm: false },
+                function() {
+                    window.open('instructorHome.html', '_self');
+                    return false;
+                });
     });
     
     // close button click //////////////////////////////////////////////////////
-    $('#btn_close').click(function() { 
-        window.open('instructorHome.html', '_self');
-        return false;
-    });
-    
-    // modal submit button click ///////////////////////////////////////////////
-    $('#mod_tech_btn_submit').click(function() { 
-        if (sendEmailToTechSupport()) {
-            $('#mod_tech_support').modal('hide');
-            alert("Your request has been submitted successfully");
+    $('#btn_close').click(function() {        
+        if (master) {
+            window.open('adminHome.html', '_self');
+            return false;
         }
         else {
+            window.open('instructorHome.html', '_self');
+            return false;
+        }
+    });
+    
+    // exam folder button click ////////////////////////////////////////////////
+    $('#btn_exam_folder').click(function() { 
+        inst_exam_file_id = "";
+        $('tbody tr').css('background-color', '');
+        $('#mod_exam_folder').modal('show');
+    });
+    
+    // table row exam file click ///////////////////////////////////////////////
+    $('table').on('click', 'tr', function() {        
+        inst_exam_file_id = $(this).attr('id').replace("select_inst_exam_file_id_", "");        
+        $(this).css('background-color', '#CCCCFF');
+        $(this).siblings().css('background-color', '');
+    });
+    
+    // modal exam folder select button click ///////////////////////////////////
+    $('#mod_exam_folder_select').click(function() {
+        if (inst_exam_file_id === "") {
+            swal("Error", "Please select exam file from the list", "error");
+            return false;
+        }
+        if (!addExamPDFInstructorList()) {
+            var str_msg = "DSPS Instructor Review: DB system error INSERT EXAM_PDF ProctorID - " + proctor_id + " InstExamFileID - " + inst_exam_file_id;            
+            return dbSystemErrorHandling("DSPS Exam: DB System Error", str_msg);
+        }
+        $('#mod_exam_folder').modal('hide');
+    });
+    
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // ivc tech support click //////////////////////////////////////////////////
+    $('#mod_tech_btn_submit').click(function() { 
+        if (!appSystemTechSupport("Application Web Site: DSPS Exams - Instructor Exam Update<br/><br/>", $('#mod_tech_problems').val(), str_img)) {
             $('#mod_tech_support').modal('hide');
-            alert("Sending email error!");
+            var str_subject = "DSPS Exam: IVC Tech Support Request Error";
+            var str_msg = "Instructor Exam Update: IVC tech support request error";
+            sendEmailToDeveloper(str_subject, str_msg);
+            swal("Error!", str_msg + "\nplease contact IVC Tech Support at 949.451.5696", "error");
+            return false;
+        }
+        
+        swal("Success!", "Your request has been submitted successfully", "success");
+        $('#mod_tech_support').modal('hide');
+    });
+    
+    $('#mod_tech_img_screen').click(function() {
+        if (str_img !== "") {
+            $.fancybox.open({ href : str_img });
         }
     });
     
@@ -236,12 +271,12 @@ $(document).ready(function() {
     html2canvas($('body'), {
         onrendered: function(canvas) { str_img = canvas.toDataURL("image/jpg"); }
     });
-    
-    // popover
-    $('#nav_capture').popover({content:"Contact IVC Tech Support", placement:"bottom"});
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     
     // auto size
     $('#inst_comments').autosize();
+    $('#mod_tech_problems').autosize();
 });
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -262,8 +297,6 @@ function stopSpin() {
 
 ////////////////////////////////////////////////////////////////////////////////
 function defaultHideDisalbe() {
-    $('#mod_dialog_box').modal('hide');
-    $('#mod_tech_support').modal('hide');
     $('#se_option').hide();
     $('#cal_type').hide();
     $('#cal_type_other').hide();
@@ -271,21 +304,21 @@ function defaultHideDisalbe() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-function setProctorLog() {
-    var result = new Array();
-    result = db_getProctorLog(proctor_id);
-    
-    var html = "";
-    for(var i = 0; i < result.length; i++) {
-        html += "<div class='row-fluid'>";
-        html += "<div class='span3' style='padding-top: 5px;'>" + result[i]['Step'] + "</div>";
-        html += "<div class='span3' style='padding-top: 5px;'>" + result[i]['LoginUser'] + "</div>";
-        html += "<div class='span3' style='padding-top: 5px;'>" + result[i]['Status'] + "</div>";
-        html += "<div class='span3' style='padding-top: 5px;'>" + convertDBDateTimeToString(result[i]['DTStamp']) + "</div>";
-        html += "</div>";
-    }
-    $("#proctor_log").append(html);
-}
+//function setProctorLog() {
+//    var result = new Array();
+//    result = db_getProctorLog(proctor_id);
+//    
+//    var html = "";
+//    for(var i = 0; i < result.length; i++) {
+//        html += "<div class='row-fluid'>";
+//        html += "<div class='span3' style='padding-top: 5px;'>" + result[i]['Step'] + "</div>";
+//        html += "<div class='span3' style='padding-top: 5px;'>" + result[i]['LoginUser'] + "</div>";
+//        html += "<div class='span3' style='padding-top: 5px;'>" + result[i]['Status'] + "</div>";
+//        html += "<div class='span3' style='padding-top: 5px;'>" + convertDBDateTimeToString(result[i]['DTStamp']) + "</div>";
+//        html += "</div>";
+//    }
+//    $("#proctor_log").append(html);
+//}
 
 function setProctor() {
     var result = new Array();
@@ -298,7 +331,7 @@ function setProctor() {
         $('#course_id').html(result[0]['CourseID']);
         $('#test_date').html(result[0]['TestDate']);
         $('#test_time').html(result[0]['TestTime']);
-        $('#comments').html(result[0]['Comments'].replace(/\n/g, "<br>")).css({height: 'auto'});
+        $('#comments').html(result[0]['Comments'].replace(/\n/g, "<br/>")).css({height: 'auto'});
         $('#inst_phone').html(result[0]['InstPhone']);
         
         inst_name = result[0]['InstName'];
@@ -312,22 +345,37 @@ function setAccom() {
     
     if (result.length === 1) {
         if (result[0]['TimeOneHalf'] === "1") {
-            $("#ckb_time_one_half").prop('checked', true);
+            $("#ckb_time_one_half").append("<i class='ion-android-checkbox' style='font-size: 20px;'></i>");
+        }
+        else {
+            $("#ckb_time_one_half").append("<i class='ion-android-checkbox-outline-blank' style='font-size: 20px;'></i>");
         }
         if (result[0]['DoubleTime'] === "1") {
-            $("#ckb_double_time").prop('checked', true);
+            $("#ckb_double_time").append("<i class='ion-android-checkbox' style='font-size: 20px;'></i>");
+        }
+        else {
+            $("#ckb_double_time").append("<i class='ion-android-checkbox-outline-blank' style='font-size: 20px;'></i>");
         }
         if (result[0]['Reader'] === "1") {
-            $("#ckb_reader").prop('checked', true);
+            $("#ckb_reader").append("<i class='ion-android-checkbox' style='font-size: 20px;'></i>");
+        }
+        else {
+            $("#ckb_reader").append("<i class='ion-android-checkbox-outline-blank' style='font-size: 20px;'></i>");
         }
         if (result[0]['EnlargeExam'] === "1") {
-            $("#ckb_enlarge_exam").prop('checked', true);
+            $("#ckb_enlarge_exam").append("<i class='ion-android-checkbox' style='font-size: 20px;'></i>");
+        }
+        else {
+            $("#ckb_enlarge_exam").append("<i class='ion-android-checkbox-outline-blank' style='font-size: 20px;'></i>");
         }
         if (result[0]['UseOfComp'] === "1") {
-            $("#ckb_user_of_comp").prop('checked', true);
+            $("#ckb_user_of_comp").append("<i class='ion-android-checkbox' style='font-size: 20px;'></i>");
+        }
+        else {
+            $("#ckb_user_of_comp").append("<i class='ion-android-checkbox-outline-blank' style='font-size: 20px;'></i>");
         }
         if (result[0]['Scribe'] === "1") {
-            $("#ckb_scribe").prop('checked', true);
+            $("#ckb_scribe").append("<i class='ion-android-checkbox' style='font-size: 20px;'></i>");
             var ckb_scantron = result[0]['Scantron'];
             var ckb_written_exam = result[0]['WrittenExam'];
             var scribe_html = "";
@@ -340,13 +388,22 @@ function setAccom() {
             else {
                 scribe_html = "Scantron and Written Exam";
             }
-            $('#cbo_scribe_list').html(scribe_html);
+            $('#cbo_scribe_list').html("<b><i>" + scribe_html + "</i></b>");
+        }
+        else {
+            $("#ckb_scribe").append("<i class='ion-android-checkbox-outline-blank' style='font-size: 20px;'></i>");
         }
         if (result[0]['Distraction'] === "1") {
-            $("#ckb_distraction").prop('checked', true);
+            $("#ckb_distraction").append("<i class='ion-android-checkbox' style='font-size: 20px;'></i>");
+        }
+        else {
+            $("#ckb_distraction").append("<i class='ion-android-checkbox-outline-blank' style='font-size: 20px;'></i>");
         }
         if (result[0]['Other'] === "1") {
-            $("#ckb_other").prop('checked', true);
+            $("#ckb_other").append("<i class='ion-android-checkbox' style='font-size: 20px;'></i>");
+        }
+        else {
+            $("#ckb_other").append("<i class='ion-android-checkbox-outline-blank' style='font-size: 20px;'></i>");
         }
         $('#txt_other').html(result[0]['txtOther']);
     }
@@ -359,35 +416,49 @@ function setInstForm() {
     if (result.length === 1) {
         $('#allow_min').html(result[0]['TAllotMin']);      
         if (result[0]['Mailbox'] === "1") {
-            $("#ckb_mailbox").prop('checked', true);
+            $("#ckb_mailbox").append("<i class='ion-android-radio-button-on' style='font-size: 20px;'></i>");
+            
             $('#cbo_mail_bld').html(result[0]['MailBuilding']);
             $('#bldg').html(result[0]['Bldg']);
         }
+        else {
+            $("#ckb_mailbox").append("<i class='ion-android-radio-button-off' style='font-size: 20px;'></i>");
+        }
         if (result[0]['ProfessorPU'] === "1") {
-            $("#ckb_prof_pu").prop('checked', true);
+            $("#ckb_prof_pu").append("<i class='ion-android-radio-button-on' style='font-size: 20px;'></i>");
+        }
+        else {
+            $("#ckb_prof_pu").append("<i class='ion-android-radio-button-off' style='font-size: 20px;'></i>");
         }
         if (result[0]['Faculty'] === "1") {
-            $("#ckb_faculty").prop('checked', true);
+            $("#ckb_faculty").append("<i class='ion-android-radio-button-on' style='font-size: 20px;'></i>");
             $('#cbo_faculty_bld').html(result[0]['FacultyBuilding']);
             $('#office').html(result[0]['Office']);
         }
+        else {
+            $("#ckb_faculty").append("<i class='ion-android-radio-button-off' style='font-size: 20px;'></i>");
+        }
         if (result[0]['StuDelivery'] === "1") {
-            $("#ckb_stu_delivery").prop('checked', true);
+            $("#ckb_stu_delivery").append("<i class='ion-android-radio-button-on' style='font-size: 20px;'></i>");
+        }
+        else {
+            $("#ckb_stu_delivery").append("<i class='ion-android-radio-button-off' style='font-size: 20px;'></i>");
         }
         if (result[0]['ScanEmail'] === "1") {
-            $("#ckb_scan_email").prop('checked', true);
-            
+            $("#ckb_scan_email").append("<i class='ion-android-radio-button-on' style='font-size: 20px;'></i>");
             $('#se_option').show();
-            $('#se_option').html(result[0]['SEOption']);
+            $('#se_option').html("<b><i>" + result[0]['SEOption'] + "</i></b>");
         }
-        m_exam_attach = result[0]['ExamAttach'];
+        else {
+            $("#ckb_scan_email").append("<i class='ion-android-radio-button-off' style='font-size: 20px;'></i>");
+        }
         if (result[0]['ExamAttach'] === "1") {
             $('input[name=rdo_exam][value=1]').prop('checked', true);
+            $('#exam_attachment').show();
             getExamPDFList();
         }
         else {
             $('input[name=rdo_exam][value=0]').prop('checked', true);
-            $('#exam_attachment').hide();
         }
     }
 }
@@ -416,55 +487,69 @@ function setExamGuide() {
     
     if (result.length === 1) {
         if (result[0]['Notes'] === "1") {
-            $('input[name=rdo_notes][value=1]').prop('checked', true); 
+            $("#rdo_notes_yes").append("<i class='ion-android-radio-button-on' style='font-size: 20px;'></i>");
+            $("#rdo_notes_no").append("<i class='ion-android-radio-button-off' style='font-size: 20px;'></i>");
         }
         else {
-            $('input[name=rdo_notes][value=0]').prop('checked', true); 
+            $("#rdo_notes_yes").append("<i class='ion-android-radio-button-off' style='font-size: 20px;'></i>");
+            $("#rdo_notes_no").append("<i class='ion-android-radio-button-on' style='font-size: 20px;'></i>");
         }
         if (result[0]['Book'] === "1") {
-            $('input[name=rdo_book][value=1]').prop('checked', true); 
+            $("#rdo_book_yes").append("<i class='ion-android-radio-button-on' style='font-size: 20px;'></i>");
+            $("#rdo_book_no").append("<i class='ion-android-radio-button-off' style='font-size: 20px;'></i>");
         }
         else {
-            $('input[name=rdo_book][value=0]').prop('checked', true); 
+            $("#rdo_book_yes").append("<i class='ion-android-radio-button-off' style='font-size: 20px;'></i>");
+            $("#rdo_book_no").append("<i class='ion-android-radio-button-on' style='font-size: 20px;'></i>");
         }
         if (result[0]['Calculator'] === "1") {
-            $('input[name=rdo_calculator][value=1]').prop('checked', true); 
+            $("#rdo_calculator_yes").append("<i class='ion-android-radio-button-on' style='font-size: 20px;'></i>");
+            $("#rdo_calculator_no").append("<i class='ion-android-radio-button-off' style='font-size: 20px;'></i>");
             
             $('#cal_type').show();
-            $('#cal_type').html(result[0]['CalType']);
+            $('#cal_type').html("<b><i>" + result[0]['CalType'] + "</i></b>");
             
             $('#cal_type_other').show();
-            $('#cal_type_other').html(result[0]['CalTypeOther']);
+            $('#cal_type_other').html("<b><i>" + result[0]['CalTypeOther'] + "</i></b>");
         }
         else {
-            $('input[name=rdo_calculator][value=0]').prop('checked', true); 
+            $("#rdo_calculator_yes").append("<i class='ion-android-radio-button-off' style='font-size: 20px;'></i>");
+            $("#rdo_calculator_no").append("<i class='ion-android-radio-button-on' style='font-size: 20px;'></i>"); 
         }
         if (result[0]['Dictionary'] === "1") {
-            $('input[name=rdo_dictionary][value=1]').prop('checked', true); 
+            $("#rdo_dictionary_yes").append("<i class='ion-android-radio-button-on' style='font-size: 20px;'></i>");
+            $("#rdo_dictionary_no").append("<i class='ion-android-radio-button-off' style='font-size: 20px;'></i>");
         }
         else {
-            $('input[name=rdo_dictionary][value=0]').prop('checked', true);
+            $("#rdo_dictionary_yes").append("<i class='ion-android-radio-button-off' style='font-size: 20px;'></i>");
+            $("#rdo_dictionary_no").append("<i class='ion-android-radio-button-on' style='font-size: 20px;'></i>"); 
         }
         if (result[0]['ScratchPaper'] === "1") {
-            $('input[name=rdo_scratch_paper][value=1]').prop('checked', true); 
+            $("#rdo_scratch_paper_yes").append("<i class='ion-android-radio-button-on' style='font-size: 20px;'></i>");
+            $("#rdo_scratch_paper_no").append("<i class='ion-android-radio-button-off' style='font-size: 20px;'></i>");
         }
         else {
-            $('input[name=rdo_scratch_paper][value=0]').prop('checked', true);
+            $("#rdo_scratch_paper_yes").append("<i class='ion-android-radio-button-off' style='font-size: 20px;'></i>");
+            $("#rdo_scratch_paper_no").append("<i class='ion-android-radio-button-on' style='font-size: 20px;'></i>");
         }
         if (result[0]['Scantron'] === "1") {
-            $('input[name=rdo_scantron][value=1]').prop('checked', true);
+            $("#rdo_scantron_yes").append("<i class='ion-android-radio-button-on' style='font-size: 20px;'></i>");
+            $("#rdo_scantron_no").append("<i class='ion-android-radio-button-off' style='font-size: 20px;'></i>");
         }
         else {
-            $('input[name=rdo_scantron][value=0]').prop('checked', true);
+            $("#rdo_scantron_yes").append("<i class='ion-android-radio-button-off' style='font-size: 20px;'></i>");
+            $("#rdo_scantron_no").append("<i class='ion-android-radio-button-on' style='font-size: 20px;'></i>");
         }
         if (result[0]['Computer'] === "1") {
-            $('input[name=rdo_computer][value=1]').prop('checked', true);
+            $("#rdo_computer_yes").append("<i class='ion-android-radio-button-on' style='font-size: 20px;'></i>");
+            $("#rdo_computer_no").append("<i class='ion-android-radio-button-off' style='font-size: 20px;'></i>");
             
             $('#sel_internet').show();
-            $('#internet_access').html(result[0]['Internet']);
+            $('#internet_access').html("<b><i>" + result[0]['Internet'] + "</i></b>");
         }
         else {
-            $('input[name=rdo_computer][value=0]').prop('checked', true);
+            $("#rdo_computer_yes").append("<i class='ion-android-radio-button-off' style='font-size: 20px;'></i>");
+            $("#rdo_computer_no").append("<i class='ion-android-radio-button-on' style='font-size: 20px;'></i>");
         }
     }
 }
@@ -480,7 +565,7 @@ function getTransactionHistory() {
         var login_name = result[i]['LoginName'];
         var note = result[i]['Note'];
 
-        html += login_name + " : " + dt_stamp + "<br>" + note.replace(/\n/g, "<br>") + "<br><br>";
+        html += login_name + " : " + dt_stamp + "<br/>" + note.replace(/\n/g, "<br/>") + "<br/><br/>";
     }
     $("#transaction_history").append(html);
 }
@@ -490,21 +575,20 @@ function getPDFAttachmentInfo() {
     var file = $('#attachment_file').get(0).files[0];
     var f_name = file.name.replace(/#/g, "");
     
-    if (typeof file !== "undefined") {
+    if (typeof file !== "undefined" && file !== null) {
         var f_extension = getFileExtension(f_name);
         if (f_extension !== "pdf") {
-            alert("Only PDF file can be upload");
+            swal("Error!", "Only PDF file can be upload", "error");
             $('#attachment_file').filestyle('clear');
             return false;
         } 
         else {   
             if (file.size >= 3000000) {
-                alert("Attached file size is too big, max. file size allow is 3Mb or less");
+                swal("Error!", "Attached file size is too big, max. file size allow is 3Mb or less", "error");
                 $('#attachment_file').filestyle('clear');
                 return false;
             }
             else {
-//                convertPDFtoBase64();
                 return true;
             }
         }
@@ -536,20 +620,6 @@ function addExamPDF(file_name) {
     }
 }
 
-//function convertPDFtoBase64() {
-//    var file = $('#attachment_file').get(0).files[0];
-//    m_file_name = file.name.replace(/#/g, "");
-//    var reader = new FileReader();
-//    
-//    reader.onloadend = function () {
-//        m_base64_data = reader.result;
-//    };
-//
-//    if (file) {
-//        reader.readAsDataURL(file);
-//    } 
-//}
-
 function addPDFFileToExamList(id, file_name) {  
     var html = "<div class='row-fluid' id='row_exampdf_id" + id + "'>";
     html += "<div class='span1 text-center'><button class='btn btn-mini btn-warning' id='btn_delete_exampdf_id" + id + "'><i class='icon-trash icon-white'></i></button></div>";
@@ -561,7 +631,7 @@ function addPDFFileToExamList(id, file_name) {
 
 function removeExamPDF(id, file_link_name) {
     db_deleteExamPDF(id);
-    if (file_link_name !== null) {
+    if (file_link_name !== null && file_link_name.indexOf("ief_") !== 0) {
         deleteAttachFile(file_link_name);
     }
     
@@ -579,6 +649,50 @@ function updateInstFormExamReceived() {
     if (result.length >= 1 ) {
         db_updateInstFormExamReceived(proctor_id, "1");
     }
+    else {
+        db_updateInstFormExamReceived(proctor_id, "0");
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+function getInstructorExamList() {
+    var result = new Array(); 
+    result = db_getInstExamFileByEmail(sessionStorage.getItem('ls_dsps_proctor_loginEmail'));
+    
+    $('#body_tr').empty();
+    var body_html = "";
+    for(var i = 0; i < result.length; i++) { 
+        body_html += setInstExamFileListHTML(result[i]['Semester'], result[i]['CourseID'], result[i]['SectionNum'], result[i]['FileName'], result[i]['InstExamFileID']);
+    }
+    $("#body_tr").append(body_html);
+}
+
+function setInstExamFileListHTML(semester, course, ticket, exam_file, inst_exam_file_id) {
+    var tbl_html = "<tr class='form-horizontal' id='select_inst_exam_file_id_" + inst_exam_file_id +  "'>";
+    tbl_html += "<td class='span2'>" + semester + "</td>";
+    tbl_html += "<td class='span2'>" + course + "</td>";
+    tbl_html += "<td class='span1'>" + ticket + "</td>";
+    tbl_html += "<td class='span7'>" + exam_file + "</a></td>";
+    tbl_html += "</tr>";
+    return tbl_html;
+}
+
+function addExamPDFInstructorList() {
+    var result = new Array();
+    result = db_getInstExamFileByID(inst_exam_file_id);
+    if (result.length === 1) {
+        var exampdf_id = db_insertExamPDFInstructorList(proctor_id, result[0]['FileName'], result[0]['FileLinkName']);
+        if (exampdf_id === "") {
+            return false;
+        }
+        var note = "Test exam: " + result[0]['FileName'] + " has been attached from instructor exam folder";
+        db_insertTransaction(proctor_id, sessionStorage.getItem('ls_dsps_proctor_loginDisplayName'), note);
+        addPDFFileToExamList(exampdf_id, result[0]['FileName']);
+        return true;
+    }
+    else {
+        return false;
+    }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -587,40 +701,27 @@ function capture() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-function sendEmailToTechSupport() {
-    var subject = "Request for New Ticket";
-    var message = "New tickert has been requested from <b>" + sessionStorage.getItem('ls_dsps_proctor_loginDisplayName') + "</b> (" + sessionStorage.getItem('ls_dsps_proctor_loginEmail') + ")<br><br>";
-    message += "Application Web Site: <b>Instructor Exam Update</b><br><br>";
-    message += "<b>Problems:</b><br>" + $('#mod_tech_problems').val().replace(/\n/g, "<br>");
-//    message += "<img src='cid:screen_shot'/>";    
-    var img_base64 = str_img.replace("data:image/png;base64,", "");
-    return proc_sendEmailToTechSupport("presidenttest@ivc.edu", "Do Not Reply", "", "", subject, message, img_base64);
-}
-
-////////////////////////////////////////////////////////////////////////////////
 function sendEmailToDSPSTestExamChange() {
     var subject = "Proctor Test Instructor Exam Update";
-    var message = "Dear Angie Bates,<br><br>";
-    message += "Instructor changed test exam option.<br><br>";
+    var message = "Dear Angie Bates,<br/><br/>";
+    message += "Instructor changed test exam option.<br/><br/>";
     
     if ($('#inst_comments').val() !== "") {
-        message += "<b>Comments:</b><br>" + $('#inst_comments').val().replace(/\n/g, "<br>") + "<br><br>";
+        message += "<b>Comments:</b><br/>" + $('#inst_comments').val().replace(/\n/g, "<br/>") + "<br/><br/>";
     }
     
-    message += "Student Name: <b>" + $('#stu_name').html() + "</b><br>";
-    message += "Student ID: <b>" + $('#stu_id').html() + "</b><br>";
-    message += "Instructor Name: <b>" + inst_name + "</b><br>";
-    message += "Ticket #: <b>" + section_num + "</b><br>";
-    message += "Course: <b>" + $('#course_id').html() + "</b><br>";
-    message += "Test Date: <b>" + $('#test_date').html() + "</b><br>";
-    message += "Test Time: <b>" + $('#test_time').html() + "</b><br><br>";
+    message += "Student Name: <b>" + $('#stu_name').html() + "</b><br/>";
+    message += "Student ID: <b>" + $('#stu_id').html() + "</b><br/>";
+    message += "Instructor Name: <b>" + inst_name + "</b><br/>";
+    message += "Ticket #: <b>" + section_num + "</b><br/>";
+    message += "Course: <b>" + $('#course_id').html() + "</b><br/>";
+    message += "Test Date: <b>" + $('#test_date').html() + "</b><br/>";
+    message += "Test Time: <b>" + $('#test_time').html() + "</b><br/><br/>";
     
     var str_url = location.href;
     str_url = str_url.replace("instructorReview.html", "dspsReview_2.html");
-    message += "Please click below ticket # to open DSPS 2 review page<br><br>";
-    message += "<a href='" + str_url + "'>" + section_num + "</a><br><br>";
-    
-    // demo setup
-//    proc_sendEmail("presidenttest@ivc.edu", "DSPS Exams", subject, message);
+    message += "Please click below ticket # to open DSPS 2 review page<br/><br/>";
+    message += "<a href='" + str_url + "'>" + section_num + "</a><br/><br/>";
+
     proc_sendEmail("ivcdspsexams@ivc.edu", "DSPS Exams", subject, message);
 }

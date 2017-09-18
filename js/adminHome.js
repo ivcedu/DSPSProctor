@@ -3,9 +3,6 @@ var master = false;
 ////////////////////////////////////////////////////////////////////////////////
 window.onload = function() {   
     if (sessionStorage.key(0) !== null) {   
-        $('#mod_dialog_box').modal('hide');
-        $('#mod_tech_support').modal('hide');
-        $('#mod_tech_processing').hide();
         $('#login_name').html(sessionStorage.getItem('ls_dsps_proctor_loginDisplayName'));
         setAdminOption();
         getAdminProctorList("All", "");
@@ -29,33 +26,16 @@ function initializeTable() {
 $(document).ready(function() {    
     $('#nav_logout').click(function() { 
         sessionStorage.clear();
-        window.open("Login.html", '_self');
+        window.open('Login.html', '_self');
         return false;
     });
     
-    $('#nav_capture').click(function() { 
+    // ivc tech click //////////////////////////////////////////////////////////
+    $('#nav_capture').click(function() {        
         capture();
-        $('#mod_tech_problems').val("");
+        $('#mod_tech_problems').val("").trigger('autosize.resize');
         $('#mod_tech_img_screen').prop('src', str_img);
         $('#mod_tech_support').modal('show');
-    });
-    
-    // report - all history click //////////////////////////////////////////////
-    $('#nav_rpt_all').click(function() { 
-        window.open('rptAdminHistory.html', '_self');
-        return false;
-    });
-    
-    // admin click /////////////////////////////////////////////////////////////
-    $('#nav_admin').click(function() { 
-        window.open('adminSetting.html', '_self');
-        return false;
-    });
-    
-    // ivc holiday click ///////////////////////////////////////////////////////
-    $('#nav_ivc_holiday').click(function() { 
-        window.open('adminIVCHoliday.html', '_self');
-        return false;
     });
     
     // filter option change event //////////////////////////////////////////////
@@ -123,10 +103,9 @@ $(document).ready(function() {
         switch (step) {
             case "Review 1":
                 window.open('dspsReview_1.html?proctor_id=' + proctor_id, '_self');
+                return false;
                 break;
             case "Instructor Review":
-                var str_url = location.href;
-                sessionStorage.setItem('ss_dsps_proctor_referrer', str_url);
                 if (master) {
                     swal({ title: "Instructor Review", 
                            type: "info",
@@ -137,20 +116,24 @@ $(document).ready(function() {
                            closeOnCancel: false }, 
                            function(isConfirm) {   
                                if (isConfirm) { 
-                                   window.open('instructorReview.html?proctor_id=' + proctor_id, '_self');   
+                                    window.open('instructorReview.html?proctor_id=' + proctor_id, '_self');
+                                    return false;
                                } 
                                else {     
-                                   window.open('printProctor.html?proctor_id=' + proctor_id, '_self');
+                                    window.open('printProctor.html?proctor_id=' + proctor_id, '_self');
+                                    return false;
                                } 
                             }
                         );
                 }
                 else {
                     window.open('printProctor.html?proctor_id=' + proctor_id, '_self');
+                    return false;
                 }
                 break;
             case "Review 2":
                 window.open('dspsReview_2.html?proctor_id=' + proctor_id, '_self');
+                return false;
                 break;
             case "Complete":
                 if (master) {
@@ -163,85 +146,62 @@ $(document).ready(function() {
                            closeOnCancel: false }, 
                            function(isConfirm) {   
                                if (isConfirm) { 
-                                   window.open('instructorExamUpdate.html?proctor_id=' + proctor_id, '_self');   
+                                    window.open('instructorExamUpdate.html?proctor_id=' + proctor_id, '_self');
+                                    return false;
                                } 
                                else {     
-                                   window.open('dspsComplete.html?proctor_id=' + proctor_id, '_self');
+                                    window.open('dspsComplete.html?proctor_id=' + proctor_id, '_self');
+                                    return false;
                                } 
                             }
                         );
                 }
                 else {
                     window.open('dspsComplete.html?proctor_id=' + proctor_id, '_self');
+                    return false;
                 }
                 break;
             default:
-                var str_url = location.href;
-                sessionStorage.setItem('ss_dsps_proctor_referrer', str_url);
                 window.open('printProctor.html?proctor_id=' + proctor_id, '_self');
                 break;
         }
-        return false;
     });
     
-    // modal submit button click ///////////////////////////////////////////////
-    $('#mod_tech_btn_submit').click(function() {        
-        $(this).hide();
-        $('#mod_tech_btn_close').prop('disabled', true);
-        $('#mod_tech_processing').show();
-        $('#mod_tech_msg_end').hide();
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // ivc tech support click //////////////////////////////////////////////////
+    $('#mod_tech_btn_submit').click(function() { 
+        if (!appSystemTechSupport("Application Web Site: DSPS Exams - Admin Home<br/><br/>", $('#mod_tech_problems').val(), str_img)) {
+            $('#mod_tech_support').modal('hide');
+            var str_subject = "DSPS Exam: IVC Tech Support Request Error";
+            var str_msg = "Admin Home: IVC tech support request error";
+            sendEmailToDeveloper(str_subject, str_msg);
+            swal("Error!", str_msg + "\nplease contact IVC Tech Support at 949.451.5696", "error");
+            return false;
+        }
         
-        var data = {'Email': 'ivctech@ivc.edu',
-                    'Name': '',
-                    'FromEmail': sessionStorage.getItem('ls_dsps_proctor_loginEmail'),
-                    'FromName': sessionStorage.getItem('ls_dsps_proctor_loginDisplayName'),
-                    'Password': sessionStorage.getItem('ls_dsps_proctor_password'),
-                    'Subject': 'DSPS Exams Ticket',
-                    'Message': 'Problems: ' + $('#mod_tech_problems').val().replace(/\n/g, "<br>"),
-                    'StrImages': str_img.replace("data:image/png;base64,", "")};
-        var obj_JSON = JSON.stringify(data);
-        
-        var web_worker = new Worker('js/web_worker.js');
-        web_worker.addEventListener('message', function(e) {
-            if (e.data === "true") {
-                $('#mod_tech_msg_end').html("Email has been sent to IVC Tech successfully");
-            }
-            else {
-                $('#mod_tech_msg_end').html("Sending email failed, please call 949.451.5504");
-            }
-
-            $('#mod_tech_progress_bar').hide();
-            $('#mod_tech_msg_end').show();
-            $('#mod_tech_btn_close').prop('disabled', false); 
-        }, false);
-        
-        web_worker.postMessage({'parent_site': sessionStorage.getItem('m_parentSite'), 'obj_json': obj_JSON});
-
-//        web_worker.postMessage({'parent_site': sessionStorage.getItem('m_parentSite'),
-//                                'login_email': sessionStorage.getItem('ls_dsps_proctor_loginEmail'),
-//                                'login_name': sessionStorage.getItem('ls_dsps_proctor_loginDisplayName'),
-//                                'password': sessionStorage.getItem('ls_dsps_proctor_password'),
-//                                'problems': $('#mod_tech_problems').val().replace(/\n/g, "<br>"),
-//                                'img_base64': str_img.replace("data:image/png;base64,", "")});
-
-//        setTimeout(function() {
-//            sendEmailToTechSupport();
-//            $('#mod_tech_msg_start').hide();
-//            $('#mod_tech_msg_end').show();
-//            $('#mod_tech_btn_close').prop('disabled', false);            
-//        }, 1000);
+        swal("Success!", "Your request has been submitted successfully", "success");
+        $('#mod_tech_support').modal('hide');
+    });
+    
+    $('#mod_tech_img_screen').click(function() {
+        if (str_img !== "") {
+            $.fancybox.open({ href : str_img });
+        }
     });
     
     // get screen shot image ///////////////////////////////////////////////////
     html2canvas($('body'), {
-        onrendered: function(canvas) { str_img = canvas.toDataURL("image/png"); }
+        onrendered: function(canvas) { str_img = canvas.toDataURL("image/jpg"); }
     });
-    
-    // popover
-    $('#nav_capture').popover({content:"Report an issue", placement:"bottom"});
-    
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
     // selectpicker
     $('.selectpicker').selectpicker();
+    
+    // autosize
+    $('#mod_tech_problems').autosize();
 });
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -312,17 +272,4 @@ function setAdminProctorListHTML(proctor_id, section_num, course_id, stu_lname, 
 ////////////////////////////////////////////////////////////////////////////////
 function capture() {    
     html2canvas($('body')).then(function(canvas) { str_img = canvas.toDataURL(); });
-}
-
-////////////////////////////////////////////////////////////////////////////////
-function sendEmailToTechSupport() {
-    var login_email = sessionStorage.getItem('ls_dsps_proctor_loginEmail');
-    var login_name = sessionStorage.getItem('ls_dsps_proctor_loginDisplayName');
-    var password = sessionStorage.getItem('ls_dsps_proctor_password');
-    
-    var subject = "DSPS Exams Ticket";
-    var message = "Problems: " + $('#mod_tech_problems').val().replace(/\n/g, "<br>");
-//    message += "<img src='cid:screen_shot'/>";    
-    var img_base64 = str_img.replace("data:image/png;base64,", "");
-    return proc_sendEmailToTechSupport("ivctech@ivc.edu", "", login_email, login_name, password, subject, message, img_base64);
 }

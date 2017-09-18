@@ -7,18 +7,22 @@ window.onload = function() {
         case "Safari":
             if (curVersion < 5)
                 window.open('browser_not_support.html', '_self');
+                return false;
             break;
         case "Chrome":
             if (curVersion < 7)
                 window.open('browser_not_support.html', '_self');
+                return false;
             break;
         case "Firefox":
             if (curVersion < 22)
                 window.open('browser_not_support.html', '_self');
+                return false;
             break;
         case "Internet Explorer":
             if (curVersion < 11)
                 window.open('browser_not_support.html', '_self');
+                return false;
             break;
         default:     
             break;
@@ -55,7 +59,7 @@ $(document).ready(function() {
 
             if(login_error === "") {
                 var login_type = sessionStorage.getItem('ls_dsps_proctor_loginType');
-                if (login_type === "Staff") {
+                if (login_type === "Faculty or Staff") {
                     var result = new Array();
                     result = db_getAdmin(sessionStorage.getItem('ls_dsps_proctor_loginEmail'));
                     if (result.length === 1 || sessionStorage.getItem('ls_dsps_proctor_loginEmail') === "ykim160@ivc.edu") {
@@ -130,17 +134,20 @@ function loginInfo() {
         var loginID = result[4];
         var login_type = result[5];
         
-        // demo setup
+        ////////////////////////////////////////////////////////////////////////
+        // demo setup //////////////////////////////////////////////////////////
 //        if (display_name === "deantest staffgen") {
-//            email = "tcheng@ivc.edu";
+//            email = "znoroozi@ivc.edu";
 //            loginID = "9999995";
-//            login_type = "Staff";
+//            login_type = "Faculty or Staff";
 //        }
 //        else if (display_name === "Staff1") {
-//            email = "swyma2@ivc.edu";
-//            loginID = "858805";
+//            email = "cbassar0@saddleback.edu";
+//            loginID = "693261";
 //            login_type = "Student";
 //        }
+        ////////////////////////////////////////////////////////////////////////
+        ////////////////////////////////////////////////////////////////////////
         
         if (email === null || typeof email === 'undefined') {
             return "AD Login System Error";

@@ -2,8 +2,6 @@ var str_img = "";
 ////////////////////////////////////////////////////////////////////////////////
 window.onload = function() {   
     if (sessionStorage.key(0) !== null) {   
-        $('#mod_dialog_box').modal('hide');
-        $('#mod_tech_support').modal('hide');
         $('#login_name').html(sessionStorage.getItem('ls_dsps_proctor_loginDisplayName'));
         getInstructorProctorList();
         initializeTable();
@@ -23,21 +21,16 @@ function initializeTable() {
 $(document).ready(function() {    
     $('#nav_logout').click(function() { 
         sessionStorage.clear();
-        window.open("Login.html", '_self');
+        window.open('Login.html', '_self');
         return false;
     });
     
+    // ivc tech click //////////////////////////////////////////////////////////
     $('#nav_capture').click(function() { 
         capture();
-        $('#mod_tech_problems').val("");
+        $('#mod_tech_problems').val("").trigger('autosize.resize');
         $('#mod_tech_img_screen').prop('src', str_img);
         $('#mod_tech_support').modal('show');
-    });
-    
-    // report - all history click //////////////////////////////////////////////
-    $('#nav_rpt_all').click(function() { 
-        window.open('rptInstructorHistory.html', '_self');
-        return false;
     });
     
     // table row open resource form click //////////////////////////////////////
@@ -48,39 +41,48 @@ $(document).ready(function() {
         
         switch (step) {
             case "Review 1":
-                var str_url = location.href;
-                sessionStorage.setItem('ss_dsps_proctor_referrer', str_url);
                 window.open('printProctor.html?proctor_id=' + proctor_id, '_self');
+                return false;
                 break;
             case "Instructor Review":
-                    window.open('instructorReview.html?proctor_id=' + proctor_id, '_self');
+                window.open('instructorReview.html?proctor_id=' + proctor_id, '_self');
+                return false;
                 break;
             case "Review 2":
-                var str_url = location.href;
-                sessionStorage.setItem('ss_dsps_proctor_referrer', str_url);
                 window.open('printProctor.html?proctor_id=' + proctor_id, '_self');
+                return false;
                 break;
             case "Complete":
                 window.open('instructorExamUpdate.html?proctor_id=' + proctor_id, '_self');
+                return false;
                 break;
             default:
-                var str_url = location.href;
-                sessionStorage.setItem('ss_dsps_proctor_referrer', str_url);
                 window.open('printProctor.html?proctor_id=' + proctor_id, '_self');
+                return false;
                 break;
         }
-        return false;
     });
     
-    // modal submit button click ///////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // ivc tech support click //////////////////////////////////////////////////
     $('#mod_tech_btn_submit').click(function() { 
-        if (sendEmailToTechSupport()) {
+        if (!appSystemTechSupport("Application Web Site: DSPS Exams - Instructor Home<br/><br/>", $('#mod_tech_problems').val(), str_img)) {
             $('#mod_tech_support').modal('hide');
-            alert("Your request has been submitted successfully");
+            var str_subject = "DSPS Exam: IVC Tech Support Request Error";
+            var str_msg = "Instructor Home: IVC tech support request error";
+            sendEmailToDeveloper(str_subject, str_msg);
+            swal("Error!", str_msg + "\nplease contact IVC Tech Support at 949.451.5696", "error");
+            return false;
         }
-        else {
-            $('#mod_tech_support').modal('hide');
-            alert("Sending email error!");
+        
+        swal("Success!", "Your request has been submitted successfully", "success");
+        $('#mod_tech_support').modal('hide');
+    });
+    
+    $('#mod_tech_img_screen').click(function() {
+        if (str_img !== "") {
+            $.fancybox.open({ href : str_img });
         }
     });
     
@@ -88,9 +90,11 @@ $(document).ready(function() {
     html2canvas($('body'), {
         onrendered: function(canvas) { str_img = canvas.toDataURL("image/jpg"); }
     });
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     
-    // popover
-    $('#nav_capture').popover({content:"Contact IVC Tech Support", placement:"bottom"});
+    // auto size
+    $('#mod_tech_problems').autosize();
 });
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -122,15 +126,4 @@ function setAdminProctorListHTML(proctor_id, section_num, course_id, stu_name, s
 ////////////////////////////////////////////////////////////////////////////////
 function capture() {    
     html2canvas($('body')).then(function(canvas) { str_img = canvas.toDataURL(); });
-}
-
-////////////////////////////////////////////////////////////////////////////////
-function sendEmailToTechSupport() {
-    var subject = "Request for New Ticket";
-    var message = "New tickert has been requested from <b>" + sessionStorage.getItem('ls_dsps_proctor_loginDisplayName') + "</b> (" + sessionStorage.getItem('ls_dsps_proctor_loginEmail') + ")<br><br>";
-    message += "Application Web Site: <b>Home</b><br><br>";
-    message += "<b>Problems:</b><br>" + $('#mod_tech_problems').val().replace(/\n/g, "<br>");
-//    message += "<img src='cid:screen_shot'/>";    
-    var img_base64 = str_img.replace("data:image/png;base64,", "");
-    return proc_sendEmailToTechSupport("presidenttest@ivc.edu", "Do Not Reply", "", "", subject, message, img_base64);
 }

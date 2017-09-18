@@ -1,8 +1,8 @@
 var admin_id = "";
+var str_img = "";
 ////////////////////////////////////////////////////////////////////////////////
 window.onload = function() {   
     if (sessionStorage.key(0) !== null) {  
-        $('#mod_dialog_box').modal('hide');
         getAdminList();
         initializeTable();
     }
@@ -18,16 +18,19 @@ function initializeTable() {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-$(document).ready(function() {  
-    $('#nav_home').click(function() { 
-        window.open('adminHome.html', '_self');
+$(document).ready(function() {    
+    $('#nav_logout').click(function() { 
+        sessionStorage.clear();
+        window.open('Login.html', '_self');
         return false;
     });
     
-    $('#nav_logout').click(function() { 
-        sessionStorage.clear();
-        window.open("Login.html", '_self');
-        return false;
+    // ivc tech click //////////////////////////////////////////////////////////
+    $('#nav_capture').click(function() { 
+        capture();
+        $('#mod_tech_problems').val("").trigger('autosize.resize');
+        $('#mod_tech_img_screen').prop('src', str_img);
+        $('#mod_tech_support').modal('show');
     });
   
     // new admin button click //////////////////////////////////////////////////
@@ -37,7 +40,6 @@ $(document).ready(function() {
         clearModalSection();
         $('#mod_dialog_box_header').html("New Administrator");
         $('#mod_dialog_box').modal('show');
-        return false;
     });
     
     // table row open resource form click //////////////////////////////////////
@@ -51,7 +53,6 @@ $(document).ready(function() {
         $('#mod_admin_name').val(result[0]['AdminName']);
         $('#mod_admin_email').val(result[0]['AdminEmail']);
         $('#mod_dialog_box').modal('show');
-        return false;
     });
 
     // modal save button click /////////////////////////////////////////////////
@@ -67,7 +68,6 @@ $(document).ready(function() {
         
         getAdminList();
         $('#mod_dialog_box').modal('hide');
-        return false;
     });
     
     // modal delete button click ///////////////////////////////////////////////
@@ -76,8 +76,40 @@ $(document).ready(function() {
         
         getAdminList();
         $('#mod_dialog_box').modal('hide');
-        return false;
     });
+    
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // ivc tech support click //////////////////////////////////////////////////
+    $('#mod_tech_btn_submit').click(function() { 
+        if (!appSystemTechSupport("Application Web Site: DSPS Exams - Admin Setting<br/><br/>", $('#mod_tech_problems').val(), str_img)) {
+            $('#mod_tech_support').modal('hide');
+            var str_subject = "DSPS Exam: IVC Tech Support Request Error";
+            var str_msg = "Admin Setting: IVC tech support request error";
+            sendEmailToDeveloper(str_subject, str_msg);
+            swal("Error!", str_msg + "\nplease contact IVC Tech Support at 949.451.5696", "error");
+            return false;
+        }
+        
+        swal("Success!", "Your request has been submitted successfully", "success");
+        $('#mod_tech_support').modal('hide');
+    });
+    
+    $('#mod_tech_img_screen').click(function() {
+        if (str_img !== "") {
+            $.fancybox.open({ href : str_img });
+        }
+    });
+    
+    // get screen shot image ///////////////////////////////////////////////////
+    html2canvas($('body'), {
+        onrendered: function(canvas) { str_img = canvas.toDataURL("image/jpg"); }
+    });
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    
+    // auto size
+    $('#mod_tech_problems').autosize();
 });
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -97,7 +129,7 @@ function setAdminListHTML(admin_id, admin_name, admin_email) {
     var tbl_html = "<tr class='form-horizontal'>";
     tbl_html += "<td class='span2'>" + admin_name + "</td>";
     tbl_html += "<td class='span2'>" + admin_email + "</td>";
-    tbl_html += "<td class='span1'><a href=# id='edit_admin_id_" + admin_id +  "'><i class='icon-edit icon-black'></i></a></td>";
+    tbl_html += "<td class='span1' style='text-align: center;'><a href=# id='edit_admin_id_" + admin_id +  "'><i class='iconic iconic-sm iconic-lock-unlocked iconic-color-default'></i></a></td>";
     tbl_html += "</tr>";
     return tbl_html;
 }
@@ -107,4 +139,9 @@ function clearModalSection() {
     $('#mod_dialog_box_header').html("");
     $('#mod_admin_name').val("");
     $('#mod_admin_email').val("");
+}
+
+////////////////////////////////////////////////////////////////////////////////
+function capture() {    
+    html2canvas($('body')).then(function(canvas) { str_img = canvas.toDataURL(); });
 }

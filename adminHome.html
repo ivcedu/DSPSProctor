@@ -10,10 +10,10 @@
         <link rel="stylesheet" href="../include/bootstrap-select/css/bootstrap-select.1.5.4.min.css"/>
         <link rel="stylesheet" href="../include/bootstrap-timepicker/css/bootstrap-timepicker.min.css"/>
         <link rel="stylesheet" href="../include/jquery-ui/css/jquery.ui.all.css"/>
+        <link rel="stylesheet" href="../include/fancyBox-2.1.5/source/jquery.fancybox.css"/>
         <link rel="stylesheet" href="../include/iconic-1.9.0/font/css/iconic-bootstrap.css"/>
         <link rel="stylesheet" href="../include/sweetalert/css/sweetalert.css"/>
         <!-- application css -->
-        <!--<link rel="stylesheet" href="css/button-color.css"/>-->
     </head>
     <body id="body">
         <div class="well container">
@@ -24,26 +24,28 @@
                         <li class="dropdown">
                             <a class="dropdown-toggle" data-toggle="dropdown" href=#>Reports <b class="caret"></b></a>
                             <ul class="dropdown-menu">
-                                <li><a href=# id="nav_rpt_all">All History</a></li>
+                                <li><a href="rptAdminHistory.html">All History</a></li>
+                                <li><a href="rptNoExamList.html">No Exam List</a></li>
                             </ul>
                         </li>
                     </ul>
                     <ul class="nav">
-                        <li><a href=# id="nav_admin"><i class="iconic iconic-person-genderless"></i> Admin</a></li>
+                        <li><a href="adminSetting.html"><i class="iconic iconic-sm iconic-person-genderless"></i> Admin</a></li>
                     </ul>
                     <ul class="nav">
-                        <li><a href=# id="nav_ivc_holiday"><i class="iconic iconic-calendar"></i> IVC Holiday</a></li>
+                        <li><a href="adminIVCHoliday.html"><i class="iconic iconic-sm iconic-calendar"></i> IVC Holiday</a></li>
                     </ul>
                     <ul class="nav pull-right">
-                        <li><a href=# id="nav_logout"><i class="iconic iconic-account-logout iconic-flip-horizontal"></i> Logout</a></li>
+                        <li><a href=# id="nav_logout"><i class="iconic iconic-sm iconic-account-logout iconic-flip-horizontal"></i> Logout</a></li>
+                    </ul>
+                    <ul class="nav pull-right">
+                        <li><a href=# id="nav_capture"><i class="iconic iconic-sm iconic-bug"></i> IVC Tech</a></li>
                     </ul>
                 </div>
             </div>
-            
             <div class="row-fluid text-center">
                 <h4 id="login_name"></h4>
             </div>
-            
             <!-- filter and search options -->
             <div class="row-fluid">
                 <div class="span1" style="padding-top: 5px;"><b>Filter:</b></div>
@@ -67,10 +69,9 @@
                 </div>
                 <div class="span2"><input type="text" class="span12" readonly id="search_field"></div>
                 <div class="span1">
-                    <button class="btn btn-success span12" id="btn_search"><i class="iconic iconic-magnifying-glass"></i></button>
+                    <button class="btn btn-success span12" id="btn_search"><i class="iconic iconic-sm iconic-magnifying-glass"></i></button>
                 </div>
             </div>
-            
             <!-- RF List section  -->
             <div id="admin_section">
                 <div id="review_1_section">
@@ -79,111 +80,95 @@
                     </div>
                     <table class="table table-condensed table-bordered" id="dsps_1_list">
                         <thead>
-                            <th class="span1" style="text-align: left;"><a href="#">Ticket</a></th>
-                            <th class="span2" style="text-align: left;"><a href="#">Course</a></th>
-                            <th class="span2" style="text-align: left;"><a href="#">SLName</a></th>
-                            <th class="span1" style="text-align: left;"><a href="#">SFName</a></th>
-                            <th class="span2" style="text-align: left;"><a href="#">ILName</a></th>
-                            <th class="span1" style="text-align: left;"><a href="#">IFName</a></th>
-                            <th class="span2" style="text-align: left;"><a href="#">Status</a></th>
-                            <th class="span2" style="text-align: left;"><a href="#">Exam Date</a></th>
+                            <tr>
+                                <th class="span1" style="text-align: left;"><a href="#">Ticket</a></th>
+                                <th class="span2" style="text-align: left;"><a href="#">Course</a></th>
+                                <th class="span2" style="text-align: left;"><a href="#">SLName</a></th>
+                                <th class="span1" style="text-align: left;"><a href="#">SFName</a></th>
+                                <th class="span2" style="text-align: left;"><a href="#">ILName</a></th>
+                                <th class="span1" style="text-align: left;"><a href="#">IFName</a></th>
+                                <th class="span2" style="text-align: left;"><a href="#">Status</a></th>
+                                <th class="span2" style="text-align: left;"><a href="#">Exam Date</a></th>
+                            </tr>
                         </thead>
                         <tbody id="dsps_1_body_tr">
                         </tbody>
                     </table>
                 </div>
-                
                 <div id="instructor_section">
                     <div class="row-fluid" style="padding-bottom: 10px;">
                         <div class="text-center" style="background-color: gray; color: white; height: 20px;">Instructor Review</div>
                     </div>
                     <table class="table table-condensed table-bordered" id="inst_review_list">
                         <thead>
-                            <th class="span1" style="text-align: left;"><a href="#">Ticket</a></th>
-                            <th class="span2" style="text-align: left;"><a href="#">Course</a></th>
-                            <th class="span2" style="text-align: left;"><a href="#">SLName</a></th>
-                            <th class="span1" style="text-align: left;"><a href="#">SFName</a></th>
-                            <th class="span2" style="text-align: left;"><a href="#">ILName</a></th>
-                            <th class="span1" style="text-align: left;"><a href="#">IFName</a></th>
-                            <th class="span2" style="text-align: left;"><a href="#">Status</a></th>
-                            <th class="span2" style="text-align: left;"><a href="#">Exam Date</a></th>
+                            <tr>
+                                <th class="span1" style="text-align: left;"><a href="#">Ticket</a></th>
+                                <th class="span2" style="text-align: left;"><a href="#">Course</a></th>
+                                <th class="span2" style="text-align: left;"><a href="#">SLName</a></th>
+                                <th class="span1" style="text-align: left;"><a href="#">SFName</a></th>
+                                <th class="span2" style="text-align: left;"><a href="#">ILName</a></th>
+                                <th class="span1" style="text-align: left;"><a href="#">IFName</a></th>
+                                <th class="span2" style="text-align: left;"><a href="#">Status</a></th>
+                                <th class="span2" style="text-align: left;"><a href="#">Exam Date</a></th>
+                            </tr>
                         </thead>
                         <tbody id="inst_review_body_tr">
                         </tbody>
                     </table>
                 </div>
-                
                 <div id="review_2_section">
                     <div class="row-fluid" style="padding-bottom: 10px;">
                         <div class="text-center" style="background-color: gray; color: white; height: 20px;">DSPS Review 2</div>
                     </div>
                     <table class="table table-condensed table-bordered" id="dsps_2_list">
                         <thead>
-                            <th class="span1" style="text-align: left;"><a href="#">Ticket</a></th>
-                            <th class="span2" style="text-align: left;"><a href="#">Course</a></th>
-                            <th class="span2" style="text-align: left;"><a href="#">SLName</a></th>
-                            <th class="span1" style="text-align: left;"><a href="#">SFName</a></th>
-                            <th class="span2" style="text-align: left;"><a href="#">ILName</a></th>
-                            <th class="span1" style="text-align: left;"><a href="#">IFName</a></th>
-                            <th class="span2" style="text-align: left;"><a href="#">Status</a></th>
-                            <th class="span2" style="text-align: left;"><a href="#">Exam Date</a></th>
+                            <tr>
+                                <th class="span1" style="text-align: left;"><a href="#">Ticket</a></th>
+                                <th class="span2" style="text-align: left;"><a href="#">Course</a></th>
+                                <th class="span2" style="text-align: left;"><a href="#">SLName</a></th>
+                                <th class="span1" style="text-align: left;"><a href="#">SFName</a></th>
+                                <th class="span2" style="text-align: left;"><a href="#">ILName</a></th>
+                                <th class="span1" style="text-align: left;"><a href="#">IFName</a></th>
+                                <th class="span2" style="text-align: left;"><a href="#">Status</a></th>
+                                <th class="span2" style="text-align: left;"><a href="#">Exam Date</a></th>
+                            </tr>
                         </thead>
                         <tbody id="dsps_2_body_tr">
                         </tbody>
                     </table>
                 </div>
-
                 <div id="complete_section">
                     <div class="row-fluid" style="padding-bottom: 10px;">
                         <div class="text-center" style="background-color: gray; color: white; height: 20px;">DSPS Complete</div>
                     </div>
                     <table class="table table-condensed table-bordered" id="dsps_complete_list">
                         <thead>
-                            <th class="span1" style="text-align: left;"><a href="#">Ticket</a></th>
-                            <th class="span2" style="text-align: left;"><a href="#">Course</a></th>
-                            <th class="span2" style="text-align: left;"><a href="#">SLName</a></th>
-                            <th class="span1" style="text-align: left;"><a href="#">SFName</a></th>
-                            <th class="span2" style="text-align: left;"><a href="#">ILName</a></th>
-                            <th class="span1" style="text-align: left;"><a href="#">IFName</a></th>
-                            <th class="span2" style="text-align: left;"><a href="#">Status</a></th>
-                            <th class="span2" style="text-align: left;"><a href="#">Exam Date</a></th>
+                            <tr>
+                                <th class="span1" style="text-align: left;"><a href="#">Ticket</a></th>
+                                <th class="span2" style="text-align: left;"><a href="#">Course</a></th>
+                                <th class="span2" style="text-align: left;"><a href="#">SLName</a></th>
+                                <th class="span1" style="text-align: left;"><a href="#">SFName</a></th>
+                                <th class="span2" style="text-align: left;"><a href="#">ILName</a></th>
+                                <th class="span1" style="text-align: left;"><a href="#">IFName</a></th>
+                                <th class="span2" style="text-align: left;"><a href="#">Status</a></th>
+                                <th class="span2" style="text-align: left;"><a href="#">Exam Date</a></th>
+                            </tr>
                         </thead>
                         <tbody id="dsps_complete_body_tr">
                         </tbody>
                     </table>
                 </div>
             </div>
-            
-            <!-- Modal dialog box -->
-            <div class="modal hide fade hidden-print" id="mod_dialog_box">
-                <div class="modal-header">
-                    <button class="close" data-dismiss="modal"> x </button>
-                    <h4 id="mod_dialog_box_header"></h4>
-                </div>
-                <div class="modal-body">
-                    <div id="mod_dialog_box_body"></div>
-                </div>
-                <div class="modal-footer">
-                    <button class="btn btn-inverse" data-dismiss="modal" id="mod_dialog_btn_ok">OK</button>
-                </div>
-            </div>
-            <!-- end of Modal dialog box -->
-            
             <!-- Modal tech support box -->
             <div class="modal hide fade hidden-print" id="mod_tech_support">
                 <div class="modal-header">
                     <button class="close" data-dismiss="modal"> x </button>
-                    <h4>Contact IVC Tech Support</h4>
+                    <h4>IVC Tech Support Request</h4>
                 </div>
                 <div class="modal-body">
                     <div class="row-fluid">
                         <div class="span2" style="padding-top: 5px;">Problems:</div>
                         <div class="span10"><textarea class="span12" style="resize: none; height: 53px;" id="mod_tech_problems"></textarea></div>
-                    </div>
-                    <div class="row-fluid" id="mod_tech_processing">
-                        <div class="span12" style="text-align: center;" id="mod_tech_progress_bar"><img src="images/ajax-loader.gif"></div>
-                        <!--<div class="span12" style="padding-top: 5px; font-weight: bold; text-align: center; color: blue;" id="mod_tech_msg_start">Sending email to IVC Tech Support...</div>-->
-                        <div class="span12" style="padding-top: 5px; font-weight: bold; text-align: center;" id="mod_tech_msg_end">Email has been sent to IVC Tech successfully</div>
                     </div>
                     <div class="row-fluid" style="padding-top: 10px; padding-bottom: 10px;">
                         <div class="text-center" style="background-color: gray; color: white; height: 10px;"></div>
@@ -193,13 +178,16 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button class="btn btn-primary" id="mod_tech_btn_submit">Send</button>
                     <button class="btn btn-inverse" data-dismiss="modal" id="mod_tech_btn_close">Close</button>
+                    <button class="btn btn-primary" data-dismiss="modal" id="mod_tech_btn_submit">Submit</button>
                 </div>
             </div>
             <!-- end of Modal tech support box -->
         </div>
-        
+        <!-- stupid IE does not support promises (asynchronous operation) so we have to use promise-polyfill -->        
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/es6-promise/4.1.1/es6-promise.auto.min.js"></script>
+        <!-- html2canvas CDN link -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/0.5.0-beta4/html2canvas.min.js"></script>
         <!-- include javascript -->
         <script src="../include/jquery/jquery-2.0.3.min.js"></script>
         <script src="../include/jquery-ui/js/jquery-ui-1.10.4.min.js"></script>
@@ -214,13 +202,13 @@
         <script src="../include/bootstrap-timepicker/js/bootstrap-timepicker.min.js"></script>
         <script src="../include/bootstrap-filestyle/js/bootstrap-filestyle.1.0.3.min.js"></script>
         <script src="../include/bootstrap-popover/js/bootstrap-popover.2.0.1.min.js"></script>
-        <script src="../include/html2canvas/js/html2canvas.min.js"></script>
+        <script src="../include/fancyBox-2.1.5/source/jquery.fancybox.pack.js"></script>
         <script src="../include/sweetalert/js/sweetalert.min.js"></script>
         <!-- application javascript -->
-        <script src="js/adminHome.js"></script>
-        <script src="js/session_data.js"></script>
-        <script src="js/db_access.js"></script>
-        <script src="js/sendEmail.js"></script>
-        <script src="js/web_worker.js"></script>
+        <script src="js/adminHome.js?v=1.4.0"></script>
+        <script src="js/session_data.js?v=1.4.0"></script>
+        <script src="js/db_access.js?v=1.4.0"></script>
+        <script src="js/sendEmail.js?v=1.4.0"></script>
+        <script src="js/web_worker.js?v=1.4.0"></script>
     </body>
 </html>

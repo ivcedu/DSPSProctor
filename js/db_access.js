@@ -74,6 +74,20 @@ function tardis_getStudentCourseList(StudentID, TermCode) {
     return result;
 }
 
+function tardis_getInstructorCourseList(InstructorUID, TermCode) {
+    var result = new Array();
+    $.ajax({
+        type:"POST",
+        url:"php/tardis_getInstructorCourseList.php",
+        data:{InstructorUID:InstructorUID, TermCode:TermCode},
+        async: false,  
+        success:function(data) {
+            result = JSON.parse(data);
+        }
+    });
+    return result;
+}
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -195,6 +209,19 @@ function db_getAdminProctorCompleteList(SearchField, Value, StartDate, EndDate) 
         type:"POST",
         url:"php/db_getAdminProctorCompleteList.php",
         data:{SearchField:SearchField, Value:Value, StartDate:StartDate, EndDate:EndDate},
+        async: false,  
+        success:function(data) {
+            result = JSON.parse(data);
+        }
+    });
+    return result;
+}
+
+function db_getAdminProctorNoExamList() {
+    var result = new Array();
+    $.ajax({
+        type:"POST",
+        url:"php/db_getAdminProctorNoExamList.php",
         async: false,  
         success:function(data) {
             result = JSON.parse(data);
@@ -340,6 +367,20 @@ function db_getExamPDF(ExamPDFID) {
     return result;
 }
 
+function db_getExamPDFByFileLinkName(FileLinkName) {
+    var result = new Array();
+    $.ajax({
+        type:"POST",
+        url:"php/db_getExamPDFByFileLinkName.php",
+        data:{FileLinkName:FileLinkName},
+        async: false,  
+        success:function(data) {
+            result = JSON.parse(data);
+        }
+    });
+    return result;
+}
+
 function db_getExamPDFList(ProctorID) {
     var result = new Array();
     $.ajax({
@@ -386,6 +427,34 @@ function db_getIVCHolidayByDate(IVCHoliday) {
         type:"POST",
         url:"php/db_getIVCHolidayByDate.php",
         data:{IVCHoliday:IVCHoliday},
+        async: false,  
+        success:function(data) {
+            result = JSON.parse(data);
+        }
+    });
+    return result;
+}
+
+function db_getInstExamFileByID(InstExamFileID) {
+    var result = new Array();
+    $.ajax({
+        type:"POST",
+        url:"php/db_getInstExamFileByID.php",
+        data:{InstExamFileID:InstExamFileID},
+        async: false,  
+        success:function(data) {
+            result = JSON.parse(data);
+        }
+    });
+    return result;
+}
+
+function db_getInstExamFileByEmail(InstEmail) {
+    var result = new Array();
+    $.ajax({
+        type:"POST",
+        url:"php/db_getInstExamFileByEmail.php",
+        data:{InstEmail:InstEmail},
         async: false,  
         success:function(data) {
             result = JSON.parse(data);
@@ -500,6 +569,20 @@ function db_insertExamPDF(ProctorID, FileName, ExamPDF) {
     return ResultID;
 }
 
+function db_insertExamPDFInstructorList(ProctorID, FileName, FileLinkName) {
+    var ResultID = "";
+    $.ajax({
+        type:"POST",
+        url:"php/db_insertExamPDFInstructorList.php",
+        data:{ProctorID:ProctorID, FileName:FileName, FileLinkName:FileLinkName},
+        async: false,  
+        success:function(data) {
+            ResultID = JSON.parse(data);
+        }
+    });
+    return ResultID;
+}
+
 function db_insertAdmin(AdminName, AdminEmail) {
     var ResultID = "";
     $.ajax({
@@ -534,6 +617,20 @@ function db_insertIVCHoliday(IVCHoliday) {
         type:"POST",
         url:"php/db_insertIVCHoliday.php",
         data:{IVCHoliday:IVCHoliday},
+        async: false,  
+        success:function(data) {
+            ResultID = JSON.parse(data);
+        }
+    });
+    return ResultID;
+}
+
+function db_insertInstExamFile(InstEmail, TermCode, Semester, SectionNum, CourseID, FileName, FileLinkName) {
+    var ResultID = "";
+    $.ajax({
+        type:"POST",
+        url:"php/db_insertInstExamFile.php",
+        data:{InstEmail:InstEmail, TermCode:TermCode, Semester:Semester, SectionNum:SectionNum, CourseID:CourseID, FileName:FileName, FileLinkName:FileLinkName},
         async: false,  
         success:function(data) {
             ResultID = JSON.parse(data);
@@ -671,6 +768,20 @@ function db_updateAdmin(AdminID, AdminName, AdminEmail) {
     return Result;
 }
 
+function db_updateInstExamFileByID(InstExamFileID, FileLinkName) {
+    var Result = false;
+    $.ajax({
+        type:"POST",
+        url:"php/db_updateInstExamFileByID.php",
+        data:{InstExamFileID:InstExamFileID, FileLinkName:FileLinkName},
+        async: false,  
+        success:function(data) {
+            Result = JSON.parse(data);
+        }
+    });
+    return Result;
+}
+
 // delete DB ///////////////////////////////////////////////////////////////////
 function db_deleteExamPDF(ExamPDFID) {
     var Result = false;
@@ -755,6 +866,20 @@ function db_deleteIVCHolidayAll() {
     return Result;
 }
 
+function db_deleteInstExamFile(InstExamFileID) {
+    var Result = false;
+    $.ajax({  
+        url: "php/db_deleteInstExamFile.php",  
+        type: "POST",  
+        data:{InstExamFileID:InstExamFileID},
+        async: false,
+        success:function(data) {
+            Result = JSON.parse(data);
+        }  
+    });
+    return Result;
+}
+
 // pdf file verification ///////////////////////////////////////////////////////
 function pdfGetTotalPages(file_data) {
     var Result = "";
@@ -805,8 +930,24 @@ function uploadAttachFile(file_data) {
     return Result;
 }
 
+function uploadInstExamFile(file_data) {
+    var Result = false;
+    $.ajax({  
+        url: "php/upload_inst_exam_file.php",  
+        type: "POST",  
+        data: file_data,
+        processData: false,  
+        contentType: false,  
+        async: false,
+        success:function(data) {
+            Result = JSON.parse(data);
+        }  
+    });
+    return Result;
+}
+
 function deleteAttachFile(FileLinkName) {
-    var Result = "";
+    var Result = false;
     $.ajax({  
         url: "php/delete_attach_file.php",  
         type: "POST",  

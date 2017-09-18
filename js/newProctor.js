@@ -10,8 +10,6 @@ var ivc_holidays = [];
 ////////////////////////////////////////////////////////////////////////////////
 window.onload = function() {   
     if (sessionStorage.key(0) !== null) {        
-        $('#mod_dialog_box').modal('hide');
-        $('#mod_tech_support').modal('hide');
         getIVCHoliday();
         setDatePickerMinDate();
         getStudentInfo();
@@ -25,9 +23,17 @@ window.onload = function() {
 
 ////////////////////////////////////////////////////////////////////////////////
 $(document).ready(function() { 
+    // logout click ////////////////////////////////////////////////////////////
+    $('#nav_logout').click(function() { 
+        sessionStorage.clear();
+        window.open('Login.html', '_self');
+        return false;
+    });
+    
+    // ivc tech click //////////////////////////////////////////////////////////
     $('#nav_capture').click(function() { 
         capture();
-        $('#mod_tech_problems').val("");
+        $('#mod_tech_problems').val("").trigger('autosize.resize');
         $('#mod_tech_img_screen').prop('src', str_img);
         $('#mod_tech_support').modal('show');
     });
@@ -112,118 +118,94 @@ $(document).ready(function() {
         }
         else {
             $('#cbo_scribe_list').prop('disabled', true);
-            $('#cbo_scribe_list').val('scantron_only');
+            $('#cbo_scribe_list').val('Select...');
             $('#cbo_scribe_list').selectpicker('refresh');
         }
     });
     
     // submit button click /////////////////////////////////////////////////////
-    $('#btn_cancel').click(function() { 
-        sessionStorage.clear();
-        window.open("Login.html", '_self');
-        return false;
-    });
-    
-    // submit button click /////////////////////////////////////////////////////
-    $('#btn_submit').click(function() {        
+    $('#btn_submit').click(function() { 
         var err = formValidation();
         if (err !== "") {
-            alert(err);
+            swal("Error!", err, "error");
             return false;
         }
+        
+        $(this).prop("disabled", true);
+        var n_result = insertProctor();
+        if (n_result === -1) {
+            var str_msg = "DSPS Exam Request: AD system error";
+            return dbSystemErrorHandling("DSPS Exam: DB System Error", str_msg);
+        }
+        else if (n_result === 0) {
+            var str_msg = "DSPS Exam Request: DB system error INSERT PROCTOR";
+            return dbSystemErrorHandling("DSPS Exam: DB System Error", str_msg);
+        }
         else {
-            $(this).prop("disabled", true);
-            var n_result = insertProctor();
-            if (n_result === -1) {
-                var str_msg = "DSPS Exam Request: AD system error";
-                sendEmailToDeveloper(str_msg);
-                alert(str_msg + ", please contact IVC Tech Support at 949.451.5696");
-                sessionStorage.clear();
-                window.open("Login.html", '_self');
-                return false;
-            }
-            else if (n_result === 0) {
-                var str_msg = "DSPS Exam Request: DB system error INSERT PROCTOR";
-                sendEmailToDeveloper(str_msg);
-                alert(str_msg + ", please contact IVC Tech Support at 949.451.5696");
-                sessionStorage.clear();
-                window.open("Login.html", '_self');
-                return false;
+            if (!insertAccom(proctor_id)) {
+                var str_msg = "DSPS Exam Request: " + proctor_id + " DB system error INSERT ACCOM";
+                return dbSystemErrorHandling("DSPS Exam: DB System Error", str_msg);
             }
             else {
-                if (!insertAccom(proctor_id)) {
-                    var str_msg = "DSPS Exam Request: " + proctor_id + " DB system error INSERT ACCOM";
-                    sendEmailToDeveloper(str_msg);
-                    alert(str_msg + ", please contact IVC Tech Support at 949.451.5696");
-                    sessionStorage.clear();
-                    window.open("Login.html", '_self');
-                    return false;
+                if (db_insertTransaction(proctor_id, sessionStorage.getItem('ls_dsps_proctor_loginDisplayName'), "Proctor request submitted") === "") {
+                    var str_msg = "DSPS Exam Request: " + proctor_id + " DB system error INSERT TRANSACTION";
+                    return dbSystemErrorHandling("DSPS Exam: DB System Error", str_msg);
                 }
-                else {
-                    if (db_insertTransaction(proctor_id, sessionStorage.getItem('ls_dsps_proctor_loginDisplayName'), "Proctor request submitted") === "") {
-                        var str_msg = "DSPS Exam Request: " + proctor_id + " DB system error INSERT TRANSACTION";
-                        sendEmailToDeveloper(str_msg);
-                        alert(str_msg + ", please contact IVC Tech Support at 949.451.5696");
-                        sessionStorage.clear();
-                        window.open("Login.html", '_self');
-                        return false;
-                    }
-                    if (db_insertProctorLog(proctor_id, sessionStorage.getItem('ls_dsps_proctor_loginDisplayName'), 6, 1) === "") {
-                        var str_msg = "DSPS Exam Request: " + proctor_id + " DB system error INSERT PROCTOR LOG";
-                        sendEmailToDeveloper(str_msg);
-                        alert(str_msg + ", please contact IVC Tech Support at 949.451.5696");
-                        sessionStorage.clear();
-                        window.open("Login.html", '_self');
-                        return false;
-                    }
-
-                    sendEmailToDSPS_1();
-                    sendEmailToStudent();
-
-                    $('#mod_dialog_box_header').html("Complete");
-                    $('#mod_dialog_box_body').html("Your request has been submitted successfully.<br><br>Thank you");
-                    $('#mod_dialog_box').modal('show');
+                if (db_insertProctorLog(proctor_id, sessionStorage.getItem('ls_dsps_proctor_loginDisplayName'), 6, 1) === "") {
+                    var str_msg = "DSPS Exam Request: " + proctor_id + " DB system error INSERT PROCTOR LOG";
+                    return dbSystemErrorHandling("DSPS Exam: DB System Error", str_msg);
                 }
+
+                sendEmailToDSPS_1();
+                sendEmailToStudent();
+                swal({  title: "Complete!",
+                        text: "Your request has been submitted successfully.",
+                        type: "success",
+                        showCancelButton: false,
+                        confirmButtonText: "OK",
+                        closeOnConfirm: false },
+                        function() {
+                            sessionStorage.clear();
+                            window.open('Login.html', '_self');
+                            return false;
+                        });
             }
         }
     });
     
-    // dialog ok click /////////////////////////////////////////////////////////
-    $('#mod_dialog_btn_ok').click(function() { 
-        sessionStorage.clear();
-        window.open('Login.html', '_self');
-        return false;
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // ivc tech support click //////////////////////////////////////////////////
+    $('#mod_tech_btn_submit').click(function() {
+        if (!appSystemTechSupport("Application Web Site: DSPS Exams - New Request<br/><br/>", $('#mod_tech_problems').val(), str_img)) {
+            $('#mod_tech_support').modal('hide');
+            var str_subject = "DSPS Exam: IVC Tech Support Request Error";
+            var str_msg = "New Proctor: IVC tech support request error";
+            sendEmailToDeveloper(str_subject, str_msg);
+            swal("Error!", str_msg + "\nplease contact IVC Tech Support at 949.451.5696", "error");
+            return false;
+        }
+        
+        swal("Success!", "Your request has been submitted successfully", "success");
+        $('#mod_tech_support').modal('hide');
     });
     
-    // modal submit button click ///////////////////////////////////////////////
-//    $('#mod_tech_btn_submit').click(function() { 
-//        if (sendEmailToTechSupport()) {
-//            $('#mod_tech_support').modal('hide');
-//            alert("Your request has been submitted successfully");
-//        }
-//        else {
-//            $('#mod_tech_support').modal('hide');
-//            alert("Sending email error!");
-//        }
-//    });
-    
-//    $('#mod_tech_img_screen').click(function() {
-//        if (str_img !== "") {
-//            $.fancybox.open({ href : str_img });
-//        }
-//    });
+    $('#mod_tech_img_screen').click(function() {
+        if (str_img !== "") {
+            $.fancybox.open({ href : str_img });
+        }
+    });
     
     // get screen shot image ///////////////////////////////////////////////////
-//    html2canvas($('body'), {
-//        onrendered: function(canvas) { str_img = canvas.toDataURL("image/jpg"); }
-//    });
-    
-    // popover
-    $('#nav_capture').popover({content:"Contact IVC Tech Support", placement:"right"});
+    html2canvas($('body'), {
+        onrendered: function(canvas) { str_img = canvas.toDataURL("image/jpg"); }
+    });
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     
     // auto size
     $('#comments').autosize();
-    $('#mod_dialog_comments').autosize();
+    $('#mod_tech_problems').autosize();
     
     // selectpicker
     $('.selectpicker').selectpicker();
@@ -253,14 +235,7 @@ $(document).ready(function() {
         var mer = e.time.meridian;
         //convert hours into minutes
         m += h * 60;
-        //10:15 = 10h*60m + 15m = 615 min
-//        if(mer === 'AM' && m < 480) {
-//            $('#test_time').timepicker('setTime', '8:00 AM');
-//        }
-//        else if (mer === 'PM' && m > 360 && m < 720) {
-//            $('#test_time').timepicker('setTime', '6:00 PM');
-//        }
-        
+        //10:15 = 10h*60m + 15m = 615 min        
         if (week_day >= 1 && week_day <= 4) {
             if(mer === 'AM' && m < 480) {
                 $('#test_time').timepicker('setTime', '8:00 AM');
@@ -279,6 +254,8 @@ $(document).ready(function() {
         }
     });
     
+    $('#nav_logout').popover({content:"log out", placement:"bottom"});
+    $('#nav_capture').popover({content:"IVC tech support request", placement:"bottom"});
     $('#div_stu_name').popover({content:"student name field", placement:"bottom"});
     $('#div_stu_id').popover({content:"student ID field", placement:"bottom"});
     $('#div_inst_list').popover({content:"instructor name drop down list", placement:"bottom"});
@@ -321,6 +298,21 @@ function formValidation() {
     }
     if ($('#test_date').val() === "") {
         err += "Test date is a required field\n";
+    }
+    if (!$('#ckb_time_one_half').is(':checked') && !$('#ckb_double_time').is(':checked') && !$('#ckb_reader').is(':checked')
+            && !$('#ckb_enlarge_exam').is(':checked') && !$('#ckb_user_of_comp').is(':checked') && !$('#ckb_distraction').is(':checked')
+            && !$('#ckb_scribe').is(':checked') && !$('#ckb_other').is(':checked')) {
+        err += "At least one accommodation are required field\n";
+    }
+    if ($('#ckb_scribe').is(':checked')) {
+        if ($('#cbo_scribe_list').val() === "Select...") {
+            err += "Scribe selection is a required field\n";
+        }
+    }
+    if ($('#ckb_other').is(':checked')) {
+        if ($.trim($('#txt_other').val()) === "") {
+            err += "Other descriptions is a required field\n";
+        }
     }
 
     return err;
@@ -505,48 +497,30 @@ function capture() {
     html2canvas($('body')).then(function(canvas) { str_img = canvas.toDataURL(); });
 }
 
-////////////////////////////////////////////////////////////////////////////////
-function sendEmailToTechSupport() {
-    var subject = "Request for New Ticket";
-    var message = "New tickert has been requested from <b>" + sessionStorage.getItem('ls_dsps_proctor_loginDisplayName') + "</b> (" + sessionStorage.getItem('ls_dsps_proctor_loginEmail') + ")<br><br>";
-    message += "Application Web Site: <b>New Proctor Request</b><br><br>";
-    message += "<b>Problems:</b><br>" + $('#mod_tech_problems').val().replace(/\n/g, "<br>");
-//    message += "<img src='cid:screen_shot'/>";    
-    var img_base64 = str_img.replace("data:image/png;base64,", "");
-    return proc_sendEmailToTechSupport("presidenttest@ivc.edu", "Do Not Reply", "", "", subject, message, img_base64);
-}
-
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-function sendEmailToDeveloper(str_msg) {
-    proc_sendEmail("ykim160@ivc.edu", "Rich Kim", "DSPS New Proctor: DB System Error", str_msg);
-}
-
-////////////////////////////////////////////////////////////////////////////////
 function sendEmailToDSPS_1() {
     var subject = "New Test Request";
-    var message = "Dear Angie Bates,<br><br>";
-    message += "A test proctoring request has been submitted to DSPS.<br><br>";
+    var message = "Dear Angie Bates,<br/><br/>";
+    message += "A test proctoring request has been submitted to DSPS.<br/><br/>";
     
     if ($('#comments').val() !== "") {
-        message += "<b>Student Comments:</b><br>" + $('#comments').val().replace(/\n/g, "<br>") + "<br><br>";
+        message += "<b>Student Comments:</b><br/>" + $('#comments').val().replace(/\n/g, "<br/>") + "<br/><br/>";
     }
     
-    message += "Student Name: <b>" + $('#stu_name').val() + "</b><br>";
-    message += "Student ID: <b>" + $('#stu_id').val() + "</b><br>";
-    message += "Instructor Name: <b>" + $('#inst_list').val() + "</b><br>";
-    message += "Ticket #: <b>" + section_num + "</b><br>";
-    message += "Course: <b>" + $('#course_list').val() + "</b><br>";
-    message += "Test Date: <b>" + $('#test_date').val() + "</b><br>";
-    message += "Test Time: <b>" + $('#test_time').val() + "</b><br><br>";
+    message += "Student Name: <b>" + $('#stu_name').val() + "</b><br/>";
+    message += "Student ID: <b>" + $('#stu_id').val() + "</b><br/>";
+    message += "Instructor Name: <b>" + $('#inst_list').val() + "</b><br/>";
+    message += "Ticket #: <b>" + section_num + "</b><br/>";
+    message += "Course: <b>" + $('#course_list').val() + "</b><br/>";
+    message += "Test Date: <b>" + $('#test_date').val() + "</b><br/>";
+    message += "Test Time: <b>" + $('#test_time').val() + "</b><br/><br/>";
 
     var str_url = location.href;
     str_url = str_url.replace("newProctor.html", "dspsReview_1.html");
-    message += "Please click below ticket # to open DSPS 1 review page<br><br>";
-    message += "<a href='" + str_url + "?proctor_id=" + proctor_id + "'>" + section_num + "</a><br><br>";
+    message += "Please click below ticket # to open DSPS 1 review page<br/><br/>";
+    message += "<a href='" + str_url + "?proctor_id=" + proctor_id + "'>" + section_num + "</a><br/><br/>";
     
-    // demo setup
-//    proc_sendEmail("presidenttest@ivc.edu", "DSPS Exams", subject, message);
     proc_sendEmail("ivcdspsexams@ivc.edu", "DSPS Exams", subject, message);
 }
 
@@ -555,19 +529,16 @@ function sendEmailToStudent() {
     var name = sessionStorage.getItem('ls_dsps_proctor_loginDisplayName');
     
     var subject = "DSPS Test Proctoring Request";
-    var message = "Dear " + name + ",<br><br>";
-//    var cur_date = new Date().toLocaleString();
+    var message = "Dear " + name + ",<br/><br/>";
     var str_cur_date = getCurrentDateTimeString();
     
-    message += "Your test proctoring request that was submitted on <b>" + str_cur_date + "</b> is <b>being processed</b> and an email has been sent to your instructor for their approval.<br>";    
-    message += "An email confirming or denying your exam will be sent to you. If this test has been changed, canceled, or your class was dropped contact DSPS immediately<br><br>";
-    message += "Instructor Name: <b>" + $('#inst_list').val() + "</b><br>";
-    message += "Ticket #: <b>" + section_num + "</b><br>";
-    message += "Course: <b>" + $('#course_list').val() + "</b><br>";
-    message += "Test Date: <b>" + $('#test_date').val() + "</b><br>";
-    message += "Test Time: <b>" + $('#test_time').val() + "</b><br><br>";
+    message += "Your test proctoring request that was submitted on <b>" + str_cur_date + "</b> is <b>being processed</b> and an email has been sent to your instructor for their approval.<br/>";    
+    message += "An email confirming or denying your exam will be sent to you. If this test has been changed, canceled, or your class was dropped contact DSPS immediately<br/><br/>";
+    message += "Instructor Name: <b>" + $('#inst_list').val() + "</b><br/>";
+    message += "Ticket #: <b>" + section_num + "</b><br/>";
+    message += "Course: <b>" + $('#course_list').val() + "</b><br/>";
+    message += "Test Date: <b>" + $('#test_date').val() + "</b><br/>";
+    message += "Test Time: <b>" + $('#test_time').val() + "</b><br/><br/>";
     
-    // demo setup
-//    proc_sendEmail("stafftest@ivc.edu", name, subject, message);
     proc_sendEmail(email, name, subject, message);
 }

@@ -10,7 +10,7 @@
     $mail->IsSMTP();
     $mail->Host = "smtp1.socccd.edu";
     $mail->From = "ivcdspsexams@ivc.edu";
-    $mail->FromName = "DSPS Exam";
+    $mail->FromName = "DSPS Proctor";
     $mail->AddAddress($Email, $Name);
     //$mail->AddCC($address, $name);
     $mail->IsHTML(true); // send as HTML

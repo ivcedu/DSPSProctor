@@ -32,7 +32,7 @@
                     $email = $data[0]["mail"][0];
                 }
 
-                $result = array($display_name, $first_name, $last_name, $email, "", "Staff");
+                $result = array($display_name, $first_name, $last_name, $email, "", "Faculty or Staff");
             } 
         }
         

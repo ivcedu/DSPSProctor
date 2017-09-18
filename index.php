@@ -8,7 +8,7 @@
         <!-- include css -->
         <link rel="stylesheet" href="../include/sweetalert/css/sweetalert.css"/>
         <!-- application css -->
-        <link rel="stylesheet" href="css/style-2.css"/>
+        <link rel="stylesheet" href="css/style-2.css?v=1.0.0"/>
     </head>
     <body>
         <div class="loginFrame">
@@ -24,15 +24,14 @@
                 <div id="login_error"></div>
             </div>
         </div>
-
         <!-- include javascript -->
         <script src="../include/jquery/jquery-2.0.3.min.js"></script>
         <script src="../include/bowser/bowser.min.js"></script>
         <script src="../include/utilities/js/jquery.backstretch.min.js"></script>
         <script src="../include/sweetalert/js/sweetalert.min.js"></script>
         <!-- application javascript -->
-        <script src="js/Login.js"></script>
-        <script src="js/session_data.js"></script>
-        <script src="js/db_access.js"></script>
+        <script src="js/Login.js?v=1.4.0"></script>
+        <script src="js/session_data.js?v=1.4.0"></script>
+        <script src="js/db_access.js?v=1.4.0"></script>
     </body>
 </html>
