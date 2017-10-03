@@ -360,7 +360,7 @@ function getStudentCourseInfo() {
             m_ar_courses.push(ar_crs);
             
             if (!inst_duplicate) {
-                html += "<option value='" + result[i]['InstructorName'] + "'>" + result[i]['InstructorName'] + "</option>";
+                html += "<option value='" + result[i]['InstructorName'].replace(/'/g, "&#39;") + "'>" + result[i]['InstructorName'] + "</option>";
             }
         }
     }

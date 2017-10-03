@@ -142,8 +142,8 @@ function loginInfo() {
 //            login_type = "Faculty or Staff";
 //        }
 //        else if (display_name === "Staff1") {
-//            email = "cbassar0@saddleback.edu";
-//            loginID = "693261";
+//            email = "afranks3@ivc.edu";
+//            loginID = "229587";
 //            login_type = "Student";
 //        }
         ////////////////////////////////////////////////////////////////////////
