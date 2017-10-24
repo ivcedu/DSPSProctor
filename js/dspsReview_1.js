@@ -386,15 +386,11 @@ function capture() {
 function sendEmailToInstructor() {
     var subject = "Test Proctoring Request: New";
     var message = "Dear " + inst_name + ",<br/><br/>";
-    message += "A new DSPS test proctoring request has been submitted, reviewed and accepted.<br/><br/>";
+    message += "A new DSPS test proctoring request has been submitted, reviewed and accepted by DSPS.<br/><br/>";
     
     if ($('#dsps_comments').val() !== "") {
         message += "<b>Comments:</b><br/>" + $('#dsps_comments').val().replace(/\n/g, "<br/>") + "<br/><br/>";
     }
-    var str_url_login = location.href;
-    str_url_login = str_url_login.replace("dspsReview_1.html", "Login.html");
-    message += "Please select the ticket number below or log on to the <a href='" + str_url_login + "'>DSPS Exam portal</a> to process the exam for the following student.<br/>";
-    message += "If you need further instructions go to: <a href='http://students.ivc.edu/dsps/Documents/DSPS%20Test%20Proctoring%20Guidelines%20for%20Instructors.pdf'>DSPS Test Proctoring Guidelines</a><br/><br/>";
     
     message += "Student Name: <b>" + $('#stu_name').html() + "</b><br/>";
     message += "Student ID: <b>" + $('#stu_id').html() + "</b><br/>";
@@ -405,9 +401,13 @@ function sendEmailToInstructor() {
     
     var str_url_instructor = location.href;
     str_url_instructor = str_url_instructor.replace("dspsReview_1.html", "instructorReview.html");
-    message += "Please click the ticket number below to open the Instructor Review page<br/><br/>";
-    message += "<a href='" + str_url_instructor + "'>" + section_num + "</a><br/><br/>";
-
+    var str_url_login = location.href;
+    str_url_login = str_url_login.replace("dspsReview_1.html", "Login.html");
+    
+    message += "Select <a href='" + str_url_instructor + "'>Quick Link #" + section_num + "</a> to process this exam. Once you have \"submitted\" your review you must log into the ";
+    message += "<a href='" + str_url_login + "'>DSPS Exam portal</a> for further action, as the \"Quick Link\" will no longer be accessible.<br/><br/>";
+    message += "If you need further instructions go to: <a href='http://students.ivc.edu/dsps/Documents/DSPS%20Test%20Proctoring%20Guidelines%20for%20Instructors.pdf'>DSPS Test Proctoring Guidelines.</a><br/><br/>";
+    
     proc_sendEmail(inst_email, inst_name, subject, message);
 }
 
