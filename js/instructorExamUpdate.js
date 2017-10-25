@@ -119,7 +119,7 @@ $(document).ready(function() {
     $('#attachment_file').change(function() {
         if (getPDFAttachmentInfo()) {
             var file = $('#attachment_file').get(0).files[0];
-            var f_name = file.name.replace(/#/g, "").replace(/'/g, "");
+            var f_name = removeIllegalCharacters(file.name);
             f_name = removeDiacritics (f_name);
             
             var file_data = new FormData();
