@@ -103,6 +103,10 @@ $(document).ready(function() {
     $('#mod_btn_save').click(function() { 
         var course = $('#mod_course_list option:selected').text();
         var ticket = $('#mod_course_list').val();
+        if (course === "Select...") {
+            swal("Error!", "Course is a required field", "error");
+            return false;
+        }
         
         if (getPDFAttachmentInfo()) {
             var file = $('#mod_exam_file').get(0).files[0];
