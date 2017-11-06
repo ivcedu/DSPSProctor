@@ -277,6 +277,9 @@ $(document).ready(function() {
     // auto size
     $('#inst_comments').autosize();
     $('#mod_tech_problems').autosize();
+    
+    // tooltip popover
+    $('#nav_capture').popover({content:"Report a Bug", placement:"bottom"});
 });
 
 ////////////////////////////////////////////////////////////////////////////////

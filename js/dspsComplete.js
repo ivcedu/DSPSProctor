@@ -289,6 +289,9 @@ $(document).ready(function() {
     
     // timepicker
     $('#mod_new_test_time').timepicker({template: 'modal'});
+    
+    // tooltip popover
+    $('#nav_capture').popover({content:"Report a Bug", placement:"bottom"});
 });
 
 ////////////////////////////////////////////////////////////////////////////////

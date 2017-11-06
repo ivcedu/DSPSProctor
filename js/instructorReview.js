@@ -454,6 +454,9 @@ $(document).ready(function() {
     $('#comments').autosize();
     $('#dsps_comments').autosize();
     $('#mod_tech_problems').autosize();
+    
+    // tooltip popover
+    $('#nav_capture').popover({content:"Report a Bug", placement:"bottom"});
 });
 
 ////////////////////////////////////////////////////////////////////////////////

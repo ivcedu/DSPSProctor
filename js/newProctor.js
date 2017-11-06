@@ -255,7 +255,7 @@ $(document).ready(function() {
     });
     
     $('#nav_logout').popover({content:"log out", placement:"bottom"});
-    $('#nav_capture').popover({content:"IVC tech support request", placement:"bottom"});
+    $('#nav_capture').popover({content:"Report a Bug", placement:"bottom"});
     $('#div_stu_name').popover({content:"student name field", placement:"bottom"});
     $('#div_stu_id').popover({content:"student ID field", placement:"bottom"});
     $('#div_inst_list').popover({content:"instructor name drop down list", placement:"bottom"});

@@ -253,6 +253,9 @@ $(document).ready(function() {
     
     // datepicker
     $('#test_date').datepicker();
+    
+    // tooltip popover
+    $('#nav_capture').popover({content:"Report a Bug", placement:"bottom"});
 });
 
 ////////////////////////////////////////////////////////////////////////////////

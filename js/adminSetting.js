@@ -110,6 +110,9 @@ $(document).ready(function() {
     
     // auto size
     $('#mod_tech_problems').autosize();
+    
+    // tooltip popover
+    $('#nav_capture').popover({content:"Report a Bug", placement:"bottom"});
 });
 
 ////////////////////////////////////////////////////////////////////////////////
