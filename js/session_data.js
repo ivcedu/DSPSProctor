@@ -258,13 +258,31 @@ function convertStringDateTimeToDBDateFormat(str_date, str_time, duration) {
     }
     
     if (duration === "") {
-        return yr + mo + dy + "T" + n_hr + mn + "00";
+        var str_n_hr = "";
+        if (n_hr < 10) {
+            str_n_hr = "0" + n_hr;
+        }
+        else {
+            str_n_hr = n_hr;
+        }
+        
+        return yr + mo + dy + "T" + str_n_hr + mn + "00";
     }
     else {
         var total_min = Number(mn) + Number(duration);
         var add_hr = Math.floor(total_min / 60);
         var new_mn = total_min % 60;
-        return yr + mo + dy + "T" + (n_hr + add_hr) + new_mn + "00";
+        var new_hr = n_hr + add_hr;
+        
+        var str_new_hr = "";
+        if (new_hr < 10) {
+            str_new_hr = "0" + new_hr;
+        }
+        else {
+            str_new_hr = new_hr;
+        }
+        
+        return yr + mo + dy + "T" + str_new_hr + new_mn + "00";
     }
 }
 
