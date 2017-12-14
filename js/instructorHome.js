@@ -29,7 +29,6 @@ $(document).ready(function() {
     $('#nav_capture').click(function() { 
         capture();
         $('#mod_tech_problems').val("").trigger('autosize.resize');
-        $('#mod_tech_img_screen').prop('src', str_img);
         $('#mod_tech_support').modal('show');
     });
     
@@ -128,5 +127,8 @@ function setAdminProctorListHTML(proctor_id, section_num, course_id, stu_name, s
 
 ////////////////////////////////////////////////////////////////////////////////
 function capture() {    
-    html2canvas($('body')).then(function(canvas) { str_img = canvas.toDataURL(); });
+    html2canvas($('body')).then(function(canvas) { 
+        str_img = canvas.toDataURL(); 
+        $('#mod_tech_img_screen').prop('src', str_img);
+    });
 }
