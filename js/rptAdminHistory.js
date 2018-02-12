@@ -114,7 +114,9 @@ $(document).ready(function() {
 
 ////////////////////////////////////////////////////////////////////////////////
 function getDefaultStartEndDate() {
+    $('#start_date').datepicker({ dateFormat: 'mm/dd/yy' });
     $('#start_date').datepicker( "setDate", getCurrentFirstDayOfMonth() );
+    $('#end_date').datepicker({ dateFormat: 'mm/dd/yy' });
     $('#end_date').datepicker( "setDate", getCurrentLastDayOfMonth() );
 }
 
