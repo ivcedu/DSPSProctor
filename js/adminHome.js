@@ -169,7 +169,12 @@ $(document).ready(function() {
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // ivc tech support click //////////////////////////////////////////////////
-    $('#mod_tech_btn_submit').click(function() { 
+    $('#mod_tech_btn_submit').click(function() {
+        if ($.trim($('#mod_tech_problems').val()) === "") {
+            swal("Error!", "Please describe your technical issue", "error");
+            return false;
+        }
+        
         if (!appSystemTechSupport("Application Web Site: DSPS Exams - Admin Home<br/><br/>", $('#mod_tech_problems').val(), str_img)) {
             $('#mod_tech_support').modal('hide');
             var str_subject = "DSPS Exam: IVC Tech Support Request Error";
