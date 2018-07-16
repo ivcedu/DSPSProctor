@@ -729,7 +729,7 @@ function sendEmailToDSPSTestExamChange() {
     message += "Test Time: <b>" + $('#test_time').html() + "</b><br/><br/>";
     
     var str_url = location.href;
-    str_url = str_url.replace("instructorReview.html", "dspsReview_2.html");
+    str_url = str_url.replace("instructorExamUpdate.html", "dspsReview_2.html");
     message += "Please click below ticket # to open DSPS 2 review page<br/><br/>";
     message += "<a href='" + str_url + "'>" + section_num + "</a><br/><br/>";
 
