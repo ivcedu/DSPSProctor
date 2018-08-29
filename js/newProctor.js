@@ -60,7 +60,20 @@ $(document).ready(function() {
             $('#test_time').timepicker('setTime', '8:00 AM');
         }
         
-        if (week_day >= 1 && week_day <= 4) {
+        // monday or tuesday
+        if (week_day === 1 || week_day === 2) {
+            if(mer === 'AM' && m < 480) {
+                $('#test_time').timepicker('setTime', '8:00 AM');
+            }
+            else if (mer === 'PM' && m > 240 && m < 720) {
+                $('#test_time').timepicker('setTime', '4:00 PM');
+            }
+            else {
+                $('#test_time').timepicker('setTime', h+':00'+' '+mer);
+            }
+        }
+        // wednesday or thursday
+        else if (week_day === 3 || week_day === 4) {
             if(mer === 'AM' && m < 480) {
                 $('#test_time').timepicker('setTime', '8:00 AM');
             }
@@ -71,12 +84,13 @@ $(document).ready(function() {
                 $('#test_time').timepicker('setTime', h+':00'+' '+mer);
             }
         }
+        // friday
         else {
             if(mer === 'AM' && m < 480) {
                 $('#test_time').timepicker('setTime', '8:00 AM');
             }
-            else if (mer === 'PM' && m > 120 && m < 720) {
-                $('#test_time').timepicker('setTime', '2:00 PM');
+            else if (mer === 'PM') {
+                $('#test_time').timepicker('setTime', '11:00 AM');
             }
             else {
                 $('#test_time').timepicker('setTime', h+':00'+' '+mer);
@@ -239,8 +253,18 @@ $(document).ready(function() {
         var mer = e.time.meridian;
         //convert hours into minutes
         m += h * 60;
-        //10:15 = 10h*60m + 15m = 615 min        
-        if (week_day >= 1 && week_day <= 4) {
+        
+        // monday or tuesday
+        if (week_day === 1 || week_day === 2) {
+            if(mer === 'AM' && m < 480) {
+                $('#test_time').timepicker('setTime', '8:00 AM');
+            }
+            else if (mer === 'PM' && m > 240 && m < 720) {
+                $('#test_time').timepicker('setTime', '4:00 PM');
+            }
+        }
+        // wednesday or thursday
+        else if (week_day === 3 || week_day === 4) {
             if(mer === 'AM' && m < 480) {
                 $('#test_time').timepicker('setTime', '8:00 AM');
             }
@@ -248,12 +272,13 @@ $(document).ready(function() {
                 $('#test_time').timepicker('setTime', '6:00 PM');
             }
         }
-        else {
+        // friday
+        else {            
             if(mer === 'AM' && m < 480) {
                 $('#test_time').timepicker('setTime', '8:00 AM');
             }
-            else if (mer === 'PM' && m > 120 && m < 720) {
-                $('#test_time').timepicker('setTime', '2:00 PM');
+            else if (mer === 'PM') {
+                $('#test_time').timepicker('setTime', '11:00 AM');
             }
         }
     });
